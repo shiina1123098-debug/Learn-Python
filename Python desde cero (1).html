@@ -1,0 +1,728 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Python desde cero</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: una sola columna tipo cuaderno de ejercicios, pensada para el pulgar. Lista de lecciones -> tarjetas de lectura -> ejercicios con barra inferior de comprobación. */
+:root{
+  --bg:#EBF0F5; --surface:#FFFFFF; --surface2:#F4F7FA; --ink:#0F1B2D; --muted:#566478; --line:#D3DBE6;
+  --accent:#0E6BA8; --accent-deep:#0A4F7C; --accent-ink:#FFFFFF; --accent-soft:#DAEAF6;
+  --spark:#B97C00; --flame:#D9531E;
+  --lock-bg:#D5DDE8; --lock-shadow:#B9C4D3; --lock-fg:#7A8AA0; --track:#C7D0DD; --on-good:#FFFFFF; --good-deep:#0F5A36;
+  --good:#17784A; --good-bg:#DCF2E4; --bad:#B3261E; --bad-bg:#FBE0DD;
+  --code-bg:#F2F5F9; --kw:#B02A5B; --str:#18764A; --num:#A85A08; --cm:#6A7889; --fn:#0A6CA8;
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B121B; --surface:#141E2B; --surface2:#1A2636; --ink:#E8EEF5; --muted:#93A1B4; --line:#273649;
+    --accent:#5AB8EE; --accent-deep:#2F86B8; --accent-ink:#06141F; --accent-soft:#17324A;
+    --spark:#F2C14E; --flame:#FF8A4C;
+    --lock-bg:#1F2B3B; --lock-shadow:#141D29; --lock-fg:#62738A; --track:#223044; --on-good:#06241A; --good-deep:#3FA971;
+    --good:#6FD79A; --good-bg:#12301F; --bad:#FF8F85; --bad-bg:#3A1715;
+    --code-bg:#0A1019; --kw:#F27BA6; --str:#7FD99F; --num:#F2B35C; --cm:#8795A8; --fn:#6CC4F2;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B121B; --surface:#141E2B; --surface2:#1A2636; --ink:#E8EEF5; --muted:#93A1B4; --line:#273649;
+  --accent:#5AB8EE; --accent-deep:#2F86B8; --accent-ink:#06141F; --accent-soft:#17324A;
+  --spark:#F2C14E; --flame:#FF8A4C;
+  --lock-bg:#1F2B3B; --lock-shadow:#141D29; --lock-fg:#62738A; --track:#223044; --on-good:#06241A; --good-deep:#3FA971;
+  --good:#6FD79A; --good-bg:#12301F; --bad:#FF8F85; --bad-bg:#3A1715;
+  --code-bg:#0A1019; --kw:#F27BA6; --str:#7FD99F; --num:#F2B35C; --cm:#8795A8; --fn:#6CC4F2;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  margin:0; padding-block:20px 28px;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-text-size-adjust:100%;
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:disabled{cursor:not-allowed}
+h1,h2,h3,p,ol{margin:0}
+ol{padding:0;list-style:none}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);color:var(--ink);padding:.08em .38em;border-radius:5px}
+.app{max-width:560px;margin:0 auto;min-width:0}
+.app.has-dock{padding-bottom:190px}
+.ic{display:inline-flex;width:1.25em;height:1.25em;flex:none}
+.ic svg{width:100%;height:100%;fill:currentColor}
+
+/* Inicio */
+.head{display:grid;gap:6px;padding:6px 0 18px}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8rem);line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 10px 9px;display:grid;gap:2px;min-width:0}
+.stat .row{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:800;font-size:1.45rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat small{font-size:.74rem;color:var(--muted);line-height:1.2}
+.t-flame{color:var(--flame)} .t-spark{color:var(--spark)} .t-good{color:var(--good)}
+.lead{color:var(--muted);margin:16px 0 18px;max-width:46ch}
+/* Mapa de lecciones: camino serpenteante, círculos alternando izquierda y derecha */
+.map{position:relative;width:100%;max-width:360px;margin:6px auto 0}
+.map-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.map-lines path{fill:none;stroke-width:15;stroke-linecap:butt}
+.trk{stroke:var(--track)}
+.prg{stroke:var(--good);stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease-in-out}
+.prg.lit{stroke-dashoffset:0}
+.node{position:absolute;width:0;height:0;z-index:1;--bg:var(--lock-bg);--sh:var(--lock-shadow);--fg:var(--lock-fg)}
+.node[data-s="done"]{--bg:var(--good);--sh:var(--good-deep);--fg:var(--on-good)}
+.node[data-s="current"]{--bg:var(--accent);--sh:var(--accent-deep);--fg:var(--accent-ink)}
+.node-btn{position:absolute;left:-42px;top:-42px;width:84px;height:84px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;
+  background:var(--bg);color:var(--fg);box-shadow:0 7px 0 var(--sh);
+  transition:background-color .5s ease,color .5s ease,box-shadow .5s ease,transform .12s ease}
+.node-btn:active:not(:disabled){transform:translateY(5px);box-shadow:0 2px 0 var(--sh)}
+.node-btn:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+.node-btn:disabled{cursor:not-allowed}
+.glyph{grid-area:1/1;width:40px;height:40px;display:grid;place-items:center;opacity:0;transform:scale(.5);transition:opacity .35s ease,transform .35s ease}
+.glyph .ic{width:100%;height:100%}
+.node[data-s="locked"] .g-lock,.node[data-s="current"] .g-play,.node[data-s="done"] .g-check{opacity:1;transform:none}
+.node[data-s="current"] .node-btn::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid var(--accent);opacity:.45;pointer-events:none;animation:ring 1.9s ease-out infinite}
+.node.unlocking .node-btn{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+.tip{position:absolute;left:0;bottom:58px;transform:translateX(-50%);white-space:nowrap;background:var(--surface);color:var(--accent);
+  border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-family:var(--f-display);font-weight:800;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}
+.tip::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+.node[data-s="current"] .tip{opacity:1;visibility:visible;animation:bob 1.4s ease-in-out infinite}
+.nlabel{position:absolute;top:0;transform:translateY(-50%);width:150px;display:grid;gap:2px;pointer-events:none}
+.node.left .nlabel{left:60px;text-align:left}
+.node.right .nlabel{right:60px;text-align:right;justify-items:end}
+.nt{font-family:var(--f-display);font-weight:700;font-size:1.02rem;line-height:1.15;transition:color .5s ease}
+.ns{font-size:.8rem;color:var(--muted);line-height:1.25}
+.node[data-s="locked"] .nt{color:var(--muted)}
+.slot:empty{display:none}
+@keyframes ring{0%{transform:scale(.92);opacity:.7}100%{transform:scale(1.22);opacity:0}}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+@keyframes pop{0%{transform:scale(.78)}100%{transform:scale(1)}}
+.stars{display:inline-flex;gap:2px;color:var(--line)}
+.stars .ic{width:1.05em;height:1.05em}
+.stars .on{color:var(--spark)}
+.stars.big .ic{width:2.6rem;height:2.6rem}
+.stars.big{gap:6px}
+.next-week{margin-top:18px;font-size:.88rem;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
+
+/* Lección */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none;color:var(--muted)}
+.bar{flex:1;height:12px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease}
+.kicker{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.q{font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.2;margin-bottom:16px;text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 18px;display:grid;gap:12px}
+.card h2{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+.card p{max-width:60ch}
+b{font-weight:700}
+
+/* Código */
+.code{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:4px 0 14px}
+.code-tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.code pre{margin:0;padding:12px 12px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;line-height:1.7;tab-size:4;color:var(--ink)}
+.card .code{margin:0}
+.kw{color:var(--kw);font-weight:500}.str{color:var(--str)}.num-t{color:var(--num)}.cm{color:var(--cm);font-style:italic}.fn{color:var(--fn)}
+.blank{display:inline-block;min-width:3.6ch;min-height:1.6em;vertical-align:baseline;padding:0 .5ch;margin:0 1px;border:0;border-bottom:2px dashed var(--accent);background:var(--accent-soft);color:var(--ink);font:inherit;border-radius:5px;text-align:center;line-height:1.5}
+.blank.filled{border-bottom-style:solid}
+.blank.ok{background:var(--good-bg);border-bottom-color:var(--good);color:var(--good)}
+.blank.bad{background:var(--bad-bg);border-bottom-color:var(--bad);color:var(--bad)}
+.bank{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.chip{font-family:var(--f-mono);font-size:1rem;min-height:46px;padding:8px 16px;border-radius:9px;border:1px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--line)}
+.chip:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.chip:disabled{opacity:.55}
+.lines{display:grid}
+.ln{display:grid;grid-template-columns:2.4ch minmax(0,1fr);gap:1.2ch;width:100%;text-align:left;background:transparent;border:0;border-radius:6px;padding:0 6px;margin:0;font:inherit;color:inherit;white-space:pre;overflow-x:auto;min-height:32px;align-items:center}
+.ln .no{color:var(--muted);text-align:right;user-select:none}
+.ln.sel{background:var(--accent-soft);outline:1px solid var(--accent)}
+.ln.ok{background:var(--good-bg);outline:1px solid var(--good)}
+.ln.bad{background:var(--bad-bg);outline:1px solid var(--bad)}
+.code .lines{padding:8px 6px}
+
+/* Opciones */
+.opts{display:grid;gap:10px}
+.opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:12px}
+.opt:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.opt .k{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:.8rem;color:var(--muted);flex:none}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .k{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.right .k{background:var(--good);color:var(--good-bg);border-color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .k{background:var(--bad);color:var(--bad-bg);border-color:var(--bad)}
+.sub-q{font-family:var(--f-display);font-weight:700;font-size:1.15rem;margin:18px 0 10px}
+.hint-ok{display:flex;align-items:center;gap:8px;color:var(--good);font-weight:600;margin:14px 0 0}
+
+/* Barra inferior */
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+.dock.good{background:var(--good-bg);border-top-color:var(--good)}
+.dock.bad{background:var(--bad-bg);border-top-color:var(--bad)}
+.dock-in{max-width:560px;margin:0 auto;display:grid;gap:12px}
+.fb{display:grid;gap:4px}
+.fb h3{font-family:var(--f-display);font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:8px}
+.dock.good .fb h3{color:var(--good)} .dock.bad .fb h3{color:var(--bad)}
+.fb p{font-size:.95rem;line-height:1.4}
+.fb .ic{width:1.1em;height:1.1em}
+.btn{width:100%;min-height:52px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);font-family:var(--f-display);font-weight:800;font-size:1.05rem;letter-spacing:.01em;box-shadow:0 3px 0 var(--accent-deep)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--accent-deep)}
+.btn:disabled{background:var(--line);color:var(--muted);box-shadow:none}
+.dock.good .btn{background:var(--good);color:var(--good-bg);box-shadow:0 3px 0 color-mix(in srgb,var(--good) 60%,black)}
+.dock.bad .btn{background:var(--bad);color:var(--bad-bg);box-shadow:0 3px 0 color-mix(in srgb,var(--bad) 60%,black)}
+.btn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1px solid var(--line);font-weight:700}
+
+/* Final */
+.done{display:grid;gap:18px;text-align:center;justify-items:center;padding-top:10px}
+.done h2{font-family:var(--f-display);font-weight:800;font-size:2.1rem;line-height:1.05;text-wrap:balance}
+.done .ttl{color:var(--muted)}
+.res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.res div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 6px;display:grid;gap:2px}
+.res strong{font-family:var(--f-display);font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.res span{font-size:.76rem;color:var(--muted)}
+
+@media (prefers-reduced-motion:no-preference){
+  .dock-in{animation:rise .18s ease-out}
+  @keyframes rise{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div id="app" class="app"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Contenido: Semana 1 ---------- */
+const L=(...a)=>a.join('\n');
+
+const LESSONS=[
+{
+  title:'Variables y tipos', sub:'Guardar datos y saber qué son',
+  cards:[
+    {h:'Una variable es una etiqueta', p:['Con `=` le ponés un nombre a un valor. Después usás ese nombre cada vez que necesitás el valor.','Python decide el tipo solo: no hay que declararlo.'],
+     code:L('nombre = "Lucía"','edad = 28','altura = 1.62','activo = True')},
+    {h:'Los cuatro tipos básicos', p:['`str` es texto (entre comillas), `int` es entero, `float` es decimal (con punto) y `bool` es `True` o `False`, con mayúscula.','Con `type()` ves de qué tipo es algo.'],
+     code:L('type("hola")  # str','type(28)      # int','type(1.62)    # float','type(True)    # bool')}
+  ],
+  ex:[
+    {t:'fill', q:'Guardá 25 en una variable llamada `edad` y mostrala.', code:L('___ = 25','print(___)'), ans:['edad','edad'], bank:['edad','25','"edad"','print'],
+     why:'La variable va a la izquierda del `=` y se usa por su nombre, sin comillas. Con comillas sería el texto "edad".'},
+    {t:'quiz', q:'¿De qué tipo es `x`?', code:'x = 3.0', opts:['`int`','`float`','`str`','`bool`'], a:1,
+     why:'Tiene punto decimal, así que es `float`, aunque el valor sea redondo.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('activo = true','print(activo)'), line:0,
+     why:'Python escribe los booleanos con mayúscula: `True` y `False`. Con `true` busca una variable que no existe y lanza NameError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Escribir `True` con mayúscula','Poner `true` entre comillas','Cambiar `=` por `==`','Borrar el `print`'], a:0}},
+    {t:'quiz', q:'¿De qué tipo es `x`?', code:'x = "10"', opts:['`int`','`float`','`str`','`bool`'], a:2,
+     why:'Todo lo que va entre comillas es texto (`str`), aunque parezca un número.'},
+    {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('precio = 10','print(Precio)'), line:1,
+     why:'Python distingue mayúsculas de minúsculas: `Precio` y `precio` son nombres distintos.',
+     fix:{q:'¿Cómo se arregla?', opts:['Escribir `precio` en minúscula','Agregar comillas dentro del `print`','Cambiar `=` por `==`','Borrar la primera línea'], a:0}},
+    {t:'quiz', q:'¿Cuál es un nombre de variable válido?', opts:['`3cosas`','`mi-edad`','`mi_edad`','`class`'], a:2,
+     why:'Solo letras, números y `_`; no puede empezar con número ni ser una palabra reservada como `class`. El guion se lee como resta.'}
+  ]
+},
+{
+  title:'Operadores', sub:'Cuentas, comparaciones y lógica',
+  cards:[
+    {h:'Aritmética', p:['Además de `+`, `-` y `*` tenés `/` (división real), `//` (división entera), `%` (resto) y `**` (potencia).'],
+     code:L('7 + 2    # 9','7 / 2    # 3.5','7 // 2   # 3','7 % 2    # 1','7 ** 2   # 49')},
+    {h:'Comparar y combinar', p:['Las comparaciones devuelven `True` o `False`. Se combinan con `and`, `or` y `not`.','Ojo: `=` guarda un valor, `==` compara.'],
+     code:L('5 == 5               # True','5 != 5               # False','3 > 2 and 2 > 5      # False','not False             # True')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:'print(7 // 2)', opts:['`3.5`','`3`','`4`','`2`'], a:1,
+     why:'`//` es división entera: descarta los decimales. 7 entre 2 da 3.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(10 % 3)', opts:['`3`','`0`','`1`','`3.33`'], a:2,
+     why:'`%` devuelve el resto. 10 = 3 × 3 + 1, así que el resto es 1.'},
+    {t:'fill', q:'Completá para saber si `edad` es mayor o igual a 18.', code:L('edad = 20','es_mayor = edad ___ 18','print(es_mayor)'), ans:['>='], bank:['>=','=>','=','<'],
+     why:'Se escribe `>=`. `=>` no existe en Python y `=` asigna en vez de comparar.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('x = 5','if x = 5:','    print("cinco")'), line:1,
+     why:'`=` asigna un valor y `==` compara. Dentro de un `if` hace falta comparar.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `==` en lugar de `=`','Quitar los dos puntos','Poner el 5 entre comillas','Indentar el `if`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(5 > 3 and 2 > 4)', opts:['`True`','`False`','`None`','Da error'], a:1,
+     why:'`and` pide que ambas sean verdaderas. `5 > 3` lo es, pero `2 > 4` no.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print("ab" * 3)', opts:['`ab3`','`ababab`','`ab ab ab`','Da error'], a:1,
+     why:'Multiplicar un texto por un entero lo repite.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(2 ** 3)', opts:['`6`','`8`','`9`','`23`'], a:1,
+     why:'`**` es potencia: 2 elevado a la 3 es 8.'}
+  ]
+},
+{
+  title:'Entrada y salida', sub:'print, input y f-strings',
+  cards:[
+    {h:'Pedir y mostrar datos', p:['`print()` muestra en pantalla. `input()` pide un dato y lo devuelve siempre como texto (`str`), aunque se escriba un número.','Para usarlo como número hay que convertirlo con `int()` o `float()`.'],
+     code:L('nombre = input("¿Cómo te llamás? ")','edad = int(input("Edad: "))','print("Hola", nombre)')},
+    {h:'f-strings', p:['Una `f` antes de las comillas permite meter variables o cuentas entre llaves.'],
+     code:L('nombre = "Ana"','edad = 30','print(f"Hola {nombre}, el año que viene tenés {edad + 1}")')}
+  ],
+  ex:[
+    {t:'fill', q:'Completá para que el mensaje use el valor de `nombre`.', code:L('nombre = "Ana"','print(___"Hola {nombre}")'), ans:['f'], bank:['f','r','$','%'],
+     why:'La `f` antes de las comillas activa la f-string y reemplaza `{nombre}` por su valor.'},
+    {t:'quiz', q:'Si la persona escribe 5, ¿de qué tipo es `x`?', code:'x = input("Número: ")', opts:['`int`','`float`','`str`','Depende de lo que escriba'], a:2,
+     why:'`input` siempre devuelve texto (`str`), aunque se escriba un número.'},
+    {t:'fill', q:'Convertí lo que se escribe en un número entero.', code:L('edad = ___(input("Edad: "))','print(edad + 1)'), ans:['int'], bank:['int','str','print','input'],
+     why:'`input` da texto; `int(...)` lo convierte a número para poder sumar.'},
+    {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta el error.', code:L('edad = input("Edad: ")','print(edad + 1)'), line:1,
+     why:'El error salta al sumar: `edad` es texto y `1` es número. Python no suma `str` con `int`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Convertir con `int(input(...))`','Cambiar `+` por `-`','Poner el 1 entre comillas','Usar `print` dos veces'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('n = 4','print(f"{n} x 2 = {n * 2}")'), opts:['`4 x 2 = 8`','`{n} x 2 = {n * 2}`','`4 x 2 = n * 2`','Da error'], a:0,
+     why:'Dentro de las llaves se evalúa cualquier expresión, así que `n * 2` se calcula.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print("Hola", "mundo")', opts:['`Holamundo`','`Hola mundo`','`Hola, mundo`','`("Hola", "mundo")`'], a:1,
+     why:'Por defecto `print` separa los argumentos con un espacio.'}
+  ]
+},
+{
+  title:'Condicionales', sub:'if, elif y else',
+  cards:[
+    {h:'Decidir qué código corre', p:['Python evalúa las condiciones de arriba hacia abajo y entra al primer bloque verdadero. `else` no lleva condición.','Cada línea con `if`, `elif` o `else` termina en `:` y el bloque va indentado (4 espacios).'],
+     code:L('nota = 7','if nota >= 6:','    print("Aprobado")','elif nota >= 4:','    print("Recuperatorio")','else:','    print("Desaprobado")')}
+  ],
+  ex:[
+    {t:'fill', q:'Completá la sintaxis.', code:L('edad = 15','if edad >= 18___','    print("Mayor")','else___','    print("Menor")'), ans:[':',':'], bank:[':',';','then',')'],
+     why:'Tanto el `if` como el `else` terminan en dos puntos. Python no usa `then`.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('edad = 20','if edad >= 18','    print("Mayor")'), line:1,
+     why:'Falta el `:` al final del `if`. Todo bloque (`if`, `else`, `for`, `while`) lo lleva.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `if`','Cambiar `>=` por `>`','Quitar la indentación','Agregar `else`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 5','if x > 10:','    print("A")','elif x > 3:','    print("B")','else:','    print("C")'), opts:['`A`','`B`','`C`','`B` y `C`'], a:1,
+     why:'`x > 10` es falso, pero `x > 3` es verdadero: entra a ese bloque y se saltea el `else`.'},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('if 5 > 3:','print("sí")'), line:1,
+     why:'Después de los dos puntos, el bloque va indentado. Esa sangría le dice a Python qué código pertenece al `if`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Agregar `else`','Cambiar `>` por `<`','Quitar los dos puntos'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 12','if x > 10:','    print("A")','if x > 5:','    print("B")'), opts:['Solo `A`','Solo `B`','`A` y `B`, en dos líneas','Nada'], a:2,
+     why:'Son dos `if` independientes y ambos son verdaderos. Con `elif`, solo entraría al primero.'},
+    {t:'fill', q:'Completá para imprimir "impar" cuando no sea par.', code:L('n = 7','if n % 2 == 0:','    print("par")','___:','    print("impar")'), ans:['else'], bank:['else','elif','if','otherwise'],
+     why:'`else` cubre todo lo que no cumplió el `if` y no lleva condición. `elif` necesitaría una.'},
+    {t:'quiz', q:'En una cadena if/elif/else, ¿cuántos bloques se ejecutan como máximo?', opts:['Uno','Todos los verdaderos','Dos','Depende del `else`'], a:0,
+     why:'Entra solo el primer bloque verdadero, o el `else` si ninguno lo fue.'}
+  ]
+},
+{
+  title:'Bucle for', sub:'Repetir con range',
+  cards:[
+    {h:'Repetir un número de veces', p:['`for` recorre una secuencia. Con `range(n)` va de 0 a n-1: el final no se incluye.','También existen `range(inicio, fin)` y `range(inicio, fin, paso)`.'],
+     code:L('for i in range(3):','    print(i)','# 0','# 1','# 2')},
+    {h:'Recorrer cosas', p:['`for` sirve con cualquier secuencia. Con un texto, recorre las letras.'],
+     code:L('for letra in "sol":','    print(letra)','','for n in range(1, 6):   # 1, 2, 3, 4, 5','    print(n)')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(3):','    print(i)'), opts:['`0, 1, 2`','`1, 2, 3`','`0, 1, 2, 3`','`1, 2`'], a:0,
+     why:'`range(3)` empieza en 0 y llega hasta 2: el final no se incluye.'},
+    {t:'fill', q:'Completá para repetir 5 veces.', code:L('for i in ___(5):','    print(i)'), ans:['range'], bank:['range','len','while','list'],
+     why:'`range(5)` genera los números del 0 al 4.'},
+    {t:'quiz', q:'¿Qué números recorre `range(2, 6)`?', opts:['`2, 3, 4, 5, 6`','`2, 3, 4, 5`','`3, 4, 5, 6`','`2, 6`'], a:1,
+     why:'Empieza en 2 e incluye hasta el 5; el 6 queda afuera.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('for i in range(3)','    print(i)'), line:0,
+     why:'Falta el `:` al final del `for`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `for`','Cambiar `range(3)` por `range[3]`','Quitar el `print`','Indentar el `for`'], a:0}},
+    {t:'fill', q:'Sumá cada `n` a `suma`.', code:L('suma = 0','for n in range(1, 4):','    suma ___ n','print(suma)'), ans:['+='], bank:['+=','=','==','++'],
+     why:'`+=` suma `n` a lo que ya hay en `suma`. Python no tiene `++`. El resultado es 1 + 2 + 3 = 6.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('for letra in "sol":','    print(letra)'), opts:['`sol`, una vez','`s`, `o`, `l`, una por línea','`sol`, tres veces','Da error'], a:1,
+     why:'Un `for` sobre un texto recorre sus letras, una por vuelta.'},
+    {t:'quiz', q:'¿Cuántas veces imprime `hola`?', code:L('for i in range(4):','    print("hola")'), opts:['3','4','5','Una'], a:1,
+     why:'`range(4)` da 4 vueltas (0, 1, 2 y 3).'}
+  ]
+},
+{
+  title:'Bucle while', sub:'Repetir hasta que se cumpla',
+  cards:[
+    {h:'Repetir mientras sea verdadero', p:['`while` repite su bloque mientras la condición sea `True`. Algo tiene que cambiar adentro, o el bucle no termina nunca.'],
+     code:L('n = 3','while n > 0:','    print(n)','    n -= 1','print("¡Despegue!")')},
+    {h:'break y continue', p:['`break` sale del bucle en el acto. `continue` salta a la siguiente vuelta sin terminar la actual. Valen para `for` y para `while`.'],
+     code:L('while True:','    texto = input("> ")','    if texto == "salir":','        break')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('n = 3','while n > 0:','    print(n)','    n -= 1','print("¡Despegue!")'), opts:['`3, 2, 1, ¡Despegue!`','`3, 2, 1, 0, ¡Despegue!`','`2, 1, 0, ¡Despegue!`','Se repite infinito'], a:0,
+     why:'Cuando `n` llega a 0, `n > 0` es falso y el bucle termina sin imprimir el 0.'},
+    {t:'bug', q:'Este bucle nunca termina. Tocá la línea que lo causa.', code:L('n = 3','while n > 0:','    print(n)','    n += 1'), line:3,
+     why:'Con `n += 1`, `n` crece y `n > 0` nunca deja de ser verdadero. Para llegar a 0 hay que restar.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `+=` por `-=`','Cambiar `>` por `<`','Quitar el `print`','Agregar `else`'], a:0}},
+    {t:'fill', q:'Completá para salir del bucle cuando se escriba "salir".', code:L('while True:','    texto = input("> ")','    if texto == "salir":','        ___'), ans:['break'], bank:['break','continue','stop','exit'],
+     why:'`break` corta el bucle. `continue` solo vuelve al inicio.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(5):','    if i == 3:','        break','    print(i)'), opts:['`0, 1, 2`','`0, 1, 2, 3`','`0, 1, 2, 4`','`0, 1, 2, 3, 4`'], a:0,
+     why:'`break` corta el bucle apenas `i` vale 3, antes de imprimirlo.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(4):','    if i == 2:','        continue','    print(i)'), opts:['`0, 1, 3`','`0, 1, 2, 3`','`0, 1`','`1, 3`'], a:0,
+     why:'`continue` se saltea el resto de esa vuelta, así que el 2 no se imprime, pero el bucle sigue.'},
+    {t:'quiz', q:'¿Cuándo conviene `while` en vez de `for`?', opts:['Cuando no sabés cuántas vueltas vas a dar','Cuando querés recorrer un texto','Nunca, `for` siempre es mejor','Cuando hay un `if` adentro'], a:0,
+     why:'Si sabés cuántas vueltas son, `for` con `range` es más claro. `while` sirve cuando depende de una condición, como esperar una respuesta.'}
+  ]
+},
+{
+  title:'Repaso final', sub:'Todo junto',
+  cards:[
+    {h:'Mezcla de la semana', p:['Tipos, operadores, `input`, f-strings, `if` y bucles, todo mezclado.','Si fallás una, vuelve al final para que la repitas.'], code:''}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = "5"','y = 3','print(x * y)'), opts:['`15`','`555`','`8`','Da error'], a:1,
+     why:'`x` es texto, y un texto multiplicado por 3 se repite tres veces.'},
+    {t:'fill', q:'Completá para que "impar" salga cuando no sea par.', code:L('for i in range(1, 4):','    if i % 2 == 0:','        print("par")','    ___:','        print("impar")'), ans:['else'], bank:['else','elif','if','while'],
+     why:'`else` toma el caso contrario del `if`, sin condición.'},
+    {t:'bug', q:'Esto corre, pero imprime las llaves literales. Tocá la línea que está mal.', code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("Hola {nombre}, tenés {edad}")'), line:2,
+     why:'Sin la `f` delante de las comillas, las llaves se imprimen tal cual en lugar de reemplazarse por los valores.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `f` antes de las comillas','Usar comillas simples','Cambiar `{}` por `()`','Convertir el nombre con `int()`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('total = 0','for i in range(1, 5):','    if i % 2 == 0:','        total += i','print(total)'), opts:['`4`','`6`','`10`','`3`'], a:1,
+     why:'Solo suma los pares del 1 al 4: 2 + 4 = 6.'},
+    {t:'fill', q:'Completá el bucle.', code:L('vidas = 3','___ vidas > 0:','    vidas -= 1','print(vidas)'), ans:['while'], bank:['while','for','if','loop'],
+     why:'`while` repite mientras la condición sea verdadera. Al terminar, `vidas` vale 0 y eso es lo que se imprime.'},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('for i in range(3):','    print(i)','  print("fin")'), line:2,
+     why:'La última línea tiene una sangría que no coincide con ninguna anterior. Para que corra al terminar el bucle debe ir alineada con el `for`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Alinear `print("fin")` con el `for`','Agregar `else`','Cambiar `range(3)` por `range(4)`','Agregar `break`'], a:0}}
+  ]
+}
+];
+
+/* ---------- Progreso guardado (solo en este navegador) ---------- */
+const KEY='python-desde-cero-v1';
+let save={xp:0,streak:0,last:'',done:{}};
+try{const s=localStorage.getItem(KEY); if(s){const o=JSON.parse(s); if(o&&typeof o==='object') save=Object.assign(save,o);}}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
+function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function currentStreak(){
+  if(!save.last) return 0;
+  const y=new Date(); y.setDate(y.getDate()-1);
+  return (save.last===dayKey()||save.last===dayKey(y))?save.streak:0;
+}
+function bumpStreak(){
+  const today=dayKey(); if(save.last===today) return;
+  const y=new Date(); y.setDate(y.getDate()-1);
+  save.streak=(save.last===dayKey(y))?save.streak+1:1; save.last=today;
+}
+
+/* ---------- Utilidades ---------- */
+function el(tag,attrs){
+  const e=document.createElement(tag); attrs=attrs||{};
+  for(const k in attrs){const v=attrs[k];
+    if(k==='class') e.className=v;
+    else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),v);
+    else if(v===true) e.setAttribute(k,'');
+    else if(v!==false&&v!=null) e.setAttribute(k,v);
+  }
+  for(let i=2;i<arguments.length;i++){
+    const kids=[].concat(arguments[i]);
+    for(const c of kids){ if(c==null||c===false) continue; e.append(c.nodeType?c:document.createTextNode(c)); }
+  }
+  return e;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function rich(s){
+  const f=document.createDocumentFragment();
+  s.split(/(`[^`]+`|\*\*[^*]+\*\*)/).forEach(p=>{
+    if(!p) return;
+    if(p[0]==='`') f.append(el('code',{},p.slice(1,-1)));
+    else if(p.slice(0,2)==='**') f.append(el('b',{},p.slice(2,-2)));
+    else f.append(p);
+  });
+  return f;
+}
+const ICONS={
+  flame:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 6 5.5 11.2A5.5 5.5 0 0 1 12 19a5.5 5.5 0 0 1-5.5-5.8c0-2.2 1-3.6 2.2-4.7.1 2 .9 3.1 2 3.5C10.2 8.2 10.6 5 12 2z"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4.5 14H10l-1 8 9-12h-5.5z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>',
+  star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>'
+};
+function icon(n,cls){const s=el('span',{class:'ic'+(cls?' '+cls:'')});s.innerHTML=ICONS[n];return s;}
+function stars(n,big){const w=el('span',{class:'stars'+(big?' big':''),role:'img','aria-label':n+' de 3 estrellas'});for(let i=0;i<3;i++)w.append(icon('star',i<n?'on':''));return w;}
+
+/* ---------- Resaltado de sintaxis ---------- */
+const KW=new Set(['if','elif','else','for','while','in','and','or','not','True','False','None','break','continue','def','return','import']);
+const FN=new Set(['print','input','int','float','str','bool','range','len','type','list']);
+const TOK=/(f?"[^"\n]*"|f?'[^'\n]*'|#.*$|___|\d+(?:\.\d+)?|[A-Za-z_]\w*|\s+|.)/g;
+function hlLine(line,onBlank){
+  const f=document.createDocumentFragment(); TOK.lastIndex=0; let m;
+  while((m=TOK.exec(line))){
+    const t=m[0]; if(t==='') {TOK.lastIndex++; continue;}
+    if(t==='___'){f.append(onBlank()); continue;}
+    let c='';
+    if(t[0]==='#') c='cm'; else if(/^f?["']/.test(t)) c='str'; else if(/^\d/.test(t)) c='num-t'; else if(KW.has(t)) c='kw'; else if(FN.has(t)) c='fn';
+    f.append(c?el('span',{class:c},t):t);
+  }
+  return f;
+}
+const tag=()=>el('div',{class:'code-tag'},'python');
+function codeStatic(code){
+  const pre=el('pre');
+  code.split('\n').forEach((l,i,a)=>{pre.append(hlLine(l,()=>'___')); if(i<a.length-1) pre.append('\n');});
+  return el('div',{class:'code'},tag(),pre);
+}
+function codeFill(c){
+  const pre=el('pre'); let bi=0;
+  c.ex.code.split('\n').forEach((l,i,a)=>{
+    pre.append(hlLine(l,()=>{
+      const idx=bi++; const v=c.filled[idx];
+      let cls='blank'+(v?' filled':'');
+      if(c.checked) cls+=(v===c.ex.ans[idx])?' ok':' bad';
+      return el('button',{class:cls,type:'button','aria-label':v?('Espacio '+(idx+1)+': '+v+'. Tocá para vaciar'):('Espacio vacío '+(idx+1)),disabled:c.checked,onclick:()=>{c.filled[idx]=null;render();}},v||'');
+    }));
+    if(i<a.length-1) pre.append('\n');
+  });
+  return el('div',{class:'code'},tag(),pre);
+}
+function codeBug(c){
+  const ex=c.ex, lines=ex.code.split('\n');
+  const box=el('div',{class:'lines',role:'group','aria-label':'Líneas de código'});
+  lines.forEach((l,i)=>{
+    let cls='ln';
+    if(c.checked&&!c.ok&&c.wrongLine){ if(i===ex.line) cls+=' ok'; else if(i===c.sel) cls+=' bad'; }
+    else if(c.step===1||c.checked){ if(i===ex.line) cls+=' ok'; }
+    else if(i===c.sel) cls+=' sel';
+    const locked=c.step===1||c.checked;
+    box.append(el('button',{class:cls,type:'button','aria-label':'Línea '+(i+1)+': '+l,disabled:locked,onclick:()=>{c.sel=i;render();}},
+      el('span',{class:'no'},String(i+1)), el('span',{class:'src'},l===''?' ':hlLine(l,()=>'___'))));
+  });
+  return el('div',{class:'code'},tag(),box);
+}
+
+/* ---------- Estado ---------- */
+let S=null; // null = inicio
+function startLesson(i){
+  celebrate=null;
+  const les=LESSONS[i];
+  S={li:i,les,view:les.cards.length?'cards':'ex',ci:0,queue:les.ex.map(ex=>({ex,retry:false,tries:0})),qi:0,cur:null,first:0,good:0,xp:0,total:les.ex.length,stars:0};
+  if(S.view==='ex') S.cur=prep(S.queue[0]);
+  render(true);
+}
+function prep(item){
+  const ex=item.ex, c={item,ex,checked:false,ok:null,step:0};
+  if(ex.t==='fill'){c.bank=shuffle(Array.from(new Set(ex.bank)));c.filled=ex.ans.map(()=>null);}
+  if(ex.t==='quiz'){c.opts=shuffle(ex.opts.map((t,i)=>({t,ok:i===ex.a})));c.sel=null;}
+  if(ex.t==='bug'){c.sel=null;c.fixOpts=shuffle(ex.fix.opts.map((t,i)=>({t,ok:i===ex.fix.a})));c.fixSel=null;c.wrongLine=false;}
+  return c;
+}
+function goHome(){S=null;render(true);}
+function ready(c){
+  const ex=c.ex;
+  if(ex.t==='fill') return c.filled.every(v=>v!==null);
+  if(ex.t==='quiz') return c.sel!==null;
+  if(ex.t==='bug') return c.step===0?c.sel!==null:c.fixSel!==null;
+  return false;
+}
+function check(){
+  const c=S.cur, ex=c.ex;
+  if(ex.t==='bug'&&c.step===0){
+    if(c.sel===ex.line){c.step=1;render();return;}
+    c.wrongLine=true;c.ok=false;
+  } else if(ex.t==='bug'){ c.ok=c.fixOpts[c.fixSel].ok; }
+  else if(ex.t==='fill'){ c.ok=c.filled.every((v,i)=>v===ex.ans[i]); }
+  else { c.ok=c.opts[c.sel].ok; }
+  c.checked=true;
+  const it=c.item;
+  if(c.ok){ S.good++; S.xp+=it.retry?4:10; if(!it.retry) S.first++; }
+  else if(it.tries<2){ S.queue.push({ex,retry:true,tries:it.tries+1}); }
+  render();
+}
+function next(){
+  S.qi++;
+  if(S.qi>=S.queue.length) return finish();
+  S.cur=prep(S.queue[S.qi]); render(true);
+}
+function finish(){
+  const acc=S.first/S.total;
+  S.stars=acc>=0.85?3:acc>=0.6?2:1;
+  const wasNew=!save.done[S.li];
+  const prev=(save.done[S.li]&&save.done[S.li].stars)||0;
+  save.done[S.li]={stars:Math.max(prev,S.stars)};
+  save.xp+=S.xp; bumpStreak(); persist();
+  celebrate=wasNew?S.li:null;
+  S.view='done'; render(true);
+}
+function feedback(c){
+  const ex=c.ex, out=[];
+  if(c.ok){ out.push(ex.why); return {head:'Correcto',body:out}; }
+  if(ex.t==='fill') out.push('Era: '+ex.ans.map(a=>'`'+a+'`').join(' y ')+'.');
+  else if(ex.t==='quiz') out.push('La respuesta era '+ex.opts[ex.a]+'.');
+  else if(c.wrongLine) out.push('El error está en la línea '+(ex.line+1)+'.');
+  else out.push('La corrección era: '+ex.fix.opts[ex.fix.a]+'.');
+  out.push(ex.why);
+  return {head:'No era esa',body:out};
+}
+
+/* ---------- Pantallas ---------- */
+function stat(ic,tone,val,label){
+  return el('div',{class:'stat'},el('div',{class:'row t-'+tone},icon(ic),el('span',{},String(val))),el('small',{},label));
+}
+/* ---------- Mapa de lecciones ---------- */
+const MAP_W=360, STEP=132, Y0=100, XL=92, XR=268;
+const NS='http://www.w3.org/2000/svg';
+let celebrate=null, homeAfter=null, homeTimers=[];
+const pos=i=>({x:i%2===0?XL:XR,y:Y0+i*STEP});
+function connD(i){const a=pos(i),b=pos(i+1),m=(a.y+b.y)/2;return 'M'+a.x+' '+a.y+' C'+a.x+' '+m+' '+b.x+' '+m+' '+b.x+' '+b.y;}
+function firstNotDone(set){for(let i=0;i<LESSONS.length;i++) if(!set.has(i)) return i; return -1;}
+function statesOf(set){const f=firstNotDone(set);return LESSONS.map((_,i)=>set.has(i)?'done':(i===f?'current':'locked'));}
+function svgEl(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs) e.setAttribute(k,attrs[k]);return e;}
+function paintNode(nd,s){
+  const i=+nd.dataset.i, les=LESSONS[i], d=save.done[i];
+  nd.dataset.s=s;
+  const b=nd.querySelector('.node-btn');
+  b.disabled=(s==='locked');
+  b.setAttribute('aria-label','Lección '+(i+1)+': '+les.title+'. '+
+    (s==='done'?'Completada'+(d?', '+d.stars+' de 3 estrellas':'')+'. Tocá para repetirla.':
+     s==='current'?'Disponible. Tocá para empezar.':'Bloqueada. Completá la anterior para abrirla.'));
+  const slot=nd.querySelector('.slot'); slot.replaceChildren();
+  if(s==='done'&&d) slot.append(stars(d.stars));
+}
+function buildMap(set){
+  const n=LESSONS.length, H=Y0+(n-1)*STEP+72, st=statesOf(set);
+  const map=el('div',{class:'map',style:'aspect-ratio:'+MAP_W+'/'+H});
+  const svg=svgEl('svg',{class:'map-lines',viewBox:'0 0 '+MAP_W+' '+H,'aria-hidden':'true'});
+  for(let i=0;i<n-1;i++){
+    svg.append(svgEl('path',{class:'trk',d:connD(i)}));
+    svg.append(svgEl('path',{class:'prg'+(set.has(i)?' lit':''),d:connD(i),pathLength:'1','data-i':String(i)}));
+  }
+  map.append(svg);
+  LESSONS.forEach((les,i)=>{
+    const p=pos(i);
+    const nd=el('div',{class:'node '+(i%2?'right':'left'),'data-i':String(i),style:'left:'+(p.x/MAP_W*100)+'%;top:'+(p.y/H*100)+'%'},
+      el('span',{class:'tip'},'Empezar'),
+      el('button',{class:'node-btn',type:'button',onclick:()=>startLesson(i)},
+        el('span',{class:'glyph g-lock'},icon('lock')),
+        el('span',{class:'glyph g-play'},icon('play')),
+        el('span',{class:'glyph g-check'},icon('check'))),
+      el('div',{class:'nlabel'},el('span',{class:'nt'},les.title),el('span',{class:'ns'},les.sub),el('span',{class:'slot'})));
+    paintNode(nd,st[i]);
+    map.append(nd);
+  });
+  return map;
+}
+/* Al volver de completar una lección: se muestra el estado anterior y se anima el cambio en tres tiempos */
+function afterHome(map,realSet,pending,initSet){
+  homeTimers.forEach(clearTimeout); homeTimers=[];
+  const nodeAt=i=>map.querySelector('.node[data-i="'+i+'"]');
+  const go=(ms,fn)=>homeTimers.push(setTimeout(fn,ms));
+  const centerOn=(i,smooth)=>{const n=nodeAt(i); if(n) n.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});};
+  if(pending===null){const f=firstNotDone(realSet); if(f>=2) centerOn(f,false); return;}
+  const before=statesOf(initSet), after=statesOf(realSet);
+  centerOn(pending,false);
+  go(500,()=>{after.forEach((s,i)=>{if(s==='done'&&before[i]!=='done') paintNode(nodeAt(i),'done');});});
+  go(1000,()=>{map.querySelectorAll('.prg').forEach(p=>{if(realSet.has(+p.dataset.i)) p.classList.add('lit');});});
+  go(2000,()=>{
+    let first=-1;
+    after.forEach((s,i)=>{
+      if(s==='current'&&before[i]!=='current'){
+        const n=nodeAt(i); paintNode(n,'current'); n.classList.add('unlocking');
+        n.addEventListener('animationend',()=>n.classList.remove('unlocking'),{once:true});
+        if(first<0) first=i;
+      }
+    });
+    if(first>=0) centerOn(first,true);
+  });
+}
+function Home(){
+  const realSet=new Set(Object.keys(save.done).map(Number));
+  const pending=celebrate; celebrate=null;
+  const initSet=new Set(realSet); if(pending!==null) initSet.delete(pending);
+  const map=buildMap(initSet);
+  homeAfter=()=>afterHome(map,realSet,pending,initSet);
+  const n=Object.keys(save.done).length, st=currentStreak();
+  return el('div',{},
+    el('header',{class:'head'},el('p',{class:'eyebrow'},'Semana 1 · Fundamentos'),el('h1',{},'Python desde cero')),
+    el('div',{class:'stats'},
+      stat('flame','flame',st,st===1?'día de racha':'días de racha'),
+      stat('bolt','spark',save.xp,'XP'),
+      stat('check','good',n+'/'+LESSONS.length,'lecciones')),
+    el('p',{class:'lead'},'Completá cada lección para abrir la siguiente. Leé, completá el código y encontrá el error: unos 5 minutos por lección.'),
+    map,
+    el('p',{class:'next-week'},'Semana 2 (listas, diccionarios y funciones) se suma después de esta.')
+  );
+}
+function Topbar(){
+  const pct=S.view==='ex'?Math.round(S.good/S.total*100):(S.view==='done'?100:0);
+  return el('div',{class:'topbar'},
+    el('button',{class:'icon-btn',type:'button','aria-label':'Salir de la lección',onclick:goHome},icon('x')),
+    el('div',{class:'bar',role:'progressbar','aria-valuemin':'0','aria-valuemax':'100','aria-valuenow':String(pct),'aria-label':'Progreso de la lección'},el('i',{style:'width:'+pct+'%'})));
+}
+function dock(cls,kids){return el('div',{class:'dock '+(cls||'')},el('div',{class:'dock-in'},kids));}
+function btn(label,fn,disabled,ghost){return el('button',{class:'btn'+(ghost?' ghost':''),type:'button',disabled:!!disabled,onclick:fn},label);}
+
+function Cards(){
+  const card=S.les.cards[S.ci], last=S.ci===S.les.cards.length-1;
+  const body=el('article',{class:'card'},el('h2',{},card.h),card.p.map(p=>el('p',{},rich(p))),card.code?codeStatic(card.code):null);
+  const main=el('div',{},Topbar(),el('p',{class:'kicker'},'Leé esto · '+(S.ci+1)+' de '+S.les.cards.length),body);
+  const d=dock('',[btn(last?'Empezar a practicar':'Entendido',()=>{
+    if(last){S.view='ex';S.cur=prep(S.queue[0]);} else S.ci++;
+    render(true);
+  })]);
+  return [main,d];
+}
+const KICK={fill:'Completá el código',bug:'Encontrá el error',quiz:'Elegí la respuesta'};
+function Exercise(){
+  const c=S.cur, ex=c.ex;
+  const sec=el('section',{},Topbar(),el('p',{class:'kicker'},KICK[ex.t]),el('h2',{class:'q'},rich(ex.q)));
+  if(ex.t==='quiz'){
+    if(ex.code) sec.append(codeStatic(ex.code));
+    sec.append(el('div',{class:'opts'},c.opts.map((o,i)=>{
+      let cls='opt';
+      if(c.checked){ if(o.ok) cls+=' right'; else if(i===c.sel) cls+=' wrong'; }
+      else if(i===c.sel) cls+=' sel';
+      return el('button',{class:cls,type:'button',disabled:c.checked,'aria-pressed':String(i===c.sel),onclick:()=>{c.sel=i;render();}},
+        el('span',{class:'k'},String.fromCharCode(65+i)),el('span',{},rich(o.t)));
+    })));
+  }
+  if(ex.t==='fill'){
+    sec.append(codeFill(c));
+    sec.append(el('div',{class:'bank',role:'group','aria-label':'Opciones'},c.bank.map(b=>el('button',{class:'chip',type:'button',disabled:c.checked,onclick:()=>{
+      const i=c.filled.indexOf(null); if(i>-1){c.filled[i]=b;render();}
+    }},b))));
+  }
+  if(ex.t==='bug'){
+    sec.append(codeBug(c));
+    if(c.step===1){
+      sec.append(el('p',{class:'hint-ok'},icon('check'),'Esa es la línea.'));
+      sec.append(el('h3',{class:'sub-q'},ex.fix.q));
+      sec.append(el('div',{class:'opts'},c.fixOpts.map((o,i)=>{
+        let cls='opt';
+        if(c.checked){ if(o.ok) cls+=' right'; else if(i===c.fixSel) cls+=' wrong'; }
+        else if(i===c.fixSel) cls+=' sel';
+        return el('button',{class:cls,type:'button',disabled:c.checked,'aria-pressed':String(i===c.fixSel),onclick:()=>{c.fixSel=i;render();}},
+          el('span',{class:'k'},String.fromCharCode(65+i)),el('span',{},rich(o.t)));
+      })));
+    }
+  }
+  let d;
+  if(!c.checked) d=dock('',[btn('Comprobar',check,!ready(c))]);
+  else{
+    const f=feedback(c);
+    d=dock(c.ok?'good':'bad',[
+      el('div',{class:'fb',role:'status'},el('h3',{},icon(c.ok?'check':'x'),f.head),f.body.map(t=>el('p',{},rich(t)))),
+      btn('Continuar',next)]);
+  }
+  return [sec,d];
+}
+function Done(){
+  const les=S.les;
+  const main=el('div',{},Topbar(),el('section',{class:'done'},
+    stars(S.stars,true),
+    el('h2',{},'Lección completa'),
+    el('p',{class:'ttl'},les.title),
+    el('div',{class:'res'},
+      el('div',{},el('strong',{},'+'+S.xp),el('span',{},'XP ganados')),
+      el('div',{},el('strong',{},S.first+'/'+S.total),el('span',{},'a la primera')),
+      el('div',{},el('strong',{},String(currentStreak())),el('span',{},currentStreak()===1?'día de racha':'días de racha')))));
+  return [main,dock('',[btn('Continuar',goHome)])];
+}
+
+const root=document.getElementById('app');
+function render(top){
+  homeTimers.forEach(clearTimeout); homeTimers=[];
+  const y=window.scrollY;
+  root.replaceChildren();
+  if(!S){ root.className='app'; root.append(Home()); }
+  else{
+    const parts=S.view==='cards'?Cards():S.view==='ex'?Exercise():Done();
+    root.className='app has-dock';
+    root.append(parts[0],parts[1]);
+  }
+  window.scrollTo(0,top?0:y);
+  if(!S&&homeAfter){const h=homeAfter;homeAfter=null;h();}
+}
+render(true);
+})();
+</script>
+
+</body></html>
