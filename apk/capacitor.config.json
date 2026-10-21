@@ -1,1 +1,11 @@
+{
+  "appId": "com.learnpython.app",
+  "appName": "Learn Python",
+  "webDir": "www",
+  "server": {
+    "url": "https://shiina1123098-debug.github.io/Learn-Python/",
+    "androidScheme": "https",
+    "errorPath": "error.html"
+  }
+}
 
