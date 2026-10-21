@@ -5,18 +5,17 @@ on:
   push:
     branches: [main, master]
     paths:
-      - 'apk/**'
       - '.github/workflows/build-apk.yml'
 
 permissions:
   contents: write
 
+env:
+  APP_URL: https://shiina1123098-debug.github.io/Learn-Python/
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apk
     steps:
       - uses: actions/checkout@v4
 
@@ -31,32 +30,89 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Instalar Capacitor
+      - name: Crear el proyecto Capacitor
+        run: |
+          mkdir -p app/www
+          cd app
+          cat > package.json <<'EOF'
+          {
+            "name": "learn-python-apk",
+            "version": "1.0.0",
+            "private": true,
+            "dependencies": {
+              "@capacitor/android": "^7.0.0",
+              "@capacitor/core": "^7.0.0"
+            },
+            "devDependencies": {
+              "@capacitor/assets": "^3.0.5",
+              "@capacitor/cli": "^7.0.0",
+              "sharp": "^0.33.5"
+            }
+          }
+          EOF
+          cat > capacitor.config.json <<EOF
+          {
+            "appId": "com.learnpython.app",
+            "appName": "Learn Python",
+            "webDir": "www",
+            "server": { "url": "$APP_URL", "androidScheme": "https" }
+          }
+          EOF
+          cat > www/index.html <<EOF
+          <!doctype html>
+          <html lang="es"><head><meta charset="utf-8"><title>Learn Python</title></head>
+          <body><script>location.replace("$APP_URL")</script></body></html>
+          EOF
+          cat > make-icons.mjs <<'EOF'
+          import sharp from 'sharp';
+          import { mkdirSync } from 'node:fs';
+
+          const glyph = `
+            <polyline points="327,360 527,512 327,664" fill="none" stroke="#FFFFFF" stroke-width="90" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="567" y1="664" x2="697" y2="664" stroke="#7BE0A4" stroke-width="90" stroke-linecap="round"/>`;
+          const bg = `
+            <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A8FD6"/><stop offset="1" stop-color="#0A4F7C"/></linearGradient></defs>
+            <rect width="1024" height="1024" fill="url(#g)"/>`;
+          const svg = (inner) => Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${inner}</svg>`);
+
+          mkdirSync('assets', { recursive: true });
+          await sharp(svg(bg + glyph)).png().toFile('assets/icon-only.png');
+          await sharp(svg(glyph)).png().toFile('assets/icon-foreground.png');
+          await sharp(svg(bg)).png().toFile('assets/icon-background.png');
+          EOF
+
+      - name: Instalar dependencias
+        working-directory: app
         run: npm install
 
-      - name: Generar el proyecto Android
+      - name: Generar el proyecto Android y los íconos
+        working-directory: app
         run: |
+          node make-icons.mjs
           npx cap add android
+          npx capacitor-assets generate --android
           npx cap sync android
 
       - name: Compilar el APK
-        working-directory: apk/android
+        working-directory: app/android
         run: ./gradlew assembleDebug
 
       - name: Guardar el APK como artefacto
         uses: actions/upload-artifact@v4
         with:
           name: Learn-Python-apk
-          path: apk/android/app/build/outputs/apk/debug/app-debug.apk
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publicar el APK en Releases
+        working-directory: app/android
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk Learn-Python.apk
+          cp app/build/outputs/apk/debug/app-debug.apk Learn-Python.apk
           gh release delete apk-latest --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
           gh release create apk-latest Learn-Python.apk \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "APK mรกs reciente" \
+            --title "APK más reciente" \
             --notes "Compilado desde el commit $GITHUB_SHA"
+            
