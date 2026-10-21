@@ -1,0 +1,1081 @@
+<title>Python desde cero</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: una sola columna tipo cuaderno de ejercicios, pensada para el pulgar. Lista de lecciones -> tarjetas de lectura -> ejercicios con barra inferior de comprobación. */
+:root{
+  --bg:#EBF0F5; --surface:#FFFFFF; --surface2:#F4F7FA; --ink:#0F1B2D; --muted:#566478; --line:#D3DBE6;
+  --accent:#0E6BA8; --accent-deep:#0A4F7C; --accent-ink:#FFFFFF; --accent-soft:#DAEAF6;
+  --spark:#B97C00; --flame:#D9531E;
+  --lock-bg:#D5DDE8; --lock-shadow:#B9C4D3; --lock-fg:#7A8AA0; --track:#C7D0DD; --on-good:#FFFFFF; --good-deep:#0F5A36;
+  --good:#17784A; --good-bg:#DCF2E4; --bad:#B3261E; --bad-bg:#FBE0DD;
+  --code-bg:#F2F5F9; --kw:#B02A5B; --str:#18764A; --num:#A85A08; --cm:#6A7889; --fn:#0A6CA8;
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B121B; --surface:#141E2B; --surface2:#1A2636; --ink:#E8EEF5; --muted:#93A1B4; --line:#273649;
+    --accent:#5AB8EE; --accent-deep:#2F86B8; --accent-ink:#06141F; --accent-soft:#17324A;
+    --spark:#F2C14E; --flame:#FF8A4C;
+    --lock-bg:#1F2B3B; --lock-shadow:#141D29; --lock-fg:#62738A; --track:#223044; --on-good:#06241A; --good-deep:#3FA971;
+    --good:#6FD79A; --good-bg:#12301F; --bad:#FF8F85; --bad-bg:#3A1715;
+    --code-bg:#0A1019; --kw:#F27BA6; --str:#7FD99F; --num:#F2B35C; --cm:#8795A8; --fn:#6CC4F2;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B121B; --surface:#141E2B; --surface2:#1A2636; --ink:#E8EEF5; --muted:#93A1B4; --line:#273649;
+  --accent:#5AB8EE; --accent-deep:#2F86B8; --accent-ink:#06141F; --accent-soft:#17324A;
+  --spark:#F2C14E; --flame:#FF8A4C;
+  --lock-bg:#1F2B3B; --lock-shadow:#141D29; --lock-fg:#62738A; --track:#223044; --on-good:#06241A; --good-deep:#3FA971;
+  --good:#6FD79A; --good-bg:#12301F; --bad:#FF8F85; --bad-bg:#3A1715;
+  --code-bg:#0A1019; --kw:#F27BA6; --str:#7FD99F; --num:#F2B35C; --cm:#8795A8; --fn:#6CC4F2;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  margin:0; padding-block:20px 28px;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-text-size-adjust:100%;
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:disabled{cursor:not-allowed}
+h1,h2,h3,p,ol{margin:0}
+ol{padding:0;list-style:none}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);color:var(--ink);padding:.08em .38em;border-radius:5px}
+.app{max-width:560px;margin:0 auto;min-width:0}
+.app.has-dock{padding-bottom:190px}
+.ic{display:inline-flex;width:1.25em;height:1.25em;flex:none}
+.ic svg{width:100%;height:100%;fill:currentColor}
+
+/* Inicio */
+.head{display:grid;gap:6px;padding:6px 0 18px}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8rem);line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 10px 9px;display:grid;gap:2px;min-width:0}
+.stat .row{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:800;font-size:1.45rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat small{font-size:.74rem;color:var(--muted);line-height:1.2}
+.t-flame{color:var(--flame)} .t-spark{color:var(--spark)} .t-good{color:var(--good)}
+.lead{color:var(--muted);margin:16px 0 18px;max-width:46ch}
+/* Mapa de lecciones: camino serpenteante, círculos alternando izquierda y derecha */
+.map{position:relative;width:100%;max-width:360px;margin:6px auto 0}
+.map-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.map-lines path{fill:none;stroke-width:15;stroke-linecap:butt}
+.trk{stroke:var(--track)}
+.prg{stroke:var(--good);stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease-in-out}
+.prg.lit{stroke-dashoffset:0}
+.node{position:absolute;width:0;height:0;z-index:1;--bg:var(--lock-bg);--sh:var(--lock-shadow);--fg:var(--lock-fg)}
+.node[data-s="done"]{--bg:var(--good);--sh:var(--good-deep);--fg:var(--on-good)}
+.node[data-s="current"]{--bg:var(--accent);--sh:var(--accent-deep);--fg:var(--accent-ink)}
+.node-btn{position:absolute;left:-42px;top:-42px;width:84px;height:84px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;
+  background:var(--bg);color:var(--fg);box-shadow:0 7px 0 var(--sh);
+  transition:background-color .5s ease,color .5s ease,box-shadow .5s ease,transform .12s ease}
+.node-btn:active:not(:disabled){transform:translateY(5px);box-shadow:0 2px 0 var(--sh)}
+.node-btn:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+.node-btn:disabled{cursor:not-allowed}
+.glyph{grid-area:1/1;width:40px;height:40px;display:grid;place-items:center;opacity:0;transform:scale(.5);transition:opacity .35s ease,transform .35s ease}
+.glyph .ic{width:100%;height:100%}
+.node[data-s="locked"] .g-lock,.node[data-s="current"] .g-play,.node[data-s="done"] .g-check{opacity:1;transform:none}
+.node[data-s="current"] .node-btn::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid var(--accent);opacity:.45;pointer-events:none;animation:ring 1.9s ease-out infinite}
+.node.unlocking .node-btn{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+.tip{position:absolute;left:0;bottom:58px;transform:translateX(-50%);white-space:nowrap;background:var(--surface);color:var(--accent);
+  border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-family:var(--f-display);font-weight:800;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}
+.tip::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+.node[data-s="current"] .tip{opacity:1;visibility:visible;animation:bob 1.4s ease-in-out infinite}
+.nlabel{position:absolute;top:0;transform:translateY(-50%);width:150px;display:grid;gap:2px;pointer-events:none}
+.node.left .nlabel{left:60px;text-align:left}
+.node.right .nlabel{right:60px;text-align:right;justify-items:end}
+.nt{font-family:var(--f-display);font-weight:700;font-size:1.02rem;line-height:1.15;transition:color .5s ease}
+.ns{font-size:.8rem;color:var(--muted);line-height:1.25}
+.node[data-s="locked"] .nt{color:var(--muted)}
+.slot:empty{display:none}
+@keyframes ring{0%{transform:scale(.92);opacity:.7}100%{transform:scale(1.22);opacity:0}}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+@keyframes pop{0%{transform:scale(.78)}100%{transform:scale(1)}}
+.stars{display:inline-flex;gap:2px;color:var(--line)}
+.stars .ic{width:1.05em;height:1.05em}
+.stars .on{color:var(--spark)}
+.stars.big .ic{width:2.6rem;height:2.6rem}
+.stars.big{gap:6px}
+.next-week{margin-top:18px;font-size:.88rem;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
+
+/* Lección */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none;color:var(--muted)}
+.bar{flex:1;height:12px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease}
+.kicker{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.q{font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.2;margin-bottom:16px;text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 18px;display:grid;gap:12px}
+.card h2{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+.card p{max-width:60ch}
+b{font-weight:700}
+
+/* Código */
+.code{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:4px 0 14px}
+.code-tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.code pre{margin:0;padding:12px 12px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;color:var(--ink)}
+.card .code{margin:0}
+.kw{color:var(--kw);font-weight:500}.str{color:var(--str)}.num-t{color:var(--num)}.cm{color:var(--cm);font-style:italic}.fn{color:var(--fn)}
+.blank{display:inline-block;min-width:3.6ch;min-height:1.6em;vertical-align:baseline;padding:0 .5ch;margin:0 1px;border:0;border-bottom:2px dashed var(--accent);background:var(--accent-soft);color:var(--ink);font:inherit;border-radius:5px;text-align:center;line-height:1.5}
+.blank.filled{border-bottom-style:solid}
+.blank.ok{background:var(--good-bg);border-bottom-color:var(--good);color:var(--good)}
+.blank.bad{background:var(--bad-bg);border-bottom-color:var(--bad);color:var(--bad)}
+.bank{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.chip{font-family:var(--f-mono);font-size:1rem;min-height:46px;padding:8px 16px;border-radius:9px;border:1px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--line)}
+.chip:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.chip:disabled{opacity:.55}
+.lines{display:grid}
+.ln{display:grid;grid-template-columns:2.4ch minmax(0,1fr);gap:1.2ch;width:100%;text-align:left;background:transparent;border:0;border-radius:6px;padding:0 6px;margin:0;font:inherit;color:inherit;white-space:pre;overflow-x:auto;min-height:32px;align-items:center}
+.ln .no{color:var(--muted);text-align:right;user-select:none}
+.ln.sel{background:var(--accent-soft);outline:1px solid var(--accent)}
+.ln.ok{background:var(--good-bg);outline:1px solid var(--good)}
+.ln.bad{background:var(--bad-bg);outline:1px solid var(--bad)}
+.code .lines{padding:8px 6px}
+
+/* Opciones */
+.opts{display:grid;gap:10px}
+.opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:12px}
+.opt:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.opt .k{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:.8rem;color:var(--muted);flex:none}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .k{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.right .k{background:var(--good);color:var(--good-bg);border-color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .k{background:var(--bad);color:var(--bad-bg);border-color:var(--bad)}
+.sub-q{font-family:var(--f-display);font-weight:700;font-size:1.15rem;margin:18px 0 10px}
+.hint-ok{display:flex;align-items:center;gap:8px;color:var(--good);font-weight:600;margin:14px 0 0}
+
+/* Barra inferior */
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+.dock.good{background:var(--good-bg);border-top-color:var(--good)}
+.dock.bad{background:var(--bad-bg);border-top-color:var(--bad)}
+.dock-in{max-width:560px;margin:0 auto;display:grid;gap:12px}
+.fb{display:grid;gap:4px}
+.fb h3{font-family:var(--f-display);font-weight:800;font-size:1.3rem;display:flex;align-items:center;gap:8px}
+.dock.good .fb h3{color:var(--good)} .dock.bad .fb h3{color:var(--bad)}
+.fb p{font-size:.95rem;line-height:1.4}
+.fb .ic{width:1.1em;height:1.1em}
+.btn{width:100%;min-height:52px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);font-family:var(--f-display);font-weight:800;font-size:1.05rem;letter-spacing:.01em;box-shadow:0 3px 0 var(--accent-deep)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--accent-deep)}
+.btn:disabled{background:var(--line);color:var(--muted);box-shadow:none}
+.dock.good .btn{background:var(--good);color:var(--good-bg);box-shadow:0 3px 0 color-mix(in srgb,var(--good) 60%,black)}
+.dock.bad .btn{background:var(--bad);color:var(--bad-bg);box-shadow:0 3px 0 color-mix(in srgb,var(--bad) 60%,black)}
+.btn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1px solid var(--line);font-weight:700}
+
+/* Final */
+.done{display:grid;gap:18px;text-align:center;justify-items:center;padding-top:10px}
+.done h2{font-family:var(--f-display);font-weight:800;font-size:2.1rem;line-height:1.05;text-wrap:balance}
+.done .ttl{color:var(--muted)}
+.res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.res div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 6px;display:grid;gap:2px}
+.res strong{font-family:var(--f-display);font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.res span{font-size:.76rem;color:var(--muted)}
+
+@media (prefers-reduced-motion:no-preference){
+  .dock-in{animation:rise .18s ease-out}
+  @keyframes rise{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div id="app" class="app"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Contenido: Semana 1 ---------- */
+const L=(...a)=>a.join('\n');
+
+const LESSONS=[
+{
+  title:'Variables y tipos', sub:'Guardar datos y saber qué son',
+  cards:[
+    {h:'Una variable es una etiqueta', p:['Con `=` le ponés un nombre a un valor. Después usás ese nombre cada vez que necesitás el valor.','Con `print()` lo mostrás en pantalla. Python decide el tipo solo: no hay que declararlo.'],
+     code:L('nombre = "Lucía"','edad = 28','print(nombre)   # muestra Lucía','print(edad)     # muestra 28')},
+    {h:'Los cuatro tipos básicos', p:['`str` es texto: va entre comillas, y si adentro hay números también es texto (`"10"` es `str`).','`int` es un número entero. `float` es un decimal: tiene punto, y `3.0` es `float` aunque sea redondo.','`bool` es `True` o `False`, con la primera letra en mayúscula. Con `type()` ves de qué tipo es algo.'],
+     code:L('type("hola")  # str','type("10")    # str','type(28)      # int','type(3.0)     # float','type(True)    # bool')},
+    {h:'Reglas para los nombres', p:['Un nombre puede tener letras, números y `_`. No puede empezar con número, ni tener espacios o guiones, ni ser una palabra que Python ya usa (`if`, `for`, `class`...).','Las mayúsculas cuentan: `precio` y `Precio` son nombres distintos. Si escribís un nombre que no existe, Python avisa con `NameError`. Por eso `true` en minúscula también da `NameError`: no es un booleano, lo toma como un nombre.'],
+     code:L('precio = 10','print(precio)   # 10','print(Precio)   # NameError')}
+  ],
+  ex:[
+    {t:'fill', q:'Guardá 25 en una variable llamada `edad` y mostrala.', code:L('___ = 25','print(___)'), ans:['edad','edad'], bank:['edad','25','"edad"','print'],
+     why:'La variable va a la izquierda del `=` y se usa por su nombre, sin comillas. Con comillas sería el texto "edad".'},
+    {t:'quiz', q:'¿De qué tipo es `x`?', code:'x = 3.0', opts:['`int`','`float`','`str`','`bool`'], a:1,
+     why:'Tiene punto decimal, así que es `float`, aunque el valor sea redondo.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('activo = true','print(activo)'), line:0,
+     why:'Los booleanos se escriben con mayúscula: `True` y `False`. Con `true` Python busca una variable que no existe y lanza NameError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Escribir `True` con mayúscula','Poner `true` entre comillas','Cambiar `=` por `==`','Borrar el `print`'], a:0}},
+    {t:'quiz', q:'¿De qué tipo es `x`?', code:'x = "10"', opts:['`int`','`float`','`str`','`bool`'], a:2,
+     why:'Todo lo que va entre comillas es texto (`str`), aunque parezca un número.'},
+    {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('precio = 10','print(Precio)'), line:1,
+     why:'Python distingue mayúsculas de minúsculas: `Precio` y `precio` son nombres distintos.',
+     fix:{q:'¿Cómo se arregla?', opts:['Escribir `precio` en minúscula','Agregar comillas dentro del `print`','Cambiar `=` por `==`','Borrar la primera línea'], a:0}},
+    {t:'quiz', q:'¿Cuál es un nombre de variable válido?', opts:['`3cosas`','`mi-edad`','`mi_edad`','`class`'], a:2,
+     why:'Solo letras, números y `_`; no puede empezar con número ni ser una palabra reservada como `class`. El guion se lee como resta.'}
+  ]
+},
+{
+  title:'Operadores', sub:'Cuentas, comparaciones y lógica',
+  cards:[
+    {h:'Cuentas', p:['Además de `+`, `-` y `*` tenés tres más. `/` es la división normal y siempre da decimal.','`//` es la división entera: cuenta cuántas veces entra un número en otro. `7 // 2` es 3 porque el 2 entra 3 veces en el 7 (3 × 2 = 6).','`%` da el resto: lo que sobra de esa división. `7 % 2` es 1. Si `n % 2` da 0, `n` es par.','`**` es potencia: `2 ** 3` es 2 × 2 × 2.'],
+     code:L('7 / 2    # 3.5','7 // 2   # 3  (entra 3 veces)','7 % 2    # 1  (sobra 1)','8 % 2    # 0  (sobra 0: es par)','2 ** 3   # 8  (2 × 2 × 2)')},
+    {h:'Atajos para actualizar', p:['`+=` suma y guarda en la misma variable. `x += 1` es lo mismo que `x = x + 1`.','`-=` resta y `*=` multiplica, igual que `+=`. Python no tiene `++`.'],
+     code:L('puntos = 10','puntos += 5   # ahora vale 15','puntos -= 3   # ahora vale 12','print(puntos)  # 12')},
+    {h:'Operadores con texto', p:['Con texto, `+` junta los dos textos y `*` repite el texto tantas veces como diga el número.'],
+     code:L('"ab" + "cd"   # "abcd"','"ab" * 3      # "ababab"','"-" * 5       # "-----"')},
+    {h:'Preguntas que dan True o False', p:['Una comparación es una pregunta y Python responde `True` (sí) o `False` (no). `5 > 3` pregunta "¿5 es mayor que 3?": es verdad, así que da `True`. `3 > 5` da `False`.','Los operadores son `>` mayor, `<` menor, `>=` mayor o igual (el ≥ de matemática), `<=` menor o igual (el ≤), `==` igual y `!=` distinto. Se escribe `>=`, nunca `=>`.','Ojo con `=` y `==`: `=` guarda un valor y `==` pregunta si dos cosas son iguales.'],
+     code:L('5 > 3   # True (5 es mayor)','3 > 5   # False (3 es menor)','5 > 5   # False (son iguales)','5 >= 5  # True (mayor o igual)','5 != 3  # True (son distintos)','x = 5   # guarda 5 en x','x == 5  # True: ¿x vale 5?')},
+    {h:'Combinar con and, or y not', p:['`and` da `True` solo si las dos preguntas dan `True`. `or` da `True` si al menos una lo da. `not` da lo contrario.','Python resuelve primero cada comparación y después las combina.'],
+     code:L('3 > 1 and 8 > 5 # True (las dos)','3 > 1 and 8 > 9 # False (falla)','3 > 1 or 8 > 9 # True (basta una)','not 3 > 1 # False (invierte)')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:'print(7 // 2)', opts:['`3.5`','`3`','`4`','`2`'], a:1,
+     why:'`//` es división entera: el 2 entra 3 veces en el 7 (3 × 2 = 6) y se descarta lo que sobra.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(10 % 3)', opts:['`3`','`0`','`1`','`3.33`'], a:2,
+     why:'`%` devuelve el resto. El 3 entra 3 veces en el 10 (3 × 3 = 9) y sobra 1.'},
+    {t:'fill', q:'Completá para saber si `edad` es mayor o igual a 18.', code:L('edad = 20','es_mayor = edad ___ 18','print(es_mayor)'), ans:['>='], bank:['>=','=>','=','<'],
+     why:'Se escribe `>=`. `=>` no existe en Python y `=` guarda un valor en vez de comparar.'},
+    {t:'quiz', q:'¿Qué hace `x == 5` en este código?', code:L('x = 5','print(x == 5)'), opts:['Guarda 5 en `x`','Pregunta si `x` vale 5 y muestra `True`','Da error','Suma 5 a `x`'], a:1,
+     why:'`==` compara. Como `x` vale 5, la pregunta "¿x es igual a 5?" da `True`. Para guardar un valor se usa un solo `=`.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(2 < 9 and 7 > 8)', opts:['`True`','`False`','`None`','Da error'], a:1,
+     why:'`2 < 9` da `True`, pero `7 > 8` da `False`. Con `and` tienen que dar `True` las dos.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(4 > 9 or 6 > 2)', opts:['`True`','`False`','`None`','Da error'], a:0,
+     why:'`4 > 9` da `False`, pero `6 > 2` da `True`. Con `or` alcanza con que una lo sea.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print("ab" * 3)', opts:['`ab3`','`ababab`','`ab ab ab`','Da error'], a:1,
+     why:'Multiplicar un texto por un número lo repite esa cantidad de veces.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(2 ** 3)', opts:['`6`','`8`','`9`','`23`'], a:1,
+     why:'`**` es potencia: 2 × 2 × 2 = 8.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('puntos = 10','puntos -= 4','print(puntos)'), opts:['`4`','`6`','`10`','`14`'], a:1,
+     why:'`puntos -= 4` es `puntos = puntos - 4`, o sea 10 - 4 = 6.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(8 % 2 == 0)', opts:['`True`','`False`','`0`','`4`'], a:0,
+     why:'`8 % 2` da 0 (sobra 0) y `0 == 0` es `True`. Así se pregunta si un número es par.'}
+  ]
+},
+{
+  title:'Entrada y salida', sub:'print, input y f-strings',
+  cards:[
+    {h:'Hablar con quien usa el programa', p:['Hasta ahora los valores los escribías vos en el código. Un programa útil también **le pregunta cosas a la persona** y **le muestra resultados**. Para eso están `input()` (pedir) y `print()` (mostrar).','Cuando Python llega a un `input()`, se frena y espera a que se escriba algo y se apriete Enter. Lo que se escribió se guarda en la variable de la izquierda.'],
+     code:L('nombre = input("¿Cómo te llamás? ")','print("Hola")','print(nombre)','','# Python muestra: ¿Cómo te llamás?','# alguien escribe: Ana  (y Enter)','# Python muestra: Hola','# Python muestra: Ana')},
+{h:'Pedir y mostrar datos', p:['`print()` muestra algo en pantalla. Si le pasás varias cosas separadas por coma, las muestra una al lado de la otra con un espacio en el medio.','`input()` pide un dato y lo devuelve siempre como texto (`str`), aunque se escriba un número.','Para usarlo como número hay que convertirlo con `int()` o `float()`.'],
+     code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("Hola", nombre) # Hola Ana')},
+    {h:'Texto y número no se mezclan', p:['Python no suma texto con número: `"20" + 1` da `TypeError`. Hay que convertir antes de hacer la cuenta.'],
+     code:L('edad = input("Edad: ") # "20"','edad + 1 # TypeError','int(edad) + 1 # 21')},
+    {h:'El problema de mezclar a mano', p:['Armar frases con variables usando comas o `+` se vuelve incómodo: hay que acordarse de los espacios y de convertir los números a texto.','Las **f-strings** lo resuelven: escribís la frase completa y, donde va un valor, ponés la variable entre `{}`. Python la reemplaza por su valor.'],
+     code:L('nombre = "Ana"','edad = 30','','# incómodo: hay que convertir y cuidar los espacios','print("Hola " + nombre + ", tenés " + str(edad))','','# cómodo: la f antes de las comillas','print(f"Hola {nombre}, tenés {edad}")')},
+{h:'f-strings', p:['Una `f` antes de las comillas permite meter variables o cuentas entre llaves.'],
+     code:L('nombre = "Ana"','edad = 30','print(f"{nombre} tiene {edad}")','print(f"Próximo año: {edad + 1}")')}
+  ],
+  ex:[
+    {t:'fill', q:'Completá para que el mensaje use el valor de `nombre`.', code:L('nombre = "Ana"','print(___"Hola {nombre}")'), ans:['f'], bank:['f','r','$','%'],
+     why:'La `f` antes de las comillas activa la f-string y reemplaza `{nombre}` por su valor.'},
+    {t:'quiz', q:'Si la persona escribe 5, ¿de qué tipo es `x`?', code:'x = input("Número: ")', opts:['`int`','`float`','`str`','Depende de lo que escriba'], a:2,
+     why:'`input` siempre devuelve texto (`str`), aunque se escriba un número.'},
+    {t:'fill', q:'Convertí lo que se escribe en un número entero.', code:L('edad = ___(input("Edad: "))','print(edad + 1)'), ans:['int'], bank:['int','str','print','input'],
+     why:'`input` da texto; `int(...)` lo convierte a número para poder sumar.'},
+    {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta el error.', code:L('edad = input("Edad: ")','print(edad + 1)'), line:1,
+     why:'El error salta al sumar: `edad` es texto y `1` es número. Python no suma `str` con `int`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Convertir con `int(input(...))`','Cambiar `+` por `-`','Poner el 1 entre comillas','Usar `print` dos veces'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('n = 4','print(f"{n} x 2 = {n * 2}")'), opts:['`4 x 2 = 8`','`{n} x 2 = {n * 2}`','`4 x 2 = n * 2`','Da error'], a:0,
+     why:'Dentro de las llaves se evalúa cualquier expresión, así que `n * 2` se calcula.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print("Hola", "mundo")', opts:['`Holamundo`','`Hola mundo`','`Hola, mundo`','`("Hola", "mundo")`'], a:1,
+     why:'Por defecto `print` separa los valores con un espacio.'}
+  ]
+},
+{
+  title:'Condicionales', sub:'if, elif y else',
+  cards:[
+    {h:'Un programa que decide', p:['Hasta ahora el código corría siempre línea por línea. Con `if` ("si") el programa **elige**: ejecuta un bloque solo **si** la condición es `True`. Si es `False`, lo saltea.','La condición es una pregunta como las de la lección de operadores (`>`, `==`...). El bloque es lo que va con sangría debajo del `:`.'],
+     code:L('edad = 20','if edad >= 18:','    print("Podés entrar")   # solo si la condición es True','print("Fin")                # esta siempre se ejecuta','','# edad vale 20 → 20 >= 18 es True → imprime "Podés entrar" y "Fin"','# si edad valiera 15 → es False → solo imprime "Fin"')},
+{h:'Decidir qué código corre', p:['Python evalúa las condiciones de arriba hacia abajo y entra al primer bloque verdadero. `else` no lleva condición y cubre todo lo demás.','Cada línea con `if`, `elif` o `else` termina en `:` y el bloque va indentado (4 espacios). Si falta la sangría, Python da `IndentationError`.','Ojo con el límite: `edad > 18` deja afuera al 18, y `edad >= 18` lo incluye.'],
+     code:L('nota = 7','if nota >= 6:','    print("Aprobado")','elif nota >= 4:','    print("Recuperatorio")','else:','    print("Desaprobado")')},
+    {h:'if, elif y else paso a paso', p:['Con varios caminos, Python prueba las condiciones **de arriba hacia abajo** y se queda con la primera que dé `True`. El resto ni lo mira.','Seguí el ejemplo: con `nota = 5` la primera pregunta da `False`, la segunda da `True`, así que entra ahí y **se saltea el `else`**.'],
+     code:L('nota = 5','if nota >= 6:         # 5 >= 6 es False → sigue','    print("Aprobado")','elif nota >= 4:       # 5 >= 4 es True → entra acá','    print("Recuperatorio")','else:                 # no se mira','    print("Desaprobado")','','# imprime: Recuperatorio')},
+{h:'Dos if o un elif', p:['Dos `if` seguidos son independientes: cada uno se evalúa por su cuenta y pueden entrar los dos.','Con `elif`, en cambio, Python se detiene en el primer bloque verdadero y se saltea el resto.'],
+     code:L('x = 12','if x >= 10:','    print("A")','if x >= 5:','    print("B")','# Imprime A y B (dos if sueltos)')}
+  ],
+  ex:[
+    {t:'fill', q:'Completá la sintaxis.', code:L('edad = 15','if edad >= 18___','    print("Mayor")','else___','    print("Menor")'), ans:[':',':'], bank:[':',';','then',')'],
+     why:'Tanto el `if` como el `else` terminan en dos puntos. Python no usa `then`.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('edad = 20','if edad >= 18','    print("Mayor")'), line:1,
+     why:'Falta el `:` al final del `if`. Todo bloque (`if`, `else`, `for`, `while`) lo lleva.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `if`','Cambiar `>=` por `>`','Quitar la indentación','Agregar `else`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 5','if x >= 10:','    print("A")','elif x >= 3:','    print("B")','else:','    print("C")'), opts:['`A`','`B`','`C`','`B` y `C`'], a:1,
+     why:'`x >= 10` es falso, pero `x >= 3` es verdadero: entra a ese bloque y se saltea el `else`.'},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('if 5 >= 3:','print("sí")'), line:1,
+     why:'Después de los dos puntos, el bloque va indentado. Esa sangría le dice a Python qué código pertenece al `if`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Agregar `else`','Cambiar `>=` por `<=`','Quitar los dos puntos'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 9','if x >= 7:','    print("A")','if x >= 4:','    print("B")'), opts:['Solo `A`','Solo `B`','`A` y `B`, en dos líneas','Nada'], a:2,
+     why:'Son dos `if` independientes y ambos son verdaderos. Con `elif`, solo entraría al primero.'},
+    {t:'fill', q:'Completá para imprimir "impar" cuando no sea par.', code:L('n = 7','if n % 2 == 0:','    print("par")','___:','    print("impar")'), ans:['else'], bank:['else','elif','if','otherwise'],
+     why:'`else` cubre todo lo que no cumplió el `if` y no lleva condición. `elif` necesitaría una.'},
+    {t:'quiz', q:'En una cadena if/elif/else, ¿cuántos bloques se ejecutan como máximo?', opts:['Uno','Todos los verdaderos','Dos','Depende del `else`'], a:0,
+     why:'Entra solo el primer bloque verdadero, o el `else` si ninguno lo fue.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('edad = 18','if edad > 18:','    print("Mayor")','else:','    print("No es mayor")'), opts:['`Mayor`','`No es mayor`','Las dos','Da error'], a:1,
+     why:'`18 > 18` es falso porque son iguales. Para incluir al 18 habría que usar `>=`.'}
+  ]
+},
+{
+  title:'Bucle for', sub:'Repetir con range',
+  cards:[
+    {h:'¿Para qué sirve un bucle?', p:['Imaginá que querés escribir "Hola" 3 veces. Podés copiar el `print` tres veces, pero ¿y si fueran 100? Un **bucle** le dice a Python: "repetí esto tantas veces".','Python tiene dos tipos de bucle: `for` y `while`. Empezamos con `for`, que se usa cuando sabés cuántas veces querés repetir algo. Las dos versiones de abajo hacen exactamente lo mismo.'],
+     code:L('# Sin bucle: hay que copiar y pegar','print("Hola")','print("Hola")','print("Hola")','','# Con bucle: se escribe una sola vez','for vez in range(3):','    print("Hola")')},
+    {h:'Las partes de un for', p:['Mirá la primera línea: `for` avisa que empieza un bucle. `vez` (o `i`, o el nombre que quieras) es una variable que **crea el propio bucle**. `range(3)` dice cuántas vueltas dar. Y el `:` del final abre el bloque.','Las líneas con sangría (4 espacios hacia la derecha) son el **bloque**: justo lo que se repite en cada vuelta. En cuanto una línea vuelve a estar pegada a la izquierda, ya no es parte del bucle. Si te olvidás el `:` Python da `SyntaxError`.'],
+     code:L('for i in range(3):   # empieza el bucle','    print("Hola")    # con sangría: se repite','print("Fin")         # sin sangría: se ejecuta una sola vez, al final','','# Hola','# Hola','# Hola','# Fin')},
+    {h:'Qué es range(3)', p:['`range(3)` fabrica una lista de números para que el `for` los vaya usando uno por uno. Es: **0, 1, 2**.','Dos cosas que confunden al principio: en programación se cuenta **desde 0**, y el número final **no se incluye**. Por eso `range(3)` son 3 números (0, 1 y 2) y da 3 vueltas, pero el 3 no aparece.'],
+     code:L('for i in range(3):','    print(i)','# 0','# 1','# 2')},
+    {h:'Qué vale i en cada vuelta', p:['`i` es una variable común, pero la maneja el `for`: en cada vuelta le asigna el **siguiente número** de `range`. Cuando se acaban los números, el bucle termina solo.','Cuando un bucle te confunda, hacé esto: andá vuelta por vuelta, anotando cuánto vale la variable y qué hace el bloque.'],
+     code:L('for i in range(3):','    print("vuelta número", i)','','# 1ª vuelta: i vale 0 → "vuelta número 0"','# 2ª vuelta: i vale 1 → "vuelta número 1"','# 3ª vuelta: i vale 2 → "vuelta número 2"','# ya no quedan números: el bucle termina')},
+    {h:'Empezar en otro número y saltear', p:['`range` acepta más de un número. Con **dos**, `range(inicio, fin)`: empieza en `inicio` y llega hasta `fin - 1` (el `fin` sigue sin incluirse).','Con **tres**, `range(inicio, fin, paso)`: el tercero dice de a cuánto avanza. Con `paso` 2 va de dos en dos.'],
+     code:L('range(5)          # 0, 1, 2, 3, 4','range(1, 6)       # 1, 2, 3, 4, 5','range(2, 6)       # 2, 3, 4, 5','range(0, 10, 2)   # 0, 2, 4, 6, 8')},
+    {h:'Recorrer un texto', p:['`for` no sirve solo con números: recorre **cualquier cosa que tenga elementos**. Un texto está hecho de letras, así que `for` lo recorre letra por letra, una por vuelta.','Fijate que la variable ahora se llama `letra` y no `i`: elegí el nombre que mejor describa lo que vale en cada vuelta.'],
+     code:L('for letra in "sol":','    print(letra)','','# 1ª vuelta: letra vale "s"','# 2ª vuelta: letra vale "o"','# 3ª vuelta: letra vale "l"')},
+    {h:'Dentro o fuera del bucle', p:['La sangría decide **qué se repite**. Mismo código, una sola diferencia, resultados distintos: en el primero las dos líneas están dentro del bucle y se repiten juntas; en el segundo, `Chau` está afuera y se ejecuta una sola vez cuando el bucle ya terminó.'],
+     code:L('for i in range(2):','    print("Hola")','    print("Chau")','# Hola, Chau, Hola, Chau','','for i in range(2):','    print("Hola")','print("Chau")','# Hola, Hola, Chau')},
+    {h:'Acumular un total', p:['Un patrón que vas a usar muchísimo: crear una variable en 0 **antes** del bucle y, en cada vuelta, sumarle algo con `+=` (que es lo mismo que `suma = suma + n`).','Va antes del bucle a propósito: si `suma = 0` estuviera adentro, volvería a 0 en cada vuelta y perderías lo acumulado.'],
+     code:L('suma = 0','for n in range(1, 4):','    suma += n','print(suma)   # 6','','# n vale 1 → suma = 0 + 1 = 1','# n vale 2 → suma = 1 + 2 = 3','# n vale 3 → suma = 3 + 3 = 6')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(3):','    print(i)'), opts:['`0, 1, 2`','`1, 2, 3`','`0, 1, 2, 3`','`1, 2`'], a:0,
+     why:'`range(3)` empieza en 0 y llega hasta 2: el final no se incluye.'},
+    {t:'fill', q:'Completá para repetir 5 veces.', code:L('for i in ___(5):','    print(i)'), ans:['range'], bank:['range','len','while','list'],
+     why:'`range(5)` genera los números del 0 al 4.'},
+    {t:'quiz', q:'¿Qué números recorre `range(2, 6)`?', opts:['`2, 3, 4, 5, 6`','`2, 3, 4, 5`','`3, 4, 5, 6`','`2, 6`'], a:1,
+     why:'Empieza en 2 e incluye hasta el 5; el 6 queda afuera.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('for i in range(3)','    print(i)'), line:0,
+     why:'Falta el `:` al final del `for`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `for`','Cambiar `range(3)` por `range[3]`','Quitar el `print`','Indentar el `for`'], a:0}},
+    {t:'fill', q:'Sumá cada `n` a `suma`.', code:L('suma = 0','for n in range(2, 5):','    suma ___ n','print(suma)'), ans:['+='], bank:['+=','=','==','++'],
+     why:'`+=` suma `n` a lo que ya hay en `suma`. Python no tiene `++`. El resultado es 2 + 3 + 4 = 9.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('for letra in "sol":','    print(letra)'), opts:['`sol`, una vez','`s`, `o`, `l`, una por línea','`sol`, tres veces','Da error'], a:1,
+     why:'Un `for` sobre un texto recorre sus letras, una por vuelta.'},
+    {t:'quiz', q:'¿Cuántas veces imprime `hola`?', code:L('for i in range(4):','    print("hola")'), opts:['3','4','5','Una'], a:1,
+     why:'`range(4)` da 4 vueltas (0, 1, 2 y 3).'}
+  ]
+},
+{
+  title:'Bucle while', sub:'Repetir hasta que se cumpla',
+  cards:[
+    {h:'Repetir mientras algo sea cierto', p:['`for` se usa cuando sabés cuántas vueltas son. `while` ("mientras") se usa cuando **no lo sabés**, pero sí sabés hasta cuándo: repetís **mientras** una condición sea verdadera.','Pensalo como "mientras tengas hambre, seguí comiendo": no sabés cuántos bocados van a ser, depende de cuándo se te pase el hambre.'],
+     code:L('n = 3','while n > 0:      # "mientras n sea mayor que 0"','    print(n)','    n -= 1       # resta 1 a n','print("¡Despegue!")','','# 3','# 2','# 1','# ¡Despegue!')},
+    {h:'Cómo lo piensa Python', p:['En cada vuelta, Python hace siempre lo mismo: **1)** mira la condición. **2)** Si es `True`, ejecuta el bloque y vuelve al paso 1. **3)** Si es `False`, sale del bucle y sigue con lo que viene abajo.','Mirá el mismo ejemplo vuelta por vuelta. Fijate que cuando `n` llega a 0, la condición `0 > 0` es falsa y el bucle termina **sin imprimir el 0**.'],
+     code:L('n = 3','while n > 0:','    print(n)','    n -= 1','','# n vale 3 → 3 > 0 es True  → imprime 3, n pasa a 2','# n vale 2 → 2 > 0 es True  → imprime 2, n pasa a 1','# n vale 1 → 1 > 0 es True  → imprime 1, n pasa a 0','# n vale 0 → 0 > 0 es False → sale del bucle')},
+    {h:'Cuidado: el bucle infinito', p:['Para que un `while` termine, **algo dentro del bloque tiene que cambiar** hasta que la condición deje de cumplirse. Si no cambia nada, la condición es verdadera para siempre y el programa se queda repitiendo sin parar. Eso se llama **bucle infinito**.','Antes de escribir un `while`, preguntate: ¿qué línea de adentro hace que algún día la condición sea falsa?'],
+     code:L('n = 3','while n > 0:','    print(n)','    # falta "n -= 1": n siempre vale 3','    # y 3 > 0 es siempre True: nunca termina')},
+    {h:'while True y break', p:['`while True` es un bucle que **nunca termina por sí solo**, porque `True` siempre es verdadero. Se usa cuando querés que la salida se decida adentro, con `break`.','`break` significa "cortá el bucle ahora mismo". En el ejemplo, el programa sigue pidiendo texto una y otra vez, y solo sale cuando escribís "salir".'],
+     code:L('while True:','    texto = input("> ")','    if texto == "salir":','        break              # corta el bucle','    print("Escribiste:", texto)','','print("Chau")             # se ejecuta después del break')},
+    {h:'break y continue: la diferencia', p:['`break` es "me voy, se terminó": **corta todo el bucle**. `continue` es "esta vuelta no, paso a la siguiente": **saltea solo lo que falta de esa vuelta** y el bucle sigue.','Las dos sirven en `for` y en `while`. Comparalas con el mismo código: cuando `i` vale 3, en un caso se corta todo y en el otro solo se saltea el 3.'],
+     code:L('for i in range(5):','    if i == 3:','        break','    print(i)    # 0, 1, 2','','for i in range(5):','    if i == 3:','        continue','    print(i)    # 0, 1, 2, 4')},
+    {h:'¿for o while?', p:['Usá `for` cuando sabés **cuántas vueltas** son o tenés **algo para recorrer**: un `range`, un texto, una lista.','Usá `while` cuando depende de **una condición** y no sabés cuántas vueltas hacen falta: por ejemplo, seguir pidiendo la clave hasta que acierten.'],
+     code:L('# for: sé que son 5 vueltas','for i in range(5):','    print(i)','','# while: depende de lo que escriba la persona','clave = ""','while clave != "1234":','    clave = input("Clave: ")')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('n = 3','while n > 0:','    print(n)','    n -= 1','print("¡Despegue!")'), opts:['`3, 2, 1, ¡Despegue!`','`3, 2, 1, 0, ¡Despegue!`','`2, 1, 0, ¡Despegue!`','Se repite infinito'], a:0,
+     why:'Cuando `n` llega a 0, `n > 0` es falso y el bucle termina sin imprimir el 0.'},
+    {t:'bug', q:'Este bucle nunca termina. Tocá la línea que lo causa.', code:L('n = 3','while n > 0:','    print(n)','    n += 1'), line:3,
+     why:'Con `n += 1`, `n` crece y `n > 0` nunca deja de ser verdadero. Para llegar a 0 hay que restar.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `+=` por `-=`','Cambiar `>` por `<`','Quitar el `print`','Agregar `else`'], a:0}},
+    {t:'fill', q:'Completá para salir del bucle cuando se escriba "salir".', code:L('while True:','    texto = input("> ")','    if texto == "salir":','        ___'), ans:['break'], bank:['break','continue','stop','exit'],
+     why:'`break` corta el bucle. `continue` solo vuelve al inicio.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(5):','    if i == 3:','        break','    print(i)'), opts:['`0, 1, 2`','`0, 1, 2, 3`','`0, 1, 2, 4`','`0, 1, 2, 3, 4`'], a:0,
+     why:'`break` corta el bucle apenas `i` vale 3, antes de imprimirlo.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(4):','    if i == 2:','        continue','    print(i)'), opts:['`0, 1, 3`','`0, 1, 2, 3`','`0, 1`','`1, 3`'], a:0,
+     why:'`continue` se saltea el resto de esa vuelta, así que el 2 no se imprime, pero el bucle sigue.'},
+    {t:'quiz', q:'¿Cuándo conviene `while` en vez de `for`?', opts:['Cuando no sabés cuántas vueltas vas a dar','Cuando querés recorrer un texto','Nunca, `for` siempre es mejor','Cuando hay un `if` adentro'], a:0,
+     why:'Si sabés cuántas vueltas son, `for` con `range` es más claro. `while` sirve cuando depende de una condición, como esperar una respuesta.'}
+  ]
+},
+{
+  title:'Repaso final', sub:'Todo junto',
+  cards:[
+    {h:'Mezcla de la semana', p:['Tipos, operadores, `input`, f-strings, `if` y bucles, todo mezclado.','Si fallás una, volvé al final para que la repitas.'], code:''}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = "5"','y = 3','print(x * y)'), opts:['`15`','`555`','`8`','Da error'], a:1,
+     why:'`x` es texto, y un texto multiplicado por 3 se repite tres veces.'},
+    {t:'fill', q:'Completá para que "impar" salga cuando no sea par.', code:L('for i in range(1, 4):','    if i % 2 == 0:','        print("par")','    ___:','        print("impar")'), ans:['else'], bank:['else','elif','if','while'],
+     why:'`else` toma el caso contrario del `if`, sin condición.'},
+    {t:'bug', q:'Esto corre, pero imprime las llaves literales. Tocá la línea que está mal.', code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("{nombre} tiene {edad}")'), line:2,
+     why:'Sin la `f` delante de las comillas, las llaves se imprimen tal cual en lugar de reemplazarse por los valores.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `f` antes de las comillas','Usar comillas simples','Cambiar `{}` por `()`','Convertir el nombre con `int()`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('total = 0','for i in range(1, 5):','    if i % 2 == 0:','        total += i','print(total)'), opts:['`4`','`6`','`10`','`3`'], a:1,
+     why:'Solo suma los pares del 1 al 4: 2 + 4 = 6.'},
+    {t:'fill', q:'Completá el bucle.', code:L('vidas = 3','___ vidas > 0:','    vidas -= 1','print(vidas)'), ans:['while'], bank:['while','for','if','loop'],
+     why:'`while` repite mientras la condición sea verdadera. Al terminar, `vidas` vale 0 y eso es lo que se imprime.'},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('for i in range(3):','    print(i)','  print("fin")'), line:2,
+     why:'La última línea tiene una sangría que no coincide con ninguna anterior. Para que corra al terminar el bucle debe ir alineada con el `for`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Alinear `print("fin")` con el `for`','Agregar `else`','Cambiar `range(3)` por `range(4)`','Agregar `break`'], a:0}}
+  ]
+},
+{
+  title:'Listas', sub:'Crear, indexar y modificar',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'¿Por qué una lista?', p:['Si tenés 30 notas, no vas a crear 30 variables (`nota1`, `nota2`...). Una **lista** guarda muchos valores bajo un solo nombre, en orden.','Pensala como una fila de casilleros: cada valor ocupa un lugar y el orden se mantiene.'],
+     code:L('# incómodo','nota1 = 8','nota2 = 6','nota3 = 9','','# mejor: una sola variable','notas = [8, 6, 9]')},
+{h:'Una lista guarda varios valores', p:['Una lista se escribe entre corchetes, con los elementos separados por comas. Puede mezclar tipos: números, textos, otras listas.','`len()` te dice cuántos elementos tiene.'],
+     code:L('precios = [10, 25, 8]','print(precios)   # [10, 25, 8]','print(len(precios))  # 3')},
+    {h:'Cada casillero tiene un número', p:['Para pedir un valor de la lista usás su **posición**, llamada **índice**, entre corchetes. La primera posición es la **0**.','Por eso una lista de 3 elementos tiene índices 0, 1 y 2, y no existe el 3.'],
+     code:L('colores = ["rojo", "verde", "azul"]','','# índice:    0        1         2','# valor:   "rojo"  "verde"   "azul"','','print(colores[0])   # rojo','print(colores[1])   # verde')},
+{h:'Índices: se cuenta desde 0', p:['El primer elemento está en el índice 0, no en el 1. El último está en `len(lista) - 1`.','Los índices negativos cuentan desde el final: `-1` es el último, `-2` el penúltimo.','Si pedís un índice que no existe, Python lanza `IndexError`.'],
+     code:L('nums = [10, 20, 30]','print(nums[0])   # 10','print(nums[2])   # 30','print(nums[-1])  # 30','print(nums[3])   # IndexError')},
+    {h:'Las listas se modifican', p:['A diferencia de un texto, una lista se puede cambiar en el lugar: le asignás un valor a un índice.','`in` pregunta si un elemento está; `not in` pregunta lo contrario. Las dos devuelven `True` o `False`.','Escribir en un índice que no existe también da `IndexError`.'],
+     code:L('nums = [10, 20, 30]','nums[0] = 99','print(nums)      # [99, 20, 30]','print(20 in nums)    # True','print(40 in nums)    # False','print(40 not in nums) # True','nums[5] = 99     # IndexError')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('frutas = ["pera", "uva", "kiwi"]','print(len(frutas))'), opts:['`2`','`3`','`4`','`"pera"`'], a:1,
+     why:'`len` cuenta cuántos elementos hay en la lista. Hay 3: pera, uva y kiwi.'},
+    {t:'fill', q:'Completá para que se imprima 8.', code:L('nums = [5, 8, 12]','print(nums[___])   # 8'), ans:['1'], bank:['0','1','2','3'],
+     why:'El 8 está en el índice 1 porque se cuenta desde 0: 5 está en 0, 8 en 1, 12 en 2.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','print(nums[3])'), line:1,
+     why:'La lista tiene 3 elementos, así que los índices válidos son 0, 1 y 2. Pedir el 3 da IndexError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `nums[2]` en vez de `nums[3]`','Usar `nums[4]` en vez de `nums[3]`','Agregar `:` al final','Cambiar `print` por `len`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [3, 6, 9, 12]','print(nums[-2])'), opts:['`3`','`6`','`9`','`12`'], a:2,
+     why:'El -1 es el último (12), el -2 es el penúltimo (9).'},
+    {t:'fill', q:'Completá para cambiar el segundo elemento.', code:L('nums = [1, 2, 3]','nums[1] = ___','print(nums)   # [1, 9, 3]'), ans:['9'], bank:['9','1','2','3'],
+     why:'`nums[1]` es el segundo elemento (el del medio). Al asignarle 9, la lista queda [1, 9, 3].'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 8, 12]','print(8 in nums)'), opts:['`True`','`False`','`8`','`IndexError`'], a:0,
+     why:'`8 in nums` pregunta si el 8 está en la lista. Está, así que devuelve `True`.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','nums[3] = 99','print(nums)'), line:1,
+     why:'Escribir en un índice que no existe también da IndexError: solo hay índices 0, 1 y 2.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `nums[3]` por `nums[2]`','Cambiar `nums[3]` por `nums[4]`','Cambiar `99` por `30`','Agregar `:` al final'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 8, 12]','print(10 not in nums)'), opts:['`True`','`False`','`10`','`IndexError`'], a:0,
+     why:'`10 not in nums` pregunta si el 10 NO está. Como no está, devuelve `True`.'}
+  ]
+},
+{
+  title:'Métodos de listas', sub:'append, sort y copias',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Qué es un método', p:['Un **método** es una acción que la lista sabe hacer sobre sí misma. Se escribe `lista.accion()`: el nombre de la lista, un **punto**, y lo que querés hacer.','Casi todos los métodos de lista **cambian la lista original** en lugar de crear una nueva.'],
+     code:L('frutas = ["pera", "uva"]','frutas.append("kiwi")   # lista.acción(valor)','print(frutas)           # ["pera", "uva", "kiwi"]')},
+{h:'Agregar con append e insert', p:['`append(x)` suma `x` al final de la lista.','`insert(i, x)` mete `x` en la posición `i` y corre el resto un lugar a la derecha.'],
+     code:L('nums = [1, 2]','nums.append(3)','print(nums)  # [1, 2, 3]','nums.insert(1, 9)','print(nums)  # [1, 9, 2, 3]')},
+    {h:'Sacar con remove y pop', p:['`remove(x)` saca el primer elemento igual a `x`. Si `x` no está, da `ValueError`.','`pop()` saca y devuelve el último elemento. `pop(i)` saca el del índice `i`. En una lista vacía, `pop()` da `IndexError`.'],
+     code:L('nums = [1, 2, 3, 2]','nums.remove(2)','print(nums)  # [1, 3, 2]','ultimo = nums.pop()','print(ultimo)  # 2','print(nums)    # [1, 3]')},
+    {h:'sort, sorted, count e index', p:['`lista.sort()` ordena la lista en el lugar y no devuelve nada.','`sorted(lista)` devuelve una lista nueva ordenada, sin tocar la original.','`count(x)` cuenta cuántas veces aparece `x`. `index(x)` te dice en qué posición está la primera aparición.'],
+     code:L('nums = [3, 1, 2]','nums.sort()','print(nums)   # [1, 2, 3]','otra = sorted([3, 1, 2])','print(otra)   # [1, 2, 3]','print(nums.count(2))  # 1','print(nums.index(3))  # 2')},
+    {h:'Cuidado con las copias', p:['`b = a` NO copia la lista: `b` y `a` apuntan a la misma. Si cambiás una, cambia la otra.','`a.copy()` sí crea una lista nueva e independiente.'],
+     code:L('a = [1, 2]','b = a','b[0] = 99','print(a)   # [99, 2]','c = a.copy()','c[0] = 0','print(a)   # [99, 2]')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 7]','nums.append(9)','print(nums)'), opts:['`[4, 7]`','`[4, 7, 9]`','`[9, 4, 7]`','`IndexError`'], a:1,
+     why:'`append` agrega al final. La lista original [4, 7] pasa a [4, 7, 9].'},
+    {t:'fill', q:'Completá para meter 2 en el medio.', code:L('nums = [1, 4]','nums.___(1, 2)','print(nums)   # [1, 2, 4]'), ans:['insert'], bank:['insert','append','add','push'],
+     why:'`insert(1, 2)` mete el 2 en la posición 1 y corre el 4 un lugar a la derecha.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','nums.remove()','print(nums)'), line:1,
+     why:'`remove` necesita un argumento: el elemento a sacar. Sin argumento da TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Pasar el elemento: `nums.remove(20)`','Pasar dos valores: `nums.remove(20, 30)`','Cambiar `remove` por `delete`','Poner `nums.remove([])`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [2, 3, 1]','otra = sorted(nums)','print(nums)'), opts:['`[1, 2, 3]`','`[2, 3, 1]`','`None`','`IndexError`'], a:1,
+     why:'`sorted` devuelve una lista nueva y NO modifica la original. Por eso `nums` sigue igual.'},
+    {t:'fill', q:'Completá para sacar y guardar el último.', code:L('nums = [7, 8, 9]','ultimo = nums.___()','print(ultimo)   # 9'), ans:['pop'], bank:['pop','remove','sort','last'],
+     why:'`pop()` saca el último elemento y lo devuelve. Con `remove(9)` también se saca, pero no se devuelve.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = [1, 2]','b = a.copy()','b[0] = 99','print(a)'), opts:['`[1, 2]`','`[99, 2]`','`[99, 1]`','`IndexError`'], a:0,
+     why:'`a.copy()` crea una lista nueva. Cambiar `b` no afecta a `a`, así que `a` sigue siendo [1, 2].'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = []','nums.pop()'), line:1,
+     why:'No se puede hacer `pop` en una lista vacía: no hay último elemento. Da IndexError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar un elemento primero: `nums.append(1)`','Cambiar `pop` por `append`','Poner `nums.pop(0)`','Poner `nums.pop(1)`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 2, 3, 2]','print(nums.count(2))'), opts:['`1`','`2`','`3`','`5`'], a:2,
+     why:'`count(2)` cuenta cuántas veces aparece el 2. Aparece 3 veces.'}
+  ]
+},
+{
+  title:'Slicing', sub:'Cortar listas y textos',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Qué es cortar', p:['Un **corte** (slice) te da un **pedazo** de una lista, sin modificarla. Se escribe con dos números separados por `:` entre corchetes.','Ayuda imaginar que los índices están **entre** los elementos: `[1:3]` arranca antes del índice 1 y corta antes del 3.'],
+     code:L('# valores:   10   20   30   40   50','# índices:    0    1    2    3    4','','nums = [10, 20, 30, 40, 50]','print(nums[1:3])   # [20, 30]','print(nums)        # sigue igual: [10, 20, 30, 40, 50]')},
+{h:'Cortar con lista[a:b]', p:['`lista[a:b]` devuelve los elementos desde `a` hasta antes de `b`. El final no se incluye, igual que en `range`.','Si `a` es 1 y `b` es 3, devuelve los índices 1 y 2, no el 3.','Para cortar se usan dos puntos. Con una coma (`nums[1, 3]`) o con un `range` Python da `TypeError`: un índice tiene que ser un número entero o un corte `a:b`.'],
+     code:L('nums = [10, 20, 30, 40, 50]','print(nums[1:3])  # [20, 30]','print(nums[0:2])  # [10, 20]','print(nums[2:4])  # [30, 40]')},
+    {h:'Omitir extremos y paso', p:['Si omitís el principio `nums[:3]`, arranca desde 0. Si omitís el final `nums[2:]`, llega hasta el final.','Un tercer número es el paso: `nums[::2]` toma uno sí y uno no. `nums[::-1]` recorre al revés.','Los negativos también sirven en un corte: `nums[-2:]` toma los dos últimos.'],
+     code:L('nums = [1, 2, 3, 4]','print(nums[:2])   # [1, 2]','print(nums[2:])   # [3, 4]','print(nums[::2])  # [1, 3]','print(nums[::-1]) # [4, 3, 2, 1]','print(nums[-2:])  # [3, 4]')},
+    {h:'Slicing también con texto', p:['Como un texto también es una secuencia, se puede cortar igual que una lista.'],
+     code:L('s = "python"','print(s[0:2])   # py','print(s[2:])    # thon','print(s[::-1])  # nohtyp')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [10, 20, 30, 40]','print(nums[1:3])'), opts:['`[10, 20]`','`[20, 30]`','`[20, 30, 40]`','`[10, 20, 30]`'], a:1,
+     why:'El slice devuelve los índices 1 y 2. El índice 3 queda afuera porque el final no se incluye.'},
+    {t:'fill', q:'Completá para que se imprima [7, 8].', code:L('nums = [5, 6, 7, 8]','print(nums[___:])   # [7, 8]'), ans:['2'], bank:['2','1','3','-1'],
+     why:'El 7 está en el índice 2. Como no ponés final, llega hasta el último elemento.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4, 5, 6]','print(nums[::2])'), opts:['`[1, 2, 3]`','`[1, 3, 5]`','`[2, 4, 6]`','`[1, 2]`'], a:1,
+     why:'El paso 2 agarra uno sí y uno no, empezando por el índice 0: 1, 3, 5.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30, 40]','print(nums[1, 3])'), line:1,
+     why:'El corte se escribe con dos puntos, no con coma. Con coma Python no lo reconoce como corte y da TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `nums[1, 3]` por `nums[1:3]`','Cambiar `nums[1, 3]` por `nums[1, 3, 4]`','Cambiar `print` por `nums`','Agregar `:` al final'], a:0}},
+    {t:'fill', q:'Completá para que salga "ol".', code:L('s = "hola"','print(s[___])   # ol'), ans:['1:3'], bank:['1:3','0:2','1:2','2:4'],
+     why:'El slice 1:3 toma los índices 1 y 2, que son la "o" y la "l".'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3]','print(nums[::-1])'), opts:['`[1, 2, 3]`','`[3, 2, 1]`','`[3]`','`IndexError`'], a:1,
+     why:'El paso -1 recorre al revés, así que invierte la lista.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3, 4]','print(nums[range(1, 3)])'), line:1,
+     why:'`nums[range(1, 3)]` usa un `range` como índice. Eso da TypeError: un índice tiene que ser un entero o un corte `a:b`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `range(1, 3)` por `1:3`','Cambiar `range(1, 3)` por `range(1, 4)`','Poner `list(range(1, 3))`','Cambiar `print` por `range`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4, 5]','print(nums[-2:])'), opts:['`[4, 5]`','`[3, 4, 5]`','`[2, 3, 4, 5]`','`[5]`'], a:0,
+     why:'Los índices negativos cuentan desde el final. `-2` es el 4, y al no poner final llega hasta el 5.'}
+  ]
+},
+{
+  title:'Recorrer y acumular', sub:'for, enumerate, sum',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Recorrer una lista', p:['`for` recorre los elementos de la lista uno por uno. La variable del `for` (acá `n`) toma cada valor.'],
+     code:L('nums = [10, 20, 30]','for n in nums:','    print(n)')},
+    {h:'Vuelta por vuelta con una lista', p:['Cuando el `for` recorre una lista, la variable toma **un elemento por vuelta**, en orden, igual que con `range` pero con los valores de la lista.','Siempre podés seguirlo a mano anotando cuánto vale la variable en cada vuelta.'],
+     code:L('precios = [10, 25, 8]','total = 0','for p in precios:','    total += p','print(total)   # 43','','# p vale 10 → total = 0 + 10 = 10','# p vale 25 → total = 10 + 25 = 35','# p vale 8  → total = 35 + 8 = 43')},
+{h:'enumerate: índice y valor', p:['`enumerate(lista)` devuelve pares `(índice, elemento)` en cada vuelta.','Se usa con dos variables en el `for`: la primera recibe el índice, la segunda el elemento.','Sin `enumerate`, el `for` da un solo valor por vuelta: no se puede usar con dos variables.'],
+     code:L('nums = ["a", "b", "c"]','for i, x in enumerate(nums):','    print(i, x)   # 0 a, 1 b, 2 c')},
+    {h:'sum, min y max', p:['`sum(lista)` suma todos los números. `min(lista)` da el menor y `max(lista)` el mayor.'],
+     code:L('nums = [4, 1, 7]','print(sum(nums))  # 12','print(min(nums))  # 1','print(max(nums))  # 7')},
+    {h:'Acumular con range(len)', p:['Otra forma de recorrer: `for i in range(len(lista))` te da los índices, y adentro accedés con `lista[i]`.','Un patrón muy común: arrancar una variable en 0 y sumarle algo en cada vuelta con `+=`.'],
+     code:L('nums = [10, 20, 30]','total = 0','for i in range(len(nums)):','    total += nums[i]','print(total)   # 60')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [5, 6, 7]','for n in nums:','    print(n)'), opts:['`5, 6, 7`','`0, 1, 2`','`1, 2, 3`','`[5, 6, 7]`'], a:0,
+     why:'`for n in nums` recorre los valores de la lista, no los índices. Por eso imprime 5, 6 y 7.'},
+    {t:'fill', q:'Completá para sumar la lista.', code:L('nums = [3, 4, 5]','print(___(nums))   # 12'), ans:['sum'], bank:['sum','len','max','total'],
+     why:'`sum` suma todos los números de la lista. `len` cuenta cuántos hay, no los suma.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [8, 2, 5]','print(max(nums))'), opts:['`2`','`5`','`8`','`[8, 2, 5]`'], a:2,
+     why:'`max` devuelve el mayor. El mayor de 8, 2 y 5 es 8.'},
+    {t:'fill', q:'Completá el acumulador.', code:L('nums = [2, 3, 4]','total = 0','for n in nums:','    total ___ n','print(total)   # 9'), ans:['+='], bank:['+=','=','==','-='],
+     why:'`+=` suma `n` a lo que ya hay en `total`. Al final: 0 + 2 + 3 + 4 = 9.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = ["a", "b"]','for i, x in nums:','    print(i, x)'), line:1,
+     why:'Un `for` común da un solo valor por vuelta, no dos. Para tener el índice y el elemento hace falta `enumerate`. Si no, Python da ValueError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `enumerate(nums)`','Usar `range(nums)`','Poner `nums.items()`','Agregar `, i`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('letras = ["x", "y"]','for i, l in enumerate(letras):','    print(i, l)'), opts:['`x, y`','`0 x, 1 y`','`1 x, 2 y`','`0, 1`'], a:1,
+     why:'`enumerate` da el índice y el elemento. Cada vuelta imprime el índice (0, 1) junto al valor.'},
+    {t:'bug', q:'Tocá la línea donde salta el error.', code:L('nums = [10, 20, 30]','for i in range(4):','    print(nums[i])'), line:2,
+     why:'`range(4)` genera 0, 1, 2 y 3. Cuando `i` vale 3, `nums[3]` no existe y da IndexError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `range(4)` por `range(len(nums))`','Cambiar `range(4)` por `range(5)`','Quitar el `print`','Agregar `enumerate`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [3, 4, 5]','print(sum(nums))'), opts:['`3`','`12`','`60`','`[3, 4, 5]`'], a:1,
+     why:'`sum` suma los tres números: 3 + 4 + 5 = 12.'}
+  ]
+},
+{
+  title:'Tuplas', sub:'Inmutables y desempaquetado',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Tuplas: como listas pero fijas', p:['Una tupla se escribe entre paréntesis. Se indexa igual que una lista: `[0]`, `[-1]`, `len()`.','A diferencia de una lista, no se puede modificar: no existe `tupla[0] = 9`.'],
+     code:L('punto = (3, 5)','print(punto[0])  # 3','print(punto[1])  # 5','print(len(punto))  # 2')},
+    {h:'No se puede modificar', p:['Intentar cambiar un elemento de una tupla da `TypeError`. Para tener algo modificable, usá una lista.','Si los valores no tienen que cambiar (como una coordenada), una tupla deja claro que son fijos.'],
+     code:L('punto = (3, 5)','punto[0] = 9','# TypeError')},
+    {h:'Desempaquetar', p:['Podés asignar los valores de una tupla a varias variables en una sola línea.','La cantidad de variables tiene que coincidir con la cantidad de elementos. Si no, da `ValueError`.'],
+     code:L('punto = (3, 5)','x, y = punto','print(x)   # 3','print(y)   # 5')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('punto = (7, 2, 9)','print(punto[1])'), opts:['`7`','`2`','`9`','`(7, 2, 9)`'], a:1,
+     why:'La tupla se indexa como cualquier secuencia: el índice 1 es el segundo elemento, o sea 2.'},
+    {t:'fill', q:'Completá para desempaquetar la tupla.', code:L('punto = (2, 5)','x, y = ___','print(x)   # 2'), ans:['punto'], bank:['punto','x','y','x, y'],
+     why:'Desempaquetar es asignar los dos valores de la tupla a dos variables. La fuente es la tupla `punto`.'},
+    {t:'quiz', q:'¿Qué pasa?', code:L('punto = (3, 5)','punto[0] = 9'), opts:['`punto` cambia a `(9, 5)`','Lanza `TypeError`','Lanza `IndexError`','Se crea una tupla nueva'], a:1,
+     why:'Las tuplas son inmutables. Intentar modificar un elemento lanza TypeError, no IndexError.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('punto = (1, 2)','punto[0] = 99'), line:1,
+     why:'No se puede reasignar un elemento de una tupla. Da TypeError porque la tupla es inmutable.',
+     fix:{q:'¿Cómo se arregla?', opts:['Crear una tupla nueva: `punto = (99, 2)`','Cambiar por `punto[0] == 99`','Agregar `:` al final','Usar `punto.append(99)`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a, b = (10, 20)','print(a)'), opts:['`10`','`20`','`(10, 20)`','`IndexError`'], a:0,
+     why:'Al desempaquetar, `a` recibe el primer valor (10) y `b` el segundo (20).'},
+    {t:'fill', q:'Completá para que se imprima 6.', code:L('punto = (4, 6, 8)','print(punto[___])   # 6'), ans:['1'], bank:['0','1','2','3'],
+     why:'El 6 está en el índice 1, porque se cuenta desde 0.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('par = (1, 2, 3)','a, b = par','print(a, b)'), line:1,
+     why:'La tupla tiene 3 valores, pero solo hay 2 variables. Python no sabe qué hacer con el tercero y da ValueError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Desempaquetar los tres: `a, b, c = par`','Cambiar `par` por `(1, 2, 3, 4)`','Agregar `:` al final','Poner `a, b = (1, 2, 3)`'], a:0}},
+    {t:'quiz', q:'¿Cuál conviene para guardar coordenadas (x, y) que no cambian?', opts:['Una lista porque es más flexible','Una tupla porque no se modifica','Un diccionario porque tiene claves','Un texto porque es inmutable'], a:1,
+     why:'Si los valores no tienen que cambiar, una tupla deja esa intención clara y evita modificaciones accidentales.'}
+  ]
+},
+{
+  title:'Diccionarios', sub:'Clave:valor',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Buscar por nombre, no por posición', p:['En una lista buscás por **posición** (`lista[0]`). Pero a veces querés buscar por **nombre**: la edad de Ana, el precio de la pera. Para eso sirve un **diccionario**, como una agenda de contactos.','Cada entrada tiene una **clave** (lo que buscás) y un **valor** (lo que obtenés).'],
+     code:L('# con lista: hay que recordar en qué posición estaba Ana','edades = [30, 25]','','# con diccionario: se pide directo por el nombre','edades = {"Ana": 30, "Luis": 25}','print(edades["Luis"])   # 25')},
+{h:'Clave:valor', p:['Un diccionario guarda pares clave:valor entre llaves. La clave va antes de los dos puntos y el valor después.','Para acceder a un valor se usa la clave entre corchetes. `len()` cuenta cuántos pares hay.'],
+     code:L('edad = {"Ana": 30, "Luis": 25}','print(edad["Ana"])   # 30','print(len(edad))     # 2')},
+    {h:'KeyError y get', p:['Si pedís una clave que no existe, Python lanza `KeyError`.','`.get(clave)` devuelve `None` si no existe (no rompe). `.get(clave, defecto)` devuelve el defecto.'],
+     code:L('edad = {"Ana": 30}','print(edad["Luis"])  # KeyError','print(edad.get("Luis"))   # None','print(edad.get("Luis", 0))  # 0')},
+    {h:'Agregar, modificar, borrar', p:['Asignar a una clave que ya existe modifica su valor. Si no existe, la agrega.','`pop(clave)` borra la clave y devuelve su valor.'],
+     code:L('d = {"a": 1}','d["b"] = 2       # agregar','d["a"] = 10      # modificar','d.pop("b")       # borrar','print(d)   # {\'a\': 10}')},
+    {h:'Recorrer un diccionario', p:['`for k in d` recorre solo las claves. `.keys()` también. `.values()` recorre los valores.','`.items()` devuelve pares (clave, valor), ideal para `for k, v in d.items():`.','`in` sobre un diccionario pregunta por las claves, no por los valores.'],
+     code:L('d = {"a": 1, "b": 2}','for k in d:','    print(k)   # a, b','for k, v in d.items():','    print(k, v)')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"x": 10, "y": 20}','print(d["y"])'), opts:['`10`','`20`','`"y"`','`KeyError`'], a:1,
+     why:'`d["y"]` busca la clave "y" y devuelve su valor: 20.'},
+    {t:'fill', q:'Completá para no romper si la clave no existe.', code:L('d = {"x": 10}','print(d.___("y", 0))   # 0'), ans:['get'], bank:['get','keys','find','value'],
+     why:'`.get(clave, defecto)` devuelve el defecto si la clave no está. Con corchetes daría KeyError.'},
+    {t:'quiz', q:'¿Qué pasa?', code:L('d = {"a": 1}','print(d["b"])'), opts:['Imprime `1`','Imprime `None`','Lanza `KeyError`','Imprime `0`'], a:2,
+     why:'La clave "b" no existe. Con corchetes, Python lanza KeyError. Para evitar eso se usa `.get()`.'},
+    {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d)   # {\'a\': 1, \'b\': 2}'), ans:['"b"'], bank:['"b"','"a"','b','2'],
+     why:'La clave va entre comillas porque es un texto. Sin comillas, Python busca una variable llamada `b` y da NameError.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2, "c": 3}','print(len(d))'), opts:['`1`','`3`','`6`','`9`'], a:1,
+     why:'`len` de un diccionario cuenta los pares clave:valor. Hay 3: a, b y c.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('d = {"Ana": 30}','print(d["Luis"])'), line:1,
+     why:'La clave "Luis" no está en el diccionario. Con corchetes, eso lanza KeyError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `d.get("Luis", 0)`','Usar `d["luis"]`','Usar `d[0]`','Poner `d.append("Luis")`'], a:0}},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('d = {"a": 1, "b": 2}','for k, v in d:','    print(k, v)'), line:1,
+     why:'Recorrer un diccionario directamente da solo las claves. Al intentar desempaquetar una clave en dos variables, da ValueError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `d.items()` en el for','Usar `d.keys()` en el for','Usar `d.values()` en el for','Usar `range(d)` en el for'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2}','print("a" in d)'), opts:['`True`','`False`','`1`','`KeyError`'], a:0,
+     why:'`in` sobre un diccionario busca en las claves. "a" es una clave, así que da True.'}
+  ]
+},
+{
+  title:'Sets', sub:'Únicos y sin orden',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'¿Para qué sirve un set?', p:['Un **set** es una colección donde **cada elemento aparece una sola vez**. Es ideal para quitar repetidos o para preguntar rápido "¿está esto acá?".','Si intentás meter un valor que ya está, Python simplemente lo ignora.'],
+     code:L('visitas = {"Ana", "Luis", "Ana"}','print(visitas)   # Ana aparece una sola vez')},
+{h:'Conjuntos: sin duplicados', p:['Un set se escribe entre llaves, como un diccionario sin valores. No tiene orden ni índices: no podés hacer `s[0]`.','`len()` cuenta cuántos elementos hay. `in` pregunta si un elemento está.'],
+     code:L('s = {1, 2, 3}','print(len(s))   # 3','print(2 in s)   # True','print(s[0])     # TypeError')},
+    {h:'set(lista) quita repetidos', p:['Pasar una lista a `set()` devuelve un conjunto sin los elementos repetidos.','Ojo: como no tiene orden, el resultado puede aparecer en cualquier orden.'],
+     code:L('nums = [1, 2, 2, 3, 3, 3]','unicos = set(nums)','print(unicos)   # {1, 2, 3}','print(len(unicos))  # 3')},
+    {h:'Operaciones de conjuntos', p:['`.add(x)` agrega. `.remove(x)` saca (y da `KeyError` si `x` no está).','`a | b` es la unión (todo junto). `a & b` es la intersección (lo que está en los dos). `a - b` es lo que está en `a` pero no en `b`.'],
+     code:L('s = {1, 2}','s.add(3)','s.remove(1)','print(s)   # {2, 3}','a = {1, 2, 3}','b = {2, 3, 4}','print(a | b)   # {1, 2, 3, 4}','print(a & b)   # {2, 3}','print(a - b)   # {1}')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 2, 3]','print(len(set(nums)))'), opts:['`2`','`3`','`4`','`6`'], a:1,
+     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}. `len` cuenta 3 elementos.'},
+    {t:'fill', q:'Completá para agregar el 3.', code:L('s = {1, 2}','s.___(3)','print(len(s))   # 3'), ans:['add'], bank:['add','append','insert','push'],
+     why:'En un set se agrega con `.add()`. `append` es de listas, no de sets.'},
+    {t:'quiz', q:'¿Qué pasa?', code:L('s = {1, 2, 3}','print(s[0])'), opts:['Imprime `1`','Imprime `{1}`','Lanza `TypeError`','Lanza `IndexError`'], a:2,
+     why:'Los sets no tienen índices. Intentar indexarlos con corchetes lanza TypeError.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('s = {10, 20, 30}','print(s[1])'), line:1,
+     why:'Los sets no se indexan. `s[1]` da TypeError porque los sets no tienen orden ni posiciones.',
+     fix:{q:'¿Cómo se arregla?', opts:['Recorrerlo con `for x in s:` en vez de usar un índice','Agregar `:` al final','Cambiar `set` por `dict`','Usar `s.get(1)`'], a:0}},
+    {t:'fill', q:'Completá para que quede la intersección.', code:L('a = {1, 2, 3}','b = {2, 3, 4}','print(a ___ b)   # {2, 3}'), ans:['&'], bank:['&','|','-','+'],
+     why:'`&` da la intersección: los elementos que están en los dos conjuntos. Acá son 2 y 3.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = {1, 2}','b = {2, 3}','print(a | b)'), opts:['`{1, 2}`','`{2}`','`{1, 2, 3}`','`{1, 3}`'], a:2,
+     why:'`|` es la unión: todo lo que está en `a` o en `b`, sin repetir. Queda {1, 2, 3}.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('s = {1, 2}','s.remove(5)'), line:1,
+     why:'`remove(5)` sobre un set que no tiene el 5 da KeyError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Verificar antes con `if 5 in s:` o quitar la línea','Cambiar `5` por `10`','Poner `s.pop(5)`','Agregar `:` al final'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('s = {1, 2, 3}','print(4 not in s)'), opts:['`True`','`False`','`4`','`KeyError`'], a:0,
+     why:'`4 not in s` pregunta si el 4 NO está. Como no está, devuelve True.'}
+  ]
+},
+{
+  title:'Comprensiones', sub:'Listas en una línea',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Una lista armada en una línea', p:['Una comprensión de lista crea una lista nueva aplicando una operación a cada elemento de otra lista.','Se escribe entre corchetes: primero la operación, después el `for`.'],
+     code:L('nums = [1, 2, 3, 4]','doble = [n * 2 for n in nums]','print(doble)   # [2, 4, 6, 8]')},
+    {h:'Cómo leer una comprensión', p:['Se lee en voz alta: `[n ** 2 for n in nums]` quiere decir **"n al cuadrado, para cada n en nums"**. Lo que va **al principio** es lo que se guarda en la lista nueva, y el `for` dice de dónde salen los elementos.','La lista original **no se modifica**: se arma una lista nueva aparte.'],
+     code:L('nums = [1, 2, 3]','cuad = [n ** 2 for n in nums]','','# n vale 1 → guarda 1 ** 2 = 1','# n vale 2 → guarda 2 ** 2 = 4','# n vale 3 → guarda 3 ** 2 = 9','print(cuad)   # [1, 4, 9]')},
+{h:'Equivale a for + append', p:['La comprensión hace lo mismo que un `for` que arma una lista con `append`, pero en una línea.','Para casos simples, la comprensión es más corta y clara.'],
+     code:L('nums = [1, 2, 3, 4]','doble = []','for n in nums:','    doble.append(n * 2)','print(doble)   # [2, 4, 6, 8]')},
+    {h:'Filtrar con if', p:['Podés agregar un `if` al final para quedarte solo con los elementos que cumplan la condición.','El `if` filtra: los elementos que no cumplen no entran a la lista nueva.'],
+     code:L('a = [1, 2, 3, 4]','p = [n for n in a if n % 2 == 0]','print(p)   # [2, 4]')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3]','print([n * 10 for n in nums])'), opts:['`[1, 2, 3]`','`[10, 20, 30]`','`[10, 2, 3]`','`[1, 10, 100]`'], a:1,
+     why:'La comprensión multiplica cada elemento por 10: 1*10, 2*10, 3*10 = 10, 20, 30.'},
+    {t:'fill', q:'Completá la comprensión.', code:L('nums = [1, 2, 3]','doble = [n * 2 ___ n in nums]','print(doble)   # [2, 4, 6]'), ans:['for'], bank:['for','in','if','while'],
+     why:'Toda comprensión lleva un `for` que recorre la lista. Después viene `in` y el nombre de la lista.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4]','print([n for n in nums if n > 2])'), opts:['`[1, 2]`','`[3, 4]`','`[1, 2, 3, 4]`','`[2, 3, 4]`'], a:1,
+     why:'El `if n > 2` filtra: solo entran los que son mayores a 2, o sea el 3 y el 4.'},
+    {t:'fill', q:'Completá para dejar solo los menores a 3.', code:L('a = [1, 2, 3, 4]','p = [n for n in a ___ n < 3]','print(p)   # [1, 2]'), ans:['if'], bank:['if','for','while','in'],
+     why:'El `if` es lo que filtra. Sin él, la comprensión incluiría todos los números.'},
+    {t:'quiz', q:'¿Qué comprensión hace lo mismo?', code:L('nums = [1, 2, 3]','resultado = []','for n in nums:','    resultado.append(n + 1)','print(resultado)'), opts:['`[n for n in nums]`','`[n + 1 for n in nums]`','`[nums + 1 for n in nums]`','`[n + 1 if n in nums]`'], a:1,
+     why:'El `for` original suma 1 a cada elemento. La comprensión equivalente también suma 1 a cada uno.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','doble = [n * 2 for n nums]','print(doble)'), line:1,
+     why:'Falta el `in` después de la variable del for. Sin `in`, Python no puede saber de dónde sacar los valores.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `in` antes de `nums`','Agregar `if` antes de `nums`','Cambiar `for` por `in`','Agregar paréntesis alrededor'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = [5, 6, 7, 8]','print([x for x in a if x > 6])'), opts:['`[5, 6]`','`[7, 8]`','`[6, 7, 8]`','`[5, 6, 7, 8]`'], a:1,
+     why:'El filtro `x > 6` deja pasar solo 7 y 8.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','doble = n * 2 for n in nums','print(doble)'), line:1,
+     why:'Una comprensión necesita corchetes. Sin ellos, la sintaxis del `for` suelto no es válida y Python tira SyntaxError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Envolver entre corchetes: `[n * 2 for n in nums]`','Cambiar `for` por `if`','Agregar `:` al final','Poner `print` adelante'], a:0}}
+  ]
+},
+{
+  title:'Repaso Semana 2', sub:'Todo junto',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Mezcla de la semana', p:['Listas, slicing, tuplas, diccionarios, sets y comprensiones, todo mezclado.','Si fallás una, volvé al final para que la repitas.'], code:''}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [10, 20, 30]','nums.append(40)','print(nums[-1])'), opts:['`10`','`30`','`40`','`IndexError`'], a:2,
+     why:'`append(40)` agrega el 40 al final. `nums[-1]` devuelve el último, que ahora es 40.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2}','print(d.get("c", 0))'), opts:['`None`','`0`','`KeyError`','`2`'], a:1,
+     why:'La clave "c" no está. `.get` con defecto devuelve el 0 en vez de romper.'},
+    {t:'fill', q:'Completá para cortar del 3 al 4.', code:L('nums = [1, 2, 3, 4, 5]','print(nums[___])   # [3, 4]'), ans:['2:4'], bank:['2:4','1:3','2:3','3:5'],
+     why:'El 3 está en el índice 2 y el 4 en el 3. Con `2:4` entran los índices 2 y 3, o sea [3, 4].'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 1, 2, 3, 3]','print(len(set(nums)))'), opts:['`2`','`3`','`5`','`1`'], a:1,
+     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}. `len` cuenta 3.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('punto = (3, 5)','punto[0] = 9'), line:1,
+     why:'Las tuplas son inmutables. Asignar a un índice lanza TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Crear una tupla nueva: `punto = (9, 5)`','Cambiar por `punto[0] == 9`','Agregar `:` al final','Usar `punto.append(9)`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = [1, 2, 3, 4]','b = [n * 2 for n in a if n > 2]','print(b)'), opts:['`[2, 4, 6, 8]`','`[6, 8]`','`[4, 6, 8]`','`[2, 4]`'], a:1,
+     why:'El `if n > 2` filtra a [3, 4]. Después el `* 2` los transforma en [6, 8].'},
+    {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d["b"])   # 2'), ans:['"b"'], bank:['"b"','b','2','"a"'],
+     why:'Sin comillas, Python busca una variable llamada `b` y da NameError. Con `"b"` se agrega una clave nueva.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','nums.remove(2, 1)'), line:1,
+     why:'`remove` toma un solo argumento. Pasarle dos da TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Quitar el `, 1`','Cambiar por `pop(2, 1)`','Agregar `:` al final','Cambiar `remove` por `delete`'], a:0}}
+  ]
+}
+];
+
+/* ---------- Progreso guardado (solo en este navegador) ---------- */
+const KEY='python-desde-cero-v1';
+let save={xp:0,streak:0,last:'',done:{}};
+try{const s=localStorage.getItem(KEY); if(s){const o=JSON.parse(s); if(o&&typeof o==='object') save=Object.assign(save,o);}}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
+function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function currentStreak(){
+  if(!save.last) return 0;
+  const y=new Date(); y.setDate(y.getDate()-1);
+  return (save.last===dayKey()||save.last===dayKey(y))?save.streak:0;
+}
+function bumpStreak(){
+  const today=dayKey(); if(save.last===today) return;
+  const y=new Date(); y.setDate(y.getDate()-1);
+  save.streak=(save.last===dayKey(y))?save.streak+1:1; save.last=today;
+}
+
+/* ---------- Utilidades ---------- */
+function el(tag,attrs){
+  const e=document.createElement(tag); attrs=attrs||{};
+  for(const k in attrs){const v=attrs[k];
+    if(k==='class') e.className=v;
+    else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),v);
+    else if(v===true) e.setAttribute(k,'');
+    else if(v!==false&&v!=null) e.setAttribute(k,v);
+  }
+  for(let i=2;i<arguments.length;i++){
+    const kids=[].concat(arguments[i]);
+    for(const c of kids){ if(c==null||c===false) continue; e.append(c.nodeType?c:document.createTextNode(c)); }
+  }
+  return e;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function rich(s){
+  const f=document.createDocumentFragment();
+  s.split(/(`[^`]+`|\*\*[^*]+\*\*)/).forEach(p=>{
+    if(!p) return;
+    if(p[0]==='`') f.append(el('code',{},p.slice(1,-1)));
+    else if(p.slice(0,2)==='**') f.append(el('b',{},p.slice(2,-2)));
+    else f.append(p);
+  });
+  return f;
+}
+const ICONS={
+  flame:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5.5 6 5.5 11.2A5.5 5.5 0 0 1 12 19a5.5 5.5 0 0 1-5.5-5.8c0-2.2 1-3.6 2.2-4.7.1 2 .9 3.1 2 3.5C10.2 8.2 10.6 5 12 2z"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4.5 14H10l-1 8 9-12h-5.5z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>',
+  star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>'
+};
+function icon(n,cls){const s=el('span',{class:'ic'+(cls?' '+cls:'')});s.innerHTML=ICONS[n];return s;}
+function stars(n,big){const w=el('span',{class:'stars'+(big?' big':''),role:'img','aria-label':n+' de 3 estrellas'});for(let i=0;i<3;i++)w.append(icon('star',i<n?'on':''));return w;}
+
+/* ---------- Resaltado de sintaxis ---------- */
+const KW=new Set(['if','elif','else','for','while','in','and','or','not','True','False','None','break','continue','def','return','import','from','as','class','try','except','finally','raise','with','lambda','pass','global','is','assert','del','yield']);
+const FN=new Set(['print','input','int','float','str','bool','range','len','type','list','dict','set','tuple','sum','min','max','sorted','enumerate','zip','open','abs','round','isinstance','map','filter','super','reversed']);
+const TOK=/(f?"[^"\n]*"|f?'[^'\n]*'|#.*$|___|\d+(?:\.\d+)?|[A-Za-z_]\w*|\s+|.)/g;
+function hlLine(line,onBlank){
+  const f=document.createDocumentFragment();
+  line.split('___').forEach((seg,k)=>{
+    if(k>0) f.append(onBlank());
+    TOK.lastIndex=0; let m;
+    while((m=TOK.exec(seg))){
+      const t=m[0]; if(t==='') {TOK.lastIndex++; continue;}
+      let c='';
+      if(t[0]==='#') c='cm'; else if(/^f?["']/.test(t)) c='str'; else if(/^\d/.test(t)) c='num-t'; else if(KW.has(t)) c='kw'; else if(FN.has(t)) c='fn';
+      f.append(c?el('span',{class:c},t):t);
+    }
+  });
+  return f;
+}
+const tag=()=>el('div',{class:'code-tag'},'python');
+function codeStatic(code){
+  const pre=el('pre');
+  code.split('\n').forEach((l,i,a)=>{pre.append(hlLine(l,()=>'___')); if(i<a.length-1) pre.append('\n');});
+  return el('div',{class:'code'},tag(),pre);
+}
+function codeFill(c){
+  const pre=el('pre'); let bi=0;
+  c.ex.code.split('\n').forEach((l,i,a)=>{
+    pre.append(hlLine(l,()=>{
+      const idx=bi++; const v=c.filled[idx];
+      let cls='blank'+(v?' filled':'');
+      if(c.checked) cls+=(v===c.ex.ans[idx])?' ok':' bad';
+      return el('button',{class:cls,type:'button','aria-label':v?('Espacio '+(idx+1)+': '+v+'. Tocá para vaciar'):('Espacio vacío '+(idx+1)),disabled:c.checked,onclick:()=>{c.filled[idx]=null;render();}},v||'');
+    }));
+    if(i<a.length-1) pre.append('\n');
+  });
+  return el('div',{class:'code'},tag(),pre);
+}
+function codeBug(c){
+  const ex=c.ex, lines=ex.code.split('\n');
+  const box=el('div',{class:'lines',role:'group','aria-label':'Líneas de código'});
+  lines.forEach((l,i)=>{
+    let cls='ln';
+    if(c.checked&&!c.ok&&c.wrongLine){ if(i===ex.line) cls+=' ok'; else if(i===c.sel) cls+=' bad'; }
+    else if(c.step===1||c.checked){ if(i===ex.line) cls+=' ok'; }
+    else if(i===c.sel) cls+=' sel';
+    const locked=c.step===1||c.checked;
+    box.append(el('button',{class:cls,type:'button','aria-label':'Línea '+(i+1)+': '+l,disabled:locked,onclick:()=>{c.sel=i;render();}},
+      el('span',{class:'no'},String(i+1)), el('span',{class:'src'},l===''?' ':hlLine(l,()=>'___'))));
+  });
+  return el('div',{class:'code'},tag(),box);
+}
+
+/* ---------- Estado ---------- */
+let S=null; // null = inicio
+function startLesson(i){
+  celebrate=null;
+  const les=LESSONS[i];
+  S={li:i,les,view:les.cards.length?'cards':'ex',ci:0,queue:les.ex.map(ex=>({ex,retry:false,tries:0})),qi:0,cur:null,first:0,good:0,xp:0,total:les.ex.length,stars:0};
+  if(S.view==='ex') S.cur=prep(S.queue[0]);
+  render(true);
+}
+function prep(item){
+  const ex=item.ex, c={item,ex,checked:false,ok:null,step:0};
+  if(ex.t==='fill'){c.bank=shuffle(Array.from(new Set(ex.bank)));c.filled=ex.ans.map(()=>null);}
+  if(ex.t==='quiz'){c.opts=shuffle(ex.opts.map((t,i)=>({t,ok:i===ex.a})));c.sel=null;}
+  if(ex.t==='bug'){c.sel=null;c.fixOpts=shuffle(ex.fix.opts.map((t,i)=>({t,ok:i===ex.fix.a})));c.fixSel=null;c.wrongLine=false;}
+  return c;
+}
+function goHome(){S=null;render(true);}
+function ready(c){
+  const ex=c.ex;
+  if(ex.t==='fill') return c.filled.every(v=>v!==null);
+  if(ex.t==='quiz') return c.sel!==null;
+  if(ex.t==='bug') return c.step===0?c.sel!==null:c.fixSel!==null;
+  return false;
+}
+function check(){
+  const c=S.cur, ex=c.ex;
+  if(ex.t==='bug'&&c.step===0){
+    if(c.sel===ex.line){c.step=1;render();return;}
+    c.wrongLine=true;c.ok=false;
+  } else if(ex.t==='bug'){ c.ok=c.fixOpts[c.fixSel].ok; }
+  else if(ex.t==='fill'){ c.ok=c.filled.every((v,i)=>v===ex.ans[i]); }
+  else { c.ok=c.opts[c.sel].ok; }
+  c.checked=true;
+  const it=c.item;
+  if(c.ok){ S.good++; S.xp+=it.retry?4:10; if(!it.retry) S.first++; }
+  else if(it.tries<2){ S.queue.push({ex,retry:true,tries:it.tries+1}); }
+  render();
+}
+function next(){
+  S.qi++;
+  if(S.qi>=S.queue.length) return finish();
+  S.cur=prep(S.queue[S.qi]); render(true);
+}
+function finish(){
+  const acc=S.first/S.total;
+  S.stars=acc>=0.85?3:acc>=0.6?2:1;
+  const wasNew=!save.done[S.li];
+  const prev=(save.done[S.li]&&save.done[S.li].stars)||0;
+  save.done[S.li]={stars:Math.max(prev,S.stars)};
+  save.xp+=S.xp; bumpStreak(); persist();
+  celebrate=wasNew?S.li:null;
+  S.view='done'; render(true);
+}
+function feedback(c){
+  const ex=c.ex, out=[];
+  if(c.ok){ out.push(ex.why); return {head:'Correcto',body:out}; }
+  if(ex.t==='fill') out.push('Era: '+ex.ans.map(a=>'`'+a+'`').join(' y ')+'.');
+  else if(ex.t==='quiz') out.push('La respuesta era '+ex.opts[ex.a]+'.');
+  else if(c.wrongLine) out.push('El error está en la línea '+(ex.line+1)+'.');
+  else out.push('La corrección era: '+ex.fix.opts[ex.fix.a]+'.');
+  out.push(ex.why);
+  return {head:'No era esa',body:out};
+}
+
+/* ---------- Pantallas ---------- */
+function stat(ic,tone,val,label){
+  return el('div',{class:'stat'},el('div',{class:'row t-'+tone},icon(ic),el('span',{},String(val))),el('small',{},label));
+}
+/* ---------- Mapa de lecciones ---------- */
+const MAP_W=360, STEP=132, Y0=100, XL=92, XR=268;
+const NS='http://www.w3.org/2000/svg';
+let celebrate=null, homeAfter=null, homeTimers=[];
+const pos=i=>({x:i%2===0?XL:XR,y:Y0+i*STEP});
+function connD(i){const a=pos(i),b=pos(i+1),m=(a.y+b.y)/2;return 'M'+a.x+' '+a.y+' C'+a.x+' '+m+' '+b.x+' '+m+' '+b.x+' '+b.y;}
+function firstNotDone(set){for(let i=0;i<LESSONS.length;i++) if(!set.has(i)) return i; return -1;}
+function statesOf(set){const f=firstNotDone(set);return LESSONS.map((_,i)=>set.has(i)?'done':(i===f?'current':'locked'));}
+function svgEl(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs) e.setAttribute(k,attrs[k]);return e;}
+function paintNode(nd,s){
+  const i=+nd.dataset.i, les=LESSONS[i], d=save.done[i];
+  nd.dataset.s=s;
+  const b=nd.querySelector('.node-btn');
+  b.disabled=(s==='locked');
+  b.setAttribute('aria-label','Lección '+(i+1)+': '+les.title+'. '+
+    (s==='done'?'Completada'+(d?', '+d.stars+' de 3 estrellas':'')+'. Tocá para repetirla.':
+     s==='current'?'Disponible. Tocá para empezar.':'Bloqueada. Completá la anterior para abrirla.'));
+  const slot=nd.querySelector('.slot'); slot.replaceChildren();
+  if(s==='done'&&d) slot.append(stars(d.stars));
+}
+function buildMap(set){
+  const n=LESSONS.length, H=Y0+(n-1)*STEP+72, st=statesOf(set);
+  const map=el('div',{class:'map',style:'aspect-ratio:'+MAP_W+'/'+H});
+  const svg=svgEl('svg',{class:'map-lines',viewBox:'0 0 '+MAP_W+' '+H,'aria-hidden':'true'});
+  for(let i=0;i<n-1;i++){
+    svg.append(svgEl('path',{class:'trk',d:connD(i)}));
+    svg.append(svgEl('path',{class:'prg'+(set.has(i)?' lit':''),d:connD(i),pathLength:'1','data-i':String(i)}));
+  }
+  map.append(svg);
+  LESSONS.forEach((les,i)=>{
+    const p=pos(i);
+    const nd=el('div',{class:'node '+(i%2?'right':'left'),'data-i':String(i),style:'left:'+(p.x/MAP_W*100)+'%;top:'+(p.y/H*100)+'%'},
+      el('span',{class:'tip'},'Empezar'),
+      el('button',{class:'node-btn',type:'button',onclick:()=>startLesson(i)},
+        el('span',{class:'glyph g-lock'},icon('lock')),
+        el('span',{class:'glyph g-play'},icon('play')),
+        el('span',{class:'glyph g-check'},icon('check'))),
+      el('div',{class:'nlabel'},el('span',{class:'nt'},les.title),el('span',{class:'ns'},les.sub),el('span',{class:'slot'})));
+    paintNode(nd,st[i]);
+    map.append(nd);
+  });
+  return map;
+}
+/* Al volver de completar una lección: se muestra el estado anterior y se anima el cambio en tres tiempos */
+function afterHome(map,realSet,pending,initSet){
+  homeTimers.forEach(clearTimeout); homeTimers=[];
+  const nodeAt=i=>map.querySelector('.node[data-i="'+i+'"]');
+  const go=(ms,fn)=>homeTimers.push(setTimeout(fn,ms));
+  const centerOn=(i,smooth)=>{const n=nodeAt(i); if(n) n.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});};
+  if(pending===null){const f=firstNotDone(realSet); if(f>=2) centerOn(f,false); return;}
+  const before=statesOf(initSet), after=statesOf(realSet);
+  centerOn(pending,false);
+  go(500,()=>{after.forEach((s,i)=>{if(s==='done'&&before[i]!=='done') paintNode(nodeAt(i),'done');});});
+  go(1000,()=>{map.querySelectorAll('.prg').forEach(p=>{if(realSet.has(+p.dataset.i)) p.classList.add('lit');});});
+  go(2000,()=>{
+    let first=-1;
+    after.forEach((s,i)=>{
+      if(s==='current'&&before[i]!=='current'){
+        const n=nodeAt(i); paintNode(n,'current'); n.classList.add('unlocking');
+        n.addEventListener('animationend',()=>n.classList.remove('unlocking'),{once:true});
+        if(first<0) first=i;
+      }
+    });
+    if(first>=0) centerOn(first,true);
+  });
+}
+function Home(){
+  const realSet=new Set(Object.keys(save.done).map(Number));
+  const pending=celebrate; celebrate=null;
+  const initSet=new Set(realSet); if(pending!==null) initSet.delete(pending);
+  const map=buildMap(initSet);
+  const cur=LESSONS[firstNotDone(realSet)]||LESSONS[LESSONS.length-1];
+  const weekLabel='Semana '+(cur.week||1)+' · '+(cur.weekName||'Fundamentos');
+  homeAfter=()=>afterHome(map,realSet,pending,initSet);
+  const n=Object.keys(save.done).length, st=currentStreak();
+  return el('div',{},
+    el('header',{class:'head'},el('p',{class:'eyebrow'},weekLabel),el('h1',{},'Python desde cero')),
+    el('div',{class:'stats'},
+      stat('flame','flame',st,st===1?'día de racha':'días de racha'),
+      stat('bolt','spark',save.xp,'XP'),
+      stat('check','good',n+'/'+LESSONS.length,'lecciones')),
+    el('p',{class:'lead'},'Completá cada lección para abrir la siguiente. Leé, completá el código y encontrá el error: unos 5 minutos por lección.'),
+    map,
+  );
+}
+function Topbar(){
+  const pct=S.view==='ex'?Math.round(S.good/S.total*100):(S.view==='done'?100:0);
+  return el('div',{class:'topbar'},
+    el('button',{class:'icon-btn',type:'button','aria-label':'Salir de la lección',onclick:goHome},icon('x')),
+    el('div',{class:'bar',role:'progressbar','aria-valuemin':'0','aria-valuemax':'100','aria-valuenow':String(pct),'aria-label':'Progreso de la lección'},el('i',{style:'width:'+pct+'%'})));
+}
+function dock(cls,kids){return el('div',{class:'dock '+(cls||'')},el('div',{class:'dock-in'},kids));}
+function btn(label,fn,disabled,ghost){return el('button',{class:'btn'+(ghost?' ghost':''),type:'button',disabled:!!disabled,onclick:fn},label);}
+
+function Cards(){
+  const card=S.les.cards[S.ci], last=S.ci===S.les.cards.length-1;
+  const body=el('article',{class:'card'},el('h2',{},card.h),card.p.map(p=>el('p',{},rich(p))),card.code?codeStatic(card.code):null);
+  const main=el('div',{},Topbar(),el('p',{class:'kicker'},'Leé esto · '+(S.ci+1)+' de '+S.les.cards.length),body);
+  const d=dock('',[btn(last?'Empezar a practicar':'Entendido',()=>{
+    if(last){S.view='ex';S.cur=prep(S.queue[0]);} else S.ci++;
+    render(true);
+  })]);
+  return [main,d];
+}
+const KICK={fill:'Completá el código',bug:'Encontrá el error',quiz:'Elegí la respuesta'};
+function Exercise(){
+  const c=S.cur, ex=c.ex;
+  const sec=el('section',{},Topbar(),el('p',{class:'kicker'},KICK[ex.t]),el('h2',{class:'q'},rich(ex.q)));
+  if(ex.t==='quiz'){
+    if(ex.code) sec.append(codeStatic(ex.code));
+    sec.append(el('div',{class:'opts'},c.opts.map((o,i)=>{
+      let cls='opt';
+      if(c.checked){ if(o.ok) cls+=' right'; else if(i===c.sel) cls+=' wrong'; }
+      else if(i===c.sel) cls+=' sel';
+      return el('button',{class:cls,type:'button',disabled:c.checked,'aria-pressed':String(i===c.sel),onclick:()=>{c.sel=i;render();}},
+        el('span',{class:'k'},String.fromCharCode(65+i)),el('span',{},rich(o.t)));
+    })));
+  }
+  if(ex.t==='fill'){
+    sec.append(codeFill(c));
+    sec.append(el('div',{class:'bank',role:'group','aria-label':'Opciones'},c.bank.map(b=>el('button',{class:'chip',type:'button',disabled:c.checked,onclick:()=>{
+      const i=c.filled.indexOf(null); if(i>-1){c.filled[i]=b;render();}
+    }},b))));
+  }
+  if(ex.t==='bug'){
+    sec.append(codeBug(c));
+    if(c.step===1){
+      sec.append(el('p',{class:'hint-ok'},icon('check'),'Esa es la línea.'));
+      sec.append(el('h3',{class:'sub-q'},ex.fix.q));
+      sec.append(el('div',{class:'opts'},c.fixOpts.map((o,i)=>{
+        let cls='opt';
+        if(c.checked){ if(o.ok) cls+=' right'; else if(i===c.fixSel) cls+=' wrong'; }
+        else if(i===c.fixSel) cls+=' sel';
+        return el('button',{class:cls,type:'button',disabled:c.checked,'aria-pressed':String(i===c.fixSel),onclick:()=>{c.fixSel=i;render();}},
+          el('span',{class:'k'},String.fromCharCode(65+i)),el('span',{},rich(o.t)));
+      })));
+    }
+  }
+  let d;
+  if(!c.checked) d=dock('',[btn('Comprobar',check,!ready(c))]);
+  else{
+    const f=feedback(c);
+    d=dock(c.ok?'good':'bad',[
+      el('div',{class:'fb',role:'status'},el('h3',{},icon(c.ok?'check':'x'),f.head),f.body.map(t=>el('p',{},rich(t)))),
+      btn('Continuar',next)]);
+  }
+  return [sec,d];
+}
+function Done(){
+  const les=S.les;
+  const main=el('div',{},Topbar(),el('section',{class:'done'},
+    stars(S.stars,true),
+    el('h2',{},'Lección completa'),
+    el('p',{class:'ttl'},les.title),
+    el('div',{class:'res'},
+      el('div',{},el('strong',{},'+'+S.xp),el('span',{},'XP ganados')),
+      el('div',{},el('strong',{},S.first+'/'+S.total),el('span',{},'a la primera')),
+      el('div',{},el('strong',{},String(currentStreak())),el('span',{},currentStreak()===1?'día de racha':'días de racha')))));
+  return [main,dock('',[btn('Continuar',goHome)])];
+}
+
+const root=document.getElementById('app');
+function render(top){
+  homeTimers.forEach(clearTimeout); homeTimers=[];
+  const y=window.scrollY;
+  root.replaceChildren();
+  if(!S){ root.className='app'; root.append(Home()); }
+  else{
+    const parts=S.view==='cards'?Cards():S.view==='ex'?Exercise():Done();
+    root.className='app has-dock';
+    root.append(parts[0],parts[1]);
+  }
+  window.scrollTo(0,top?0:y);
+  if(!S&&homeAfter){const h=homeAfter;homeAfter=null;h();}
+}
+render(true);
+})();
+</script>
