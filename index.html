@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Python desde cero</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,7 +122,7 @@ b{font-weight:700}
 /* Código */
 .code{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:4px 0 14px}
 .code-tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface2)}
-.code pre{margin:0;padding:12px 12px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;line-height:1.7;tab-size:4;color:var(--ink)}
+.code pre{margin:0;padding:12px 12px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;color:var(--ink)}
 .card .code{margin:0}
 .kw{color:var(--kw);font-weight:500}.str{color:var(--str)}.num-t{color:var(--num)}.cm{color:var(--cm);font-style:italic}.fn{color:var(--fn)}
 .blank{display:inline-block;min-width:3.6ch;min-height:1.6em;vertical-align:baseline;padding:0 .5ch;margin:0 1px;border:0;border-bottom:2px dashed var(--accent);background:var(--accent-soft);color:var(--ink);font:inherit;border-radius:5px;text-align:center;line-height:1.5}
@@ -204,10 +203,12 @@ const LESSONS=[
 {
   title:'Variables y tipos', sub:'Guardar datos y saber qué son',
   cards:[
-    {h:'Una variable es una etiqueta', p:['Con `=` le ponés un nombre a un valor. Después usás ese nombre cada vez que necesitás el valor.','Python decide el tipo solo: no hay que declararlo.'],
-     code:L('nombre = "Lucía"','edad = 28','altura = 1.62','activo = True')},
-    {h:'Los cuatro tipos básicos', p:['`str` es texto (entre comillas), `int` es entero, `float` es decimal (con punto) y `bool` es `True` o `False`, con mayúscula.','Con `type()` ves de qué tipo es algo.'],
-     code:L('type("hola")  # str','type(28)      # int','type(1.62)    # float','type(True)    # bool')}
+    {h:'Una variable es una etiqueta', p:['Con `=` le ponés un nombre a un valor. Después usás ese nombre cada vez que necesitás el valor.','Con `print()` lo mostrás en pantalla. Python decide el tipo solo: no hay que declararlo.'],
+     code:L('nombre = "Lucía"','edad = 28','print(nombre)   # muestra Lucía','print(edad)     # muestra 28')},
+    {h:'Los cuatro tipos básicos', p:['`str` es texto: va entre comillas, y si adentro hay números también es texto (`"10"` es `str`).','`int` es un número entero. `float` es un decimal: tiene punto, y `3.0` es `float` aunque sea redondo.','`bool` es `True` o `False`, con la primera letra en mayúscula. Con `type()` ves de qué tipo es algo.'],
+     code:L('type("hola")  # str','type("10")    # str','type(28)      # int','type(3.0)     # float','type(True)    # bool')},
+    {h:'Reglas para los nombres', p:['Un nombre puede tener letras, números y `_`. No puede empezar con número, ni tener espacios o guiones, ni ser una palabra que Python ya usa (`if`, `for`, `class`...).','Las mayúsculas cuentan: `precio` y `Precio` son nombres distintos. Si escribís un nombre que no existe, Python avisa con `NameError`. Por eso `true` en minúscula también da `NameError`: no es un booleano, lo toma como un nombre.'],
+     code:L('precio = 10','print(precio)   # 10','print(Precio)   # NameError')}
   ],
   ex:[
     {t:'fill', q:'Guardá 25 en una variable llamada `edad` y mostrala.', code:L('___ = 25','print(___)'), ans:['edad','edad'], bank:['edad','25','"edad"','print'],
@@ -215,7 +216,7 @@ const LESSONS=[
     {t:'quiz', q:'¿De qué tipo es `x`?', code:'x = 3.0', opts:['`int`','`float`','`str`','`bool`'], a:1,
      why:'Tiene punto decimal, así que es `float`, aunque el valor sea redondo.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('activo = true','print(activo)'), line:0,
-     why:'Python escribe los booleanos con mayúscula: `True` y `False`. Con `true` busca una variable que no existe y lanza NameError.',
+     why:'Los booleanos se escriben con mayúscula: `True` y `False`. Con `true` Python busca una variable que no existe y lanza NameError.',
      fix:{q:'¿Cómo se arregla?', opts:['Escribir `True` con mayúscula','Poner `true` entre comillas','Cambiar `=` por `==`','Borrar el `print`'], a:0}},
     {t:'quiz', q:'¿De qué tipo es `x`?', code:'x = "10"', opts:['`int`','`float`','`str`','`bool`'], a:2,
      why:'Todo lo que va entre comillas es texto (`str`), aunque parezca un número.'},
@@ -229,36 +230,49 @@ const LESSONS=[
 {
   title:'Operadores', sub:'Cuentas, comparaciones y lógica',
   cards:[
-    {h:'Aritmética', p:['Además de `+`, `-` y `*` tenés `/` (división real), `//` (división entera), `%` (resto) y `**` (potencia).'],
-     code:L('7 + 2    # 9','7 / 2    # 3.5','7 // 2   # 3','7 % 2    # 1','7 ** 2   # 49')},
-    {h:'Comparar y combinar', p:['Las comparaciones devuelven `True` o `False`. Se combinan con `and`, `or` y `not`.','Ojo: `=` guarda un valor, `==` compara.'],
-     code:L('5 == 5               # True','5 != 5               # False','3 > 2 and 2 > 5      # False','not False             # True')}
+    {h:'Cuentas', p:['Además de `+`, `-` y `*` tenés tres más. `/` es la división normal y siempre da decimal.','`//` es la división entera: cuenta cuántas veces entra un número en otro. `7 // 2` es 3 porque el 2 entra 3 veces en el 7 (3 × 2 = 6).','`%` da el resto: lo que sobra de esa división. `7 % 2` es 1. Si `n % 2` da 0, `n` es par.','`**` es potencia: `2 ** 3` es 2 × 2 × 2.'],
+     code:L('7 / 2    # 3.5','7 // 2   # 3  (entra 3 veces)','7 % 2    # 1  (sobra 1)','8 % 2    # 0  (sobra 0: es par)','2 ** 3   # 8  (2 × 2 × 2)')},
+    {h:'Atajos para actualizar', p:['`+=` suma y guarda en la misma variable. `x += 1` es lo mismo que `x = x + 1`.','`-=` resta y `*=` multiplica, igual que `+=`. Python no tiene `++`.'],
+     code:L('puntos = 10','puntos += 5   # ahora vale 15','puntos -= 3   # ahora vale 12','print(puntos)  # 12')},
+    {h:'Operadores con texto', p:['Con texto, `+` junta los dos textos y `*` repite el texto tantas veces como diga el número.'],
+     code:L('"ab" + "cd"   # "abcd"','"ab" * 3      # "ababab"','"-" * 5       # "-----"')},
+    {h:'Preguntas que dan True o False', p:['Una comparación es una pregunta y Python responde `True` (sí) o `False` (no). `5 > 3` pregunta "¿5 es mayor que 3?": es verdad, así que da `True`. `3 > 5` da `False`.','Los operadores son `>` mayor, `<` menor, `>=` mayor o igual (el ≥ de matemática), `<=` menor o igual (el ≤), `==` igual y `!=` distinto. Se escribe `>=`, nunca `=>`.','Ojo con `=` y `==`: `=` guarda un valor y `==` pregunta si dos cosas son iguales.'],
+     code:L('5 > 3   # True (5 es mayor)','3 > 5   # False (3 es menor)','5 > 5   # False (son iguales)','5 >= 5  # True (mayor o igual)','5 != 3  # True (son distintos)','x = 5   # guarda 5 en x','x == 5  # True: ¿x vale 5?')},
+    {h:'Combinar con and, or y not', p:['`and` da `True` solo si las dos preguntas dan `True`. `or` da `True` si al menos una lo da. `not` da lo contrario.','Python resuelve primero cada comparación y después las combina.'],
+     code:L('3 > 1 and 8 > 5 # True (las dos)','3 > 1 and 8 > 9 # False (falla)','3 > 1 or 8 > 9 # True (basta una)','not 3 > 1 # False (invierte)')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:'print(7 // 2)', opts:['`3.5`','`3`','`4`','`2`'], a:1,
-     why:'`//` es división entera: descarta los decimales. 7 entre 2 da 3.'},
+     why:'`//` es división entera: el 2 entra 3 veces en el 7 (3 × 2 = 6) y se descarta lo que sobra.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print(10 % 3)', opts:['`3`','`0`','`1`','`3.33`'], a:2,
-     why:'`%` devuelve el resto. 10 = 3 × 3 + 1, así que el resto es 1.'},
+     why:'`%` devuelve el resto. El 3 entra 3 veces en el 10 (3 × 3 = 9) y sobra 1.'},
     {t:'fill', q:'Completá para saber si `edad` es mayor o igual a 18.', code:L('edad = 20','es_mayor = edad ___ 18','print(es_mayor)'), ans:['>='], bank:['>=','=>','=','<'],
-     why:'Se escribe `>=`. `=>` no existe en Python y `=` asigna en vez de comparar.'},
-    {t:'bug', q:'Tocá la línea con el error.', code:L('x = 5','if x = 5:','    print("cinco")'), line:1,
-     why:'`=` asigna un valor y `==` compara. Dentro de un `if` hace falta comparar.',
-     fix:{q:'¿Cómo se arregla?', opts:['Usar `==` en lugar de `=`','Quitar los dos puntos','Poner el 5 entre comillas','Indentar el `if`'], a:0}},
-    {t:'quiz', q:'¿Qué imprime?', code:'print(5 > 3 and 2 > 4)', opts:['`True`','`False`','`None`','Da error'], a:1,
-     why:'`and` pide que ambas sean verdaderas. `5 > 3` lo es, pero `2 > 4` no.'},
+     why:'Se escribe `>=`. `=>` no existe en Python y `=` guarda un valor en vez de comparar.'},
+    {t:'quiz', q:'¿Qué hace `x == 5` en este código?', code:L('x = 5','print(x == 5)'), opts:['Guarda 5 en `x`','Pregunta si `x` vale 5 y muestra `True`','Da error','Suma 5 a `x`'], a:1,
+     why:'`==` compara. Como `x` vale 5, la pregunta "¿x es igual a 5?" da `True`. Para guardar un valor se usa un solo `=`.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(2 < 9 and 7 > 8)', opts:['`True`','`False`','`None`','Da error'], a:1,
+     why:'`2 < 9` da `True`, pero `7 > 8` da `False`. Con `and` tienen que dar `True` las dos.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(4 > 9 or 6 > 2)', opts:['`True`','`False`','`None`','Da error'], a:0,
+     why:'`4 > 9` da `False`, pero `6 > 2` da `True`. Con `or` alcanza con que una lo sea.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print("ab" * 3)', opts:['`ab3`','`ababab`','`ab ab ab`','Da error'], a:1,
-     why:'Multiplicar un texto por un entero lo repite.'},
+     why:'Multiplicar un texto por un número lo repite esa cantidad de veces.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print(2 ** 3)', opts:['`6`','`8`','`9`','`23`'], a:1,
-     why:'`**` es potencia: 2 elevado a la 3 es 8.'}
+     why:'`**` es potencia: 2 × 2 × 2 = 8.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('puntos = 10','puntos -= 4','print(puntos)'), opts:['`4`','`6`','`10`','`14`'], a:1,
+     why:'`puntos -= 4` es `puntos = puntos - 4`, o sea 10 - 4 = 6.'},
+    {t:'quiz', q:'¿Qué imprime?', code:'print(8 % 2 == 0)', opts:['`True`','`False`','`0`','`4`'], a:0,
+     why:'`8 % 2` da 0 (sobra 0) y `0 == 0` es `True`. Así se pregunta si un número es par.'}
   ]
 },
 {
   title:'Entrada y salida', sub:'print, input y f-strings',
   cards:[
-    {h:'Pedir y mostrar datos', p:['`print()` muestra en pantalla. `input()` pide un dato y lo devuelve siempre como texto (`str`), aunque se escriba un número.','Para usarlo como número hay que convertirlo con `int()` o `float()`.'],
-     code:L('nombre = input("¿Cómo te llamás? ")','edad = int(input("Edad: "))','print("Hola", nombre)')},
+    {h:'Pedir y mostrar datos', p:['`print()` muestra algo en pantalla. Si le pasás varias cosas separadas por coma, las muestra una al lado de la otra con un espacio en el medio.','`input()` pide un dato y lo devuelve siempre como texto (`str`), aunque se escriba un número.','Para usarlo como número hay que convertirlo con `int()` o `float()`.'],
+     code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("Hola", nombre) # Hola Ana')},
+    {h:'Texto y número no se mezclan', p:['Python no suma texto con número: `"20" + 1` da `TypeError`. Hay que convertir antes de hacer la cuenta.'],
+     code:L('edad = input("Edad: ") # "20"','edad + 1 # TypeError','int(edad) + 1 # 21')},
     {h:'f-strings', p:['Una `f` antes de las comillas permite meter variables o cuentas entre llaves.'],
-     code:L('nombre = "Ana"','edad = 30','print(f"Hola {nombre}, el año que viene tenés {edad + 1}")')}
+     code:L('nombre = "Ana"','edad = 30','print(f"{nombre} tiene {edad}")','print(f"Próximo año: {edad + 1}")')}
   ],
   ex:[
     {t:'fill', q:'Completá para que el mensaje use el valor de `nombre`.', code:L('nombre = "Ana"','print(___"Hola {nombre}")'), ans:['f'], bank:['f','r','$','%'],
@@ -273,14 +287,16 @@ const LESSONS=[
     {t:'quiz', q:'¿Qué imprime?', code:L('n = 4','print(f"{n} x 2 = {n * 2}")'), opts:['`4 x 2 = 8`','`{n} x 2 = {n * 2}`','`4 x 2 = n * 2`','Da error'], a:0,
      why:'Dentro de las llaves se evalúa cualquier expresión, así que `n * 2` se calcula.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print("Hola", "mundo")', opts:['`Holamundo`','`Hola mundo`','`Hola, mundo`','`("Hola", "mundo")`'], a:1,
-     why:'Por defecto `print` separa los argumentos con un espacio.'}
+     why:'Por defecto `print` separa los valores con un espacio.'}
   ]
 },
 {
   title:'Condicionales', sub:'if, elif y else',
   cards:[
-    {h:'Decidir qué código corre', p:['Python evalúa las condiciones de arriba hacia abajo y entra al primer bloque verdadero. `else` no lleva condición.','Cada línea con `if`, `elif` o `else` termina en `:` y el bloque va indentado (4 espacios).'],
-     code:L('nota = 7','if nota >= 6:','    print("Aprobado")','elif nota >= 4:','    print("Recuperatorio")','else:','    print("Desaprobado")')}
+    {h:'Decidir qué código corre', p:['Python evalúa las condiciones de arriba hacia abajo y entra al primer bloque verdadero. `else` no lleva condición y cubre todo lo demás.','Cada línea con `if`, `elif` o `else` termina en `:` y el bloque va indentado (4 espacios). Si falta la sangría, Python da `IndentationError`.','Ojo con el límite: `edad > 18` deja afuera al 18, y `edad >= 18` lo incluye.'],
+     code:L('nota = 7','if nota >= 6:','    print("Aprobado")','elif nota >= 4:','    print("Recuperatorio")','else:','    print("Desaprobado")')},
+    {h:'Dos if o un elif', p:['Dos `if` seguidos son independientes: cada uno se evalúa por su cuenta y pueden entrar los dos.','Con `elif`, en cambio, Python se detiene en el primer bloque verdadero y se saltea el resto.'],
+     code:L('x = 12','if x >= 10:','    print("A")','if x >= 5:','    print("B")','# Imprime A y B (dos if sueltos)')}
   ],
   ex:[
     {t:'fill', q:'Completá la sintaxis.', code:L('edad = 15','if edad >= 18___','    print("Mayor")','else___','    print("Menor")'), ans:[':',':'], bank:[':',';','then',')'],
@@ -288,26 +304,30 @@ const LESSONS=[
     {t:'bug', q:'Tocá la línea con el error.', code:L('edad = 20','if edad >= 18','    print("Mayor")'), line:1,
      why:'Falta el `:` al final del `if`. Todo bloque (`if`, `else`, `for`, `while`) lo lleva.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `if`','Cambiar `>=` por `>`','Quitar la indentación','Agregar `else`'], a:0}},
-    {t:'quiz', q:'¿Qué imprime?', code:L('x = 5','if x > 10:','    print("A")','elif x > 3:','    print("B")','else:','    print("C")'), opts:['`A`','`B`','`C`','`B` y `C`'], a:1,
-     why:'`x > 10` es falso, pero `x > 3` es verdadero: entra a ese bloque y se saltea el `else`.'},
-    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('if 5 > 3:','print("sí")'), line:1,
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 5','if x >= 10:','    print("A")','elif x >= 3:','    print("B")','else:','    print("C")'), opts:['`A`','`B`','`C`','`B` y `C`'], a:1,
+     why:'`x >= 10` es falso, pero `x >= 3` es verdadero: entra a ese bloque y se saltea el `else`.'},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('if 5 >= 3:','print("sí")'), line:1,
      why:'Después de los dos puntos, el bloque va indentado. Esa sangría le dice a Python qué código pertenece al `if`.',
-     fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Agregar `else`','Cambiar `>` por `<`','Quitar los dos puntos'], a:0}},
-    {t:'quiz', q:'¿Qué imprime?', code:L('x = 12','if x > 10:','    print("A")','if x > 5:','    print("B")'), opts:['Solo `A`','Solo `B`','`A` y `B`, en dos líneas','Nada'], a:2,
+     fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Agregar `else`','Cambiar `>=` por `<=`','Quitar los dos puntos'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 9','if x >= 7:','    print("A")','if x >= 4:','    print("B")'), opts:['Solo `A`','Solo `B`','`A` y `B`, en dos líneas','Nada'], a:2,
      why:'Son dos `if` independientes y ambos son verdaderos. Con `elif`, solo entraría al primero.'},
     {t:'fill', q:'Completá para imprimir "impar" cuando no sea par.', code:L('n = 7','if n % 2 == 0:','    print("par")','___:','    print("impar")'), ans:['else'], bank:['else','elif','if','otherwise'],
      why:'`else` cubre todo lo que no cumplió el `if` y no lleva condición. `elif` necesitaría una.'},
     {t:'quiz', q:'En una cadena if/elif/else, ¿cuántos bloques se ejecutan como máximo?', opts:['Uno','Todos los verdaderos','Dos','Depende del `else`'], a:0,
-     why:'Entra solo el primer bloque verdadero, o el `else` si ninguno lo fue.'}
+     why:'Entra solo el primer bloque verdadero, o el `else` si ninguno lo fue.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('edad = 18','if edad > 18:','    print("Mayor")','else:','    print("No es mayor")'), opts:['`Mayor`','`No es mayor`','Las dos','Da error'], a:1,
+     why:'`18 > 18` es falso porque son iguales. Para incluir al 18 habría que usar `>=`.'}
   ]
 },
 {
   title:'Bucle for', sub:'Repetir con range',
   cards:[
-    {h:'Repetir un número de veces', p:['`for` recorre una secuencia. Con `range(n)` va de 0 a n-1: el final no se incluye.','También existen `range(inicio, fin)` y `range(inicio, fin, paso)`.'],
+    {h:'Repetir un número de veces', p:['`for` recorre una secuencia. Con `range(n)` da `n` vueltas, con los valores de 0 a n-1: el final no se incluye. `range(3)` da 0, 1, 2.','También existen `range(inicio, fin)` y `range(inicio, fin, paso)`. El `for` termina en `:` y su bloque va indentado, igual que el `if`.'],
      code:L('for i in range(3):','    print(i)','# 0','# 1','# 2')},
-    {h:'Recorrer cosas', p:['`for` sirve con cualquier secuencia. Con un texto, recorre las letras.'],
-     code:L('for letra in "sol":','    print(letra)','','for n in range(1, 6):   # 1, 2, 3, 4, 5','    print(n)')}
+    {h:'Recorrer cosas', p:['`for` sirve con cualquier secuencia. Con un texto, recorre las letras. `range(1, 6)` empieza en 1 y llega hasta 5.'],
+     code:L('for letra in "sol":','    print(letra)   # s, o, l','','for n in range(1, 6):','    print(n)   # 1, 2, 3, 4, 5')},
+    {h:'Acumular un total', p:['Un patrón muy común: arrancar una variable en 0 y sumarle algo en cada vuelta con `+=`.'],
+     code:L('suma = 0','for n in range(1, 4):','    suma += n','print(suma)   # 6  (1 + 2 + 3)')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(3):','    print(i)'), opts:['`0, 1, 2`','`1, 2, 3`','`0, 1, 2, 3`','`1, 2`'], a:0,
@@ -319,8 +339,8 @@ const LESSONS=[
     {t:'bug', q:'Tocá la línea con el error.', code:L('for i in range(3)','    print(i)'), line:0,
      why:'Falta el `:` al final del `for`.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `for`','Cambiar `range(3)` por `range[3]`','Quitar el `print`','Indentar el `for`'], a:0}},
-    {t:'fill', q:'Sumá cada `n` a `suma`.', code:L('suma = 0','for n in range(1, 4):','    suma ___ n','print(suma)'), ans:['+='], bank:['+=','=','==','++'],
-     why:'`+=` suma `n` a lo que ya hay en `suma`. Python no tiene `++`. El resultado es 1 + 2 + 3 = 6.'},
+    {t:'fill', q:'Sumá cada `n` a `suma`.', code:L('suma = 0','for n in range(2, 5):','    suma ___ n','print(suma)'), ans:['+='], bank:['+=','=','==','++'],
+     why:'`+=` suma `n` a lo que ya hay en `suma`. Python no tiene `++`. El resultado es 2 + 3 + 4 = 9.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('for letra in "sol":','    print(letra)'), opts:['`sol`, una vez','`s`, `o`, `l`, una por línea','`sol`, tres veces','Da error'], a:1,
      why:'Un `for` sobre un texto recorre sus letras, una por vuelta.'},
     {t:'quiz', q:'¿Cuántas veces imprime `hola`?', code:L('for i in range(4):','    print("hola")'), opts:['3','4','5','Una'], a:1,
@@ -330,10 +350,11 @@ const LESSONS=[
 {
   title:'Bucle while', sub:'Repetir hasta que se cumpla',
   cards:[
-    {h:'Repetir mientras sea verdadero', p:['`while` repite su bloque mientras la condición sea `True`. Algo tiene que cambiar adentro, o el bucle no termina nunca.'],
-     code:L('n = 3','while n > 0:','    print(n)','    n -= 1','print("¡Despegue!")')},
+    {h:'Repetir mientras sea verdadero', p:['`while` repite su bloque mientras la condición sea `True`. Antes de cada vuelta Python la vuelve a evaluar, y cuando da `False` el bucle termina.','Algo tiene que cambiar adentro del bloque, o la condición nunca deja de ser verdadera y el bucle no termina.'],
+     code:L('n = 3','while n > 0:','    print(n)','    n -= 1   # resta 1 a n','print("¡Despegue!")')},
     {h:'break y continue', p:['`break` sale del bucle en el acto. `continue` salta a la siguiente vuelta sin terminar la actual. Valen para `for` y para `while`.'],
-     code:L('while True:','    texto = input("> ")','    if texto == "salir":','        break')}
+     code:L('while True:','    texto = input("> ")','    if texto == "salir":','        break')},
+    {h:'¿for o while?', p:['Usá `for` cuando sabés cuántas vueltas son o tenés algo para recorrer, como un `range` o un texto.','Usá `while` cuando depende de una condición y no sabés cuántas vueltas hacen falta, por ejemplo seguir pidiendo datos hasta que escriban "salir".'], code:''}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('n = 3','while n > 0:','    print(n)','    n -= 1','print("¡Despegue!")'), opts:['`3, 2, 1, ¡Despegue!`','`3, 2, 1, 0, ¡Despegue!`','`2, 1, 0, ¡Despegue!`','Se repite infinito'], a:0,
@@ -354,14 +375,14 @@ const LESSONS=[
 {
   title:'Repaso final', sub:'Todo junto',
   cards:[
-    {h:'Mezcla de la semana', p:['Tipos, operadores, `input`, f-strings, `if` y bucles, todo mezclado.','Si fallás una, vuelve al final para que la repitas.'], code:''}
+    {h:'Mezcla de la semana', p:['Tipos, operadores, `input`, f-strings, `if` y bucles, todo mezclado.','Si fallás una, volvé al final para que la repitas.'], code:''}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('x = "5"','y = 3','print(x * y)'), opts:['`15`','`555`','`8`','Da error'], a:1,
      why:'`x` es texto, y un texto multiplicado por 3 se repite tres veces.'},
     {t:'fill', q:'Completá para que "impar" salga cuando no sea par.', code:L('for i in range(1, 4):','    if i % 2 == 0:','        print("par")','    ___:','        print("impar")'), ans:['else'], bank:['else','elif','if','while'],
      why:'`else` toma el caso contrario del `if`, sin condición.'},
-    {t:'bug', q:'Esto corre, pero imprime las llaves literales. Tocá la línea que está mal.', code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("Hola {nombre}, tenés {edad}")'), line:2,
+    {t:'bug', q:'Esto corre, pero imprime las llaves literales. Tocá la línea que está mal.', code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("{nombre} tiene {edad}")'), line:2,
      why:'Sin la `f` delante de las comillas, las llaves se imprimen tal cual en lugar de reemplazarse por los valores.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `f` antes de las comillas','Usar comillas simples','Cambiar `{}` por `()`','Convertir el nombre con `int()`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('total = 0','for i in range(1, 5):','    if i % 2 == 0:','        total += i','print(total)'), opts:['`4`','`6`','`10`','`3`'], a:1,
@@ -371,6 +392,295 @@ const LESSONS=[
     {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('for i in range(3):','    print(i)','  print("fin")'), line:2,
      why:'La última línea tiene una sangría que no coincide con ninguna anterior. Para que corra al terminar el bucle debe ir alineada con el `for`.',
      fix:{q:'¿Cómo se arregla?', opts:['Alinear `print("fin")` con el `for`','Agregar `else`','Cambiar `range(3)` por `range(4)`','Agregar `break`'], a:0}}
+  ]
+},
+{
+  title:'Listas', sub:'Crear, indexar y modificar',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Una lista guarda varios valores', p:['Una lista se escribe entre corchetes, con los elementos separados por comas. Puede mezclar tipos: números, textos, otras listas.','`len()` te dice cuántos elementos tiene.'],
+     code:L('precios = [10, 25, 8]','print(precios)   # [10, 25, 8]','print(len(precios))  # 3')},
+    {h:'Índices: se cuenta desde 0', p:['El primer elemento está en el índice 0, no en el 1. El último está en `len(lista) - 1`.','Los índices negativos cuentan desde el final: `-1` es el último, `-2` el penúltimo.','Si pedís un índice que no existe, Python lanza `IndexError`.'],
+     code:L('nums = [10, 20, 30]','print(nums[0])   # 10','print(nums[2])   # 30','print(nums[-1])  # 30','print(nums[3])   # IndexError')},
+    {h:'Las listas se modifican', p:['A diferencia de un texto, una lista se puede cambiar en el lugar: le asignás un valor a un índice.','`in` pregunta si un elemento está; `not in` pregunta lo contrario. Las dos devuelven `True` o `False`.','Escribir en un índice que no existe también da `IndexError`.'],
+     code:L('nums = [10, 20, 30]','nums[0] = 99','print(nums)      # [99, 20, 30]','print(20 in nums)    # True','print(40 in nums)    # False','print(40 not in nums) # True','nums[5] = 99     # IndexError')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('frutas = ["pera", "uva", "kiwi"]','print(len(frutas))'), opts:['`2`','`3`','`4`','`"pera"`'], a:1,
+     why:'`len` cuenta cuántos elementos hay en la lista. Hay 3: pera, uva y kiwi.'},
+    {t:'fill', q:'Completá para que se imprima 8.', code:L('nums = [5, 8, 12]','print(nums[___])   # 8'), ans:['1'], bank:['0','1','2','3'],
+     why:'El 8 está en el índice 1 porque se cuenta desde 0: 5 está en 0, 8 en 1, 12 en 2.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','print(nums[3])'), line:1,
+     why:'La lista tiene 3 elementos, así que los índices válidos son 0, 1 y 2. Pedir el 3 da IndexError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `nums[2]` en vez de `nums[3]`','Usar `nums[4]` en vez de `nums[3]`','Agregar `:` al final','Cambiar `print` por `len`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [3, 6, 9, 12]','print(nums[-2])'), opts:['`3`','`6`','`9`','`12`'], a:2,
+     why:'El -1 es el último (12), el -2 es el penúltimo (9).'},
+    {t:'fill', q:'Completá para cambiar el segundo elemento.', code:L('nums = [1, 2, 3]','nums[1] = ___','print(nums)   # [1, 9, 3]'), ans:['9'], bank:['9','1','2','3'],
+     why:'`nums[1]` es el segundo elemento (el del medio). Al asignarle 9, la lista queda [1, 9, 3].'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 8, 12]','print(8 in nums)'), opts:['`True`','`False`','`8`','`IndexError`'], a:0,
+     why:'`8 in nums` pregunta si el 8 está en la lista. Está, así que devuelve `True`.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','nums[3] = 99','print(nums)'), line:1,
+     why:'Escribir en un índice que no existe también da IndexError: solo hay índices 0, 1 y 2.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `nums[3]` por `nums[2]`','Cambiar `nums[3]` por `nums[4]`','Cambiar `99` por `30`','Agregar `:` al final'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 8, 12]','print(10 not in nums)'), opts:['`True`','`False`','`10`','`IndexError`'], a:0,
+     why:'`10 not in nums` pregunta si el 10 NO está. Como no está, devuelve `True`.'}
+  ]
+},
+{
+  title:'Métodos de listas', sub:'append, sort y copias',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Agregar con append e insert', p:['`append(x)` suma `x` al final de la lista.','`insert(i, x)` mete `x` en la posición `i` y corre el resto un lugar a la derecha.'],
+     code:L('nums = [1, 2]','nums.append(3)','print(nums)  # [1, 2, 3]','nums.insert(1, 9)','print(nums)  # [1, 9, 2, 3]')},
+    {h:'Sacar con remove y pop', p:['`remove(x)` saca el primer elemento igual a `x`. Si `x` no está, da `ValueError`.','`pop()` saca y devuelve el último elemento. `pop(i)` saca el del índice `i`. En una lista vacía, `pop()` da `IndexError`.'],
+     code:L('nums = [1, 2, 3, 2]','nums.remove(2)','print(nums)  # [1, 3, 2]','ultimo = nums.pop()','print(ultimo)  # 2','print(nums)    # [1, 3]')},
+    {h:'sort, sorted, count e index', p:['`lista.sort()` ordena la lista en el lugar y no devuelve nada.','`sorted(lista)` devuelve una lista nueva ordenada, sin tocar la original.','`count(x)` cuenta cuántas veces aparece `x`. `index(x)` te dice en qué posición está la primera aparición.'],
+     code:L('nums = [3, 1, 2]','nums.sort()','print(nums)   # [1, 2, 3]','otra = sorted([3, 1, 2])','print(otra)   # [1, 2, 3]','print(nums.count(2))  # 1','print(nums.index(3))  # 2')},
+    {h:'Cuidado con las copias', p:['`b = a` NO copia la lista: `b` y `a` apuntan a la misma. Si cambiás una, cambia la otra.','`a.copy()` sí crea una lista nueva e independiente.'],
+     code:L('a = [1, 2]','b = a','b[0] = 99','print(a)   # [99, 2]','c = a.copy()','c[0] = 0','print(a)   # [99, 2]')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 7]','nums.append(9)','print(nums)'), opts:['`[4, 7]`','`[4, 7, 9]`','`[9, 4, 7]`','`IndexError`'], a:1,
+     why:'`append` agrega al final. La lista original [4, 7] pasa a [4, 7, 9].'},
+    {t:'fill', q:'Completá para meter 2 en el medio.', code:L('nums = [1, 4]','nums.___(1, 2)','print(nums)   # [1, 2, 4]'), ans:['insert'], bank:['insert','append','add','push'],
+     why:'`insert(1, 2)` mete el 2 en la posición 1 y corre el 4 un lugar a la derecha.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','nums.remove()','print(nums)'), line:1,
+     why:'`remove` necesita un argumento: el elemento a sacar. Sin argumento da TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Pasar el elemento: `nums.remove(20)`','Pasar dos valores: `nums.remove(20, 30)`','Cambiar `remove` por `delete`','Poner `nums.remove([])`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [2, 3, 1]','otra = sorted(nums)','print(nums)'), opts:['`[1, 2, 3]`','`[2, 3, 1]`','`None`','`IndexError`'], a:1,
+     why:'`sorted` devuelve una lista nueva y NO modifica la original. Por eso `nums` sigue igual.'},
+    {t:'fill', q:'Completá para sacar y guardar el último.', code:L('nums = [7, 8, 9]','ultimo = nums.___()','print(ultimo)   # 9'), ans:['pop'], bank:['pop','remove','sort','last'],
+     why:'`pop()` saca el último elemento y lo devuelve. Con `remove(9)` también se saca, pero no se devuelve.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = [1, 2]','b = a.copy()','b[0] = 99','print(a)'), opts:['`[1, 2]`','`[99, 2]`','`[99, 1]`','`IndexError`'], a:0,
+     why:'`a.copy()` crea una lista nueva. Cambiar `b` no afecta a `a`, así que `a` sigue siendo [1, 2].'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = []','nums.pop()'), line:1,
+     why:'No se puede hacer `pop` en una lista vacía: no hay último elemento. Da IndexError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar un elemento primero: `nums.append(1)`','Cambiar `pop` por `append`','Poner `nums.pop(0)`','Poner `nums.pop(1)`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 2, 3, 2]','print(nums.count(2))'), opts:['`1`','`2`','`3`','`5`'], a:2,
+     why:'`count(2)` cuenta cuántas veces aparece el 2. Aparece 3 veces.'}
+  ]
+},
+{
+  title:'Slicing', sub:'Cortar listas y textos',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Cortar con lista[a:b]', p:['`lista[a:b]` devuelve los elementos desde `a` hasta antes de `b`. El final no se incluye, igual que en `range`.','Si `a` es 1 y `b` es 3, devuelve los índices 1 y 2, no el 3.','Para cortar se usan dos puntos. Con una coma (`nums[1, 3]`) o con un `range` Python da `TypeError`: un índice tiene que ser un número entero o un corte `a:b`.'],
+     code:L('nums = [10, 20, 30, 40, 50]','print(nums[1:3])  # [20, 30]','print(nums[0:2])  # [10, 20]','print(nums[2:4])  # [30, 40]')},
+    {h:'Omitir extremos y paso', p:['Si omitís el principio `nums[:3]`, arranca desde 0. Si omitís el final `nums[2:]`, llega hasta el final.','Un tercer número es el paso: `nums[::2]` toma uno sí y uno no. `nums[::-1]` recorre al revés.','Los negativos también sirven en un corte: `nums[-2:]` toma los dos últimos.'],
+     code:L('nums = [1, 2, 3, 4]','print(nums[:2])   # [1, 2]','print(nums[2:])   # [3, 4]','print(nums[::2])  # [1, 3]','print(nums[::-1]) # [4, 3, 2, 1]','print(nums[-2:])  # [3, 4]')},
+    {h:'Slicing también con texto', p:['Como un texto también es una secuencia, se puede cortar igual que una lista.'],
+     code:L('s = "python"','print(s[0:2])   # py','print(s[2:])    # thon','print(s[::-1])  # nohtyp')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [10, 20, 30, 40]','print(nums[1:3])'), opts:['`[10, 20]`','`[20, 30]`','`[20, 30, 40]`','`[10, 20, 30]`'], a:1,
+     why:'El slice devuelve los índices 1 y 2. El índice 3 queda afuera porque el final no se incluye.'},
+    {t:'fill', q:'Completá para que se imprima [7, 8].', code:L('nums = [5, 6, 7, 8]','print(nums[___:])   # [7, 8]'), ans:['2'], bank:['2','1','3','-1'],
+     why:'El 7 está en el índice 2. Como no ponés final, llega hasta el último elemento.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4, 5, 6]','print(nums[::2])'), opts:['`[1, 2, 3]`','`[1, 3, 5]`','`[2, 4, 6]`','`[1, 2]`'], a:1,
+     why:'El paso 2 agarra uno sí y uno no, empezando por el índice 0: 1, 3, 5.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30, 40]','print(nums[1, 3])'), line:1,
+     why:'El corte se escribe con dos puntos, no con coma. Con coma Python no lo reconoce como corte y da TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `nums[1, 3]` por `nums[1:3]`','Cambiar `nums[1, 3]` por `nums[1, 3, 4]`','Cambiar `print` por `nums`','Agregar `:` al final'], a:0}},
+    {t:'fill', q:'Completá para que salga "ol".', code:L('s = "hola"','print(s[___])   # ol'), ans:['1:3'], bank:['1:3','0:2','1:2','2:4'],
+     why:'El slice 1:3 toma los índices 1 y 2, que son la "o" y la "l".'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3]','print(nums[::-1])'), opts:['`[1, 2, 3]`','`[3, 2, 1]`','`[3]`','`IndexError`'], a:1,
+     why:'El paso -1 recorre al revés, así que invierte la lista.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3, 4]','print(nums[range(1, 3)])'), line:1,
+     why:'`nums[range(1, 3)]` usa un `range` como índice. Eso da TypeError: un índice tiene que ser un entero o un corte `a:b`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `range(1, 3)` por `1:3`','Cambiar `range(1, 3)` por `range(1, 4)`','Poner `list(range(1, 3))`','Cambiar `print` por `range`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4, 5]','print(nums[-2:])'), opts:['`[4, 5]`','`[3, 4, 5]`','`[2, 3, 4, 5]`','`[5]`'], a:0,
+     why:'Los índices negativos cuentan desde el final. `-2` es el 4, y al no poner final llega hasta el 5.'}
+  ]
+},
+{
+  title:'Recorrer y acumular', sub:'for, enumerate, sum',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Recorrer una lista', p:['`for` recorre los elementos de la lista uno por uno. La variable del `for` (acá `n`) toma cada valor.'],
+     code:L('nums = [10, 20, 30]','for n in nums:','    print(n)')},
+    {h:'enumerate: índice y valor', p:['`enumerate(lista)` devuelve pares `(índice, elemento)` en cada vuelta.','Se usa con dos variables en el `for`: la primera recibe el índice, la segunda el elemento.','Sin `enumerate`, el `for` da un solo valor por vuelta: no se puede usar con dos variables.'],
+     code:L('nums = ["a", "b", "c"]','for i, x in enumerate(nums):','    print(i, x)   # 0 a, 1 b, 2 c')},
+    {h:'sum, min y max', p:['`sum(lista)` suma todos los números. `min(lista)` da el menor y `max(lista)` el mayor.'],
+     code:L('nums = [4, 1, 7]','print(sum(nums))  # 12','print(min(nums))  # 1','print(max(nums))  # 7')},
+    {h:'Acumular con range(len)', p:['Otra forma de recorrer: `for i in range(len(lista))` te da los índices, y adentro accedés con `lista[i]`.','Un patrón muy común: arrancar una variable en 0 y sumarle algo en cada vuelta con `+=`.'],
+     code:L('nums = [10, 20, 30]','total = 0','for i in range(len(nums)):','    total += nums[i]','print(total)   # 60')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [5, 6, 7]','for n in nums:','    print(n)'), opts:['`5, 6, 7`','`0, 1, 2`','`1, 2, 3`','`[5, 6, 7]`'], a:0,
+     why:'`for n in nums` recorre los valores de la lista, no los índices. Por eso imprime 5, 6 y 7.'},
+    {t:'fill', q:'Completá para sumar la lista.', code:L('nums = [3, 4, 5]','print(___(nums))   # 12'), ans:['sum'], bank:['sum','len','max','total'],
+     why:'`sum` suma todos los números de la lista. `len` cuenta cuántos hay, no los suma.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [8, 2, 5]','print(max(nums))'), opts:['`2`','`5`','`8`','`[8, 2, 5]`'], a:2,
+     why:'`max` devuelve el mayor. El mayor de 8, 2 y 5 es 8.'},
+    {t:'fill', q:'Completá el acumulador.', code:L('nums = [2, 3, 4]','total = 0','for n in nums:','    total ___ n','print(total)   # 9'), ans:['+='], bank:['+=','=','==','-='],
+     why:'`+=` suma `n` a lo que ya hay en `total`. Al final: 0 + 2 + 3 + 4 = 9.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = ["a", "b"]','for i, x in nums:','    print(i, x)'), line:1,
+     why:'Un `for` común da un solo valor por vuelta, no dos. Para tener el índice y el elemento hace falta `enumerate`. Si no, Python da ValueError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `enumerate(nums)`','Usar `range(nums)`','Poner `nums.items()`','Agregar `, i`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('letras = ["x", "y"]','for i, l in enumerate(letras):','    print(i, l)'), opts:['`x, y`','`0 x, 1 y`','`1 x, 2 y`','`0, 1`'], a:1,
+     why:'`enumerate` da el índice y el elemento. Cada vuelta imprime el índice (0, 1) junto al valor.'},
+    {t:'bug', q:'Tocá la línea donde salta el error.', code:L('nums = [10, 20, 30]','for i in range(4):','    print(nums[i])'), line:2,
+     why:'`range(4)` genera 0, 1, 2 y 3. Cuando `i` vale 3, `nums[3]` no existe y da IndexError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar `range(4)` por `range(len(nums))`','Cambiar `range(4)` por `range(5)`','Quitar el `print`','Agregar `enumerate`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [3, 4, 5]','print(sum(nums))'), opts:['`3`','`12`','`60`','`[3, 4, 5]`'], a:1,
+     why:'`sum` suma los tres números: 3 + 4 + 5 = 12.'}
+  ]
+},
+{
+  title:'Tuplas', sub:'Inmutables y desempaquetado',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Tuplas: como listas pero fijas', p:['Una tupla se escribe entre paréntesis. Se indexa igual que una lista: `[0]`, `[-1]`, `len()`.','A diferencia de una lista, no se puede modificar: no existe `tupla[0] = 9`.'],
+     code:L('punto = (3, 5)','print(punto[0])  # 3','print(punto[1])  # 5','print(len(punto))  # 2')},
+    {h:'No se puede modificar', p:['Intentar cambiar un elemento de una tupla da `TypeError`. Para tener algo modificable, usá una lista.','Si los valores no tienen que cambiar (como una coordenada), una tupla deja claro que son fijos.'],
+     code:L('punto = (3, 5)','punto[0] = 9','# TypeError')},
+    {h:'Desempaquetar', p:['Podés asignar los valores de una tupla a varias variables en una sola línea.','La cantidad de variables tiene que coincidir con la cantidad de elementos. Si no, da `ValueError`.'],
+     code:L('punto = (3, 5)','x, y = punto','print(x)   # 3','print(y)   # 5')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('punto = (7, 2, 9)','print(punto[1])'), opts:['`7`','`2`','`9`','`(7, 2, 9)`'], a:1,
+     why:'La tupla se indexa como cualquier secuencia: el índice 1 es el segundo elemento, o sea 2.'},
+    {t:'fill', q:'Completá para desempaquetar la tupla.', code:L('punto = (2, 5)','x, y = ___','print(x)   # 2'), ans:['punto'], bank:['punto','x','y','x, y'],
+     why:'Desempaquetar es asignar los dos valores de la tupla a dos variables. La fuente es la tupla `punto`.'},
+    {t:'quiz', q:'¿Qué pasa?', code:L('punto = (3, 5)','punto[0] = 9'), opts:['`punto` cambia a `(9, 5)`','Lanza `TypeError`','Lanza `IndexError`','Se crea una tupla nueva'], a:1,
+     why:'Las tuplas son inmutables. Intentar modificar un elemento lanza TypeError, no IndexError.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('punto = (1, 2)','punto[0] = 99'), line:1,
+     why:'No se puede reasignar un elemento de una tupla. Da TypeError porque la tupla es inmutable.',
+     fix:{q:'¿Cómo se arregla?', opts:['Crear una tupla nueva: `punto = (99, 2)`','Cambiar por `punto[0] == 99`','Agregar `:` al final','Usar `punto.append(99)`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a, b = (10, 20)','print(a)'), opts:['`10`','`20`','`(10, 20)`','`IndexError`'], a:0,
+     why:'Al desempaquetar, `a` recibe el primer valor (10) y `b` el segundo (20).'},
+    {t:'fill', q:'Completá para que se imprima 6.', code:L('punto = (4, 6, 8)','print(punto[___])   # 6'), ans:['1'], bank:['0','1','2','3'],
+     why:'El 6 está en el índice 1, porque se cuenta desde 0.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('par = (1, 2, 3)','a, b = par','print(a, b)'), line:1,
+     why:'La tupla tiene 3 valores, pero solo hay 2 variables. Python no sabe qué hacer con el tercero y da ValueError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Desempaquetar los tres: `a, b, c = par`','Cambiar `par` por `(1, 2, 3, 4)`','Agregar `:` al final','Poner `a, b = (1, 2, 3)`'], a:0}},
+    {t:'quiz', q:'¿Cuál conviene para guardar coordenadas (x, y) que no cambian?', opts:['Una lista porque es más flexible','Una tupla porque no se modifica','Un diccionario porque tiene claves','Un texto porque es inmutable'], a:1,
+     why:'Si los valores no tienen que cambiar, una tupla deja esa intención clara y evita modificaciones accidentales.'}
+  ]
+},
+{
+  title:'Diccionarios', sub:'Clave:valor',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Clave:valor', p:['Un diccionario guarda pares clave:valor entre llaves. La clave va antes de los dos puntos y el valor después.','Para acceder a un valor se usa la clave entre corchetes. `len()` cuenta cuántos pares hay.'],
+     code:L('edad = {"Ana": 30, "Luis": 25}','print(edad["Ana"])   # 30','print(len(edad))     # 2')},
+    {h:'KeyError y get', p:['Si pedís una clave que no existe, Python lanza `KeyError`.','`.get(clave)` devuelve `None` si no existe (no rompe). `.get(clave, defecto)` devuelve el defecto.'],
+     code:L('edad = {"Ana": 30}','print(edad["Luis"])  # KeyError','print(edad.get("Luis"))   # None','print(edad.get("Luis", 0))  # 0')},
+    {h:'Agregar, modificar, borrar', p:['Asignar a una clave que ya existe modifica su valor. Si no existe, la agrega.','`pop(clave)` borra la clave y devuelve su valor.'],
+     code:L('d = {"a": 1}','d["b"] = 2       # agregar','d["a"] = 10      # modificar','d.pop("b")       # borrar','print(d)   # {\'a\': 10}')},
+    {h:'Recorrer un diccionario', p:['`for k in d` recorre solo las claves. `.keys()` también. `.values()` recorre los valores.','`.items()` devuelve pares (clave, valor), ideal para `for k, v in d.items():`.','`in` sobre un diccionario pregunta por las claves, no por los valores.'],
+     code:L('d = {"a": 1, "b": 2}','for k in d:','    print(k)   # a, b','for k, v in d.items():','    print(k, v)')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"x": 10, "y": 20}','print(d["y"])'), opts:['`10`','`20`','`"y"`','`KeyError`'], a:1,
+     why:'`d["y"]` busca la clave "y" y devuelve su valor: 20.'},
+    {t:'fill', q:'Completá para no romper si la clave no existe.', code:L('d = {"x": 10}','print(d.___("y", 0))   # 0'), ans:['get'], bank:['get','keys','find','value'],
+     why:'`.get(clave, defecto)` devuelve el defecto si la clave no está. Con corchetes daría KeyError.'},
+    {t:'quiz', q:'¿Qué pasa?', code:L('d = {"a": 1}','print(d["b"])'), opts:['Imprime `1`','Imprime `None`','Lanza `KeyError`','Imprime `0`'], a:2,
+     why:'La clave "b" no existe. Con corchetes, Python lanza KeyError. Para evitar eso se usa `.get()`.'},
+    {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d)   # {\'a\': 1, \'b\': 2}'), ans:['"b"'], bank:['"b"','"a"','b','2'],
+     why:'La clave va entre comillas porque es un texto. Sin comillas, Python busca una variable llamada `b` y da NameError.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2, "c": 3}','print(len(d))'), opts:['`1`','`3`','`6`','`9`'], a:1,
+     why:'`len` de un diccionario cuenta los pares clave:valor. Hay 3: a, b y c.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('d = {"Ana": 30}','print(d["Luis"])'), line:1,
+     why:'La clave "Luis" no está en el diccionario. Con corchetes, eso lanza KeyError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `d.get("Luis", 0)`','Usar `d["luis"]`','Usar `d[0]`','Poner `d.append("Luis")`'], a:0}},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('d = {"a": 1, "b": 2}','for k, v in d:','    print(k, v)'), line:1,
+     why:'Recorrer un diccionario directamente da solo las claves. Al intentar desempaquetar una clave en dos variables, da ValueError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Usar `d.items()` en el for','Usar `d.keys()` en el for','Usar `d.values()` en el for','Usar `range(d)` en el for'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2}','print("a" in d)'), opts:['`True`','`False`','`1`','`KeyError`'], a:0,
+     why:'`in` sobre un diccionario busca en las claves. "a" es una clave, así que da True.'}
+  ]
+},
+{
+  title:'Sets', sub:'Únicos y sin orden',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Conjuntos: sin duplicados', p:['Un set se escribe entre llaves, como un diccionario sin valores. No tiene orden ni índices: no podés hacer `s[0]`.','`len()` cuenta cuántos elementos hay. `in` pregunta si un elemento está.'],
+     code:L('s = {1, 2, 3}','print(len(s))   # 3','print(2 in s)   # True','print(s[0])     # TypeError')},
+    {h:'set(lista) quita repetidos', p:['Pasar una lista a `set()` devuelve un conjunto sin los elementos repetidos.','Ojo: como no tiene orden, el resultado puede aparecer en cualquier orden.'],
+     code:L('nums = [1, 2, 2, 3, 3, 3]','unicos = set(nums)','print(unicos)   # {1, 2, 3}','print(len(unicos))  # 3')},
+    {h:'Operaciones de conjuntos', p:['`.add(x)` agrega. `.remove(x)` saca (y da `KeyError` si `x` no está).','`a | b` es la unión (todo junto). `a & b` es la intersección (lo que está en los dos). `a - b` es lo que está en `a` pero no en `b`.'],
+     code:L('s = {1, 2}','s.add(3)','s.remove(1)','print(s)   # {2, 3}','a = {1, 2, 3}','b = {2, 3, 4}','print(a | b)   # {1, 2, 3, 4}','print(a & b)   # {2, 3}','print(a - b)   # {1}')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 2, 3]','print(len(set(nums)))'), opts:['`2`','`3`','`4`','`6`'], a:1,
+     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}. `len` cuenta 3 elementos.'},
+    {t:'fill', q:'Completá para agregar el 3.', code:L('s = {1, 2}','s.___(3)','print(len(s))   # 3'), ans:['add'], bank:['add','append','insert','push'],
+     why:'En un set se agrega con `.add()`. `append` es de listas, no de sets.'},
+    {t:'quiz', q:'¿Qué pasa?', code:L('s = {1, 2, 3}','print(s[0])'), opts:['Imprime `1`','Imprime `{1}`','Lanza `TypeError`','Lanza `IndexError`'], a:2,
+     why:'Los sets no tienen índices. Intentar indexarlos con corchetes lanza TypeError.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('s = {10, 20, 30}','print(s[1])'), line:1,
+     why:'Los sets no se indexan. `s[1]` da TypeError porque los sets no tienen orden ni posiciones.',
+     fix:{q:'¿Cómo se arregla?', opts:['Recorrerlo con `for x in s:` en vez de usar un índice','Agregar `:` al final','Cambiar `set` por `dict`','Usar `s.get(1)`'], a:0}},
+    {t:'fill', q:'Completá para que quede la intersección.', code:L('a = {1, 2, 3}','b = {2, 3, 4}','print(a ___ b)   # {2, 3}'), ans:['&'], bank:['&','|','-','+'],
+     why:'`&` da la intersección: los elementos que están en los dos conjuntos. Acá son 2 y 3.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = {1, 2}','b = {2, 3}','print(a | b)'), opts:['`{1, 2}`','`{2}`','`{1, 2, 3}`','`{1, 3}`'], a:2,
+     why:'`|` es la unión: todo lo que está en `a` o en `b`, sin repetir. Queda {1, 2, 3}.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('s = {1, 2}','s.remove(5)'), line:1,
+     why:'`remove(5)` sobre un set que no tiene el 5 da KeyError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Verificar antes con `if 5 in s:` o quitar la línea','Cambiar `5` por `10`','Poner `s.pop(5)`','Agregar `:` al final'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('s = {1, 2, 3}','print(4 not in s)'), opts:['`True`','`False`','`4`','`KeyError`'], a:0,
+     why:'`4 not in s` pregunta si el 4 NO está. Como no está, devuelve True.'}
+  ]
+},
+{
+  title:'Comprensiones', sub:'Listas en una línea',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Una lista armada en una línea', p:['Una comprensión de lista crea una lista nueva aplicando una operación a cada elemento de otra lista.','Se escribe entre corchetes: primero la operación, después el `for`.'],
+     code:L('nums = [1, 2, 3, 4]','doble = [n * 2 for n in nums]','print(doble)   # [2, 4, 6, 8]')},
+    {h:'Equivale a for + append', p:['La comprensión hace lo mismo que un `for` que arma una lista con `append`, pero en una línea.','Para casos simples, la comprensión es más corta y clara.'],
+     code:L('nums = [1, 2, 3, 4]','doble = []','for n in nums:','    doble.append(n * 2)','print(doble)   # [2, 4, 6, 8]')},
+    {h:'Filtrar con if', p:['Podés agregar un `if` al final para quedarte solo con los elementos que cumplan la condición.','El `if` filtra: los elementos que no cumplen no entran a la lista nueva.'],
+     code:L('a = [1, 2, 3, 4]','p = [n for n in a if n % 2 == 0]','print(p)   # [2, 4]')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3]','print([n * 10 for n in nums])'), opts:['`[1, 2, 3]`','`[10, 20, 30]`','`[10, 2, 3]`','`[1, 10, 100]`'], a:1,
+     why:'La comprensión multiplica cada elemento por 10: 1*10, 2*10, 3*10 = 10, 20, 30.'},
+    {t:'fill', q:'Completá la comprensión.', code:L('nums = [1, 2, 3]','doble = [n * 2 ___ n in nums]','print(doble)   # [2, 4, 6]'), ans:['for'], bank:['for','in','if','while'],
+     why:'Toda comprensión lleva un `for` que recorre la lista. Después viene `in` y el nombre de la lista.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4]','print([n for n in nums if n > 2])'), opts:['`[1, 2]`','`[3, 4]`','`[1, 2, 3, 4]`','`[2, 3, 4]`'], a:1,
+     why:'El `if n > 2` filtra: solo entran los que son mayores a 2, o sea el 3 y el 4.'},
+    {t:'fill', q:'Completá para dejar solo los menores a 3.', code:L('a = [1, 2, 3, 4]','p = [n for n in a ___ n < 3]','print(p)   # [1, 2]'), ans:['if'], bank:['if','for','while','in'],
+     why:'El `if` es lo que filtra. Sin él, la comprensión incluiría todos los números.'},
+    {t:'quiz', q:'¿Qué comprensión hace lo mismo?', code:L('nums = [1, 2, 3]','resultado = []','for n in nums:','    resultado.append(n + 1)','print(resultado)'), opts:['`[n for n in nums]`','`[n + 1 for n in nums]`','`[nums + 1 for n in nums]`','`[n + 1 if n in nums]`'], a:1,
+     why:'El `for` original suma 1 a cada elemento. La comprensión equivalente también suma 1 a cada uno.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','doble = [n * 2 for n nums]','print(doble)'), line:1,
+     why:'Falta el `in` después de la variable del for. Sin `in`, Python no puede saber de dónde sacar los valores.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `in` antes de `nums`','Agregar `if` antes de `nums`','Cambiar `for` por `in`','Agregar paréntesis alrededor'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = [5, 6, 7, 8]','print([x for x in a if x > 6])'), opts:['`[5, 6]`','`[7, 8]`','`[6, 7, 8]`','`[5, 6, 7, 8]`'], a:1,
+     why:'El filtro `x > 6` deja pasar solo 7 y 8.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','doble = n * 2 for n in nums','print(doble)'), line:1,
+     why:'Una comprensión necesita corchetes. Sin ellos, la sintaxis del `for` suelto no es válida y Python tira SyntaxError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Envolver entre corchetes: `[n * 2 for n in nums]`','Cambiar `for` por `if`','Agregar `:` al final','Poner `print` adelante'], a:0}}
+  ]
+},
+{
+  title:'Repaso Semana 2', sub:'Todo junto',
+  week:2, weekName:'Colecciones',
+  cards:[
+    {h:'Mezcla de la semana', p:['Listas, slicing, tuplas, diccionarios, sets y comprensiones, todo mezclado.','Si fallás una, volvé al final para que la repitas.'], code:''}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [10, 20, 30]','nums.append(40)','print(nums[-1])'), opts:['`10`','`30`','`40`','`IndexError`'], a:2,
+     why:'`append(40)` agrega el 40 al final. `nums[-1]` devuelve el último, que ahora es 40.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2}','print(d.get("c", 0))'), opts:['`None`','`0`','`KeyError`','`2`'], a:1,
+     why:'La clave "c" no está. `.get` con defecto devuelve el 0 en vez de romper.'},
+    {t:'fill', q:'Completá para cortar del 3 al 4.', code:L('nums = [1, 2, 3, 4, 5]','print(nums[___])   # [3, 4]'), ans:['2:4'], bank:['2:4','1:3','2:3','3:5'],
+     why:'El 3 está en el índice 2 y el 4 en el 3. Con `2:4` entran los índices 2 y 3, o sea [3, 4].'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 1, 2, 3, 3]','print(len(set(nums)))'), opts:['`2`','`3`','`5`','`1`'], a:1,
+     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}. `len` cuenta 3.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('punto = (3, 5)','punto[0] = 9'), line:1,
+     why:'Las tuplas son inmutables. Asignar a un índice lanza TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Crear una tupla nueva: `punto = (9, 5)`','Cambiar por `punto[0] == 9`','Agregar `:` al final','Usar `punto.append(9)`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('a = [1, 2, 3, 4]','b = [n * 2 for n in a if n > 2]','print(b)'), opts:['`[2, 4, 6, 8]`','`[6, 8]`','`[4, 6, 8]`','`[2, 4]`'], a:1,
+     why:'El `if n > 2` filtra a [3, 4]. Después el `* 2` los transforma en [6, 8].'},
+    {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d["b"])   # 2'), ans:['"b"'], bank:['"b"','b','2','"a"'],
+     why:'Sin comillas, Python busca una variable llamada `b` y da NameError. Con `"b"` se agrega una clave nueva.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','nums.remove(2, 1)'), line:1,
+     why:'`remove` toma un solo argumento. Pasarle dos da TypeError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Quitar el `, 1`','Cambiar por `pop(2, 1)`','Agregar `:` al final','Cambiar `remove` por `delete`'], a:0}}
   ]
 }
 ];
@@ -431,18 +741,21 @@ function icon(n,cls){const s=el('span',{class:'ic'+(cls?' '+cls:'')});s.innerHTM
 function stars(n,big){const w=el('span',{class:'stars'+(big?' big':''),role:'img','aria-label':n+' de 3 estrellas'});for(let i=0;i<3;i++)w.append(icon('star',i<n?'on':''));return w;}
 
 /* ---------- Resaltado de sintaxis ---------- */
-const KW=new Set(['if','elif','else','for','while','in','and','or','not','True','False','None','break','continue','def','return','import']);
-const FN=new Set(['print','input','int','float','str','bool','range','len','type','list']);
+const KW=new Set(['if','elif','else','for','while','in','and','or','not','True','False','None','break','continue','def','return','import','from','as','class','try','except','finally','raise','with','lambda','pass','global','is','assert','del','yield']);
+const FN=new Set(['print','input','int','float','str','bool','range','len','type','list','dict','set','tuple','sum','min','max','sorted','enumerate','zip','open','abs','round','isinstance','map','filter','super','reversed']);
 const TOK=/(f?"[^"\n]*"|f?'[^'\n]*'|#.*$|___|\d+(?:\.\d+)?|[A-Za-z_]\w*|\s+|.)/g;
 function hlLine(line,onBlank){
-  const f=document.createDocumentFragment(); TOK.lastIndex=0; let m;
-  while((m=TOK.exec(line))){
-    const t=m[0]; if(t==='') {TOK.lastIndex++; continue;}
-    if(t==='___'){f.append(onBlank()); continue;}
-    let c='';
-    if(t[0]==='#') c='cm'; else if(/^f?["']/.test(t)) c='str'; else if(/^\d/.test(t)) c='num-t'; else if(KW.has(t)) c='kw'; else if(FN.has(t)) c='fn';
-    f.append(c?el('span',{class:c},t):t);
-  }
+  const f=document.createDocumentFragment();
+  line.split('___').forEach((seg,k)=>{
+    if(k>0) f.append(onBlank());
+    TOK.lastIndex=0; let m;
+    while((m=TOK.exec(seg))){
+      const t=m[0]; if(t==='') {TOK.lastIndex++; continue;}
+      let c='';
+      if(t[0]==='#') c='cm'; else if(/^f?["']/.test(t)) c='str'; else if(/^\d/.test(t)) c='num-t'; else if(KW.has(t)) c='kw'; else if(FN.has(t)) c='fn';
+      f.append(c?el('span',{class:c},t):t);
+    }
+  });
   return f;
 }
 const tag=()=>el('div',{class:'code-tag'},'python');
@@ -618,17 +931,18 @@ function Home(){
   const pending=celebrate; celebrate=null;
   const initSet=new Set(realSet); if(pending!==null) initSet.delete(pending);
   const map=buildMap(initSet);
+  const cur=LESSONS[firstNotDone(realSet)]||LESSONS[LESSONS.length-1];
+  const weekLabel='Semana '+(cur.week||1)+' · '+(cur.weekName||'Fundamentos');
   homeAfter=()=>afterHome(map,realSet,pending,initSet);
   const n=Object.keys(save.done).length, st=currentStreak();
   return el('div',{},
-    el('header',{class:'head'},el('p',{class:'eyebrow'},'Semana 1 · Fundamentos'),el('h1',{},'Python desde cero')),
+    el('header',{class:'head'},el('p',{class:'eyebrow'},weekLabel),el('h1',{},'Python desde cero')),
     el('div',{class:'stats'},
       stat('flame','flame',st,st===1?'día de racha':'días de racha'),
       stat('bolt','spark',save.xp,'XP'),
       stat('check','good',n+'/'+LESSONS.length,'lecciones')),
     el('p',{class:'lead'},'Completá cada lección para abrir la siguiente. Leé, completá el código y encontrá el error: unos 5 minutos por lección.'),
     map,
-    el('p',{class:'next-week'},'Semana 2 (listas, diccionarios y funciones) se suma después de esta.')
   );
 }
 function Topbar(){
@@ -724,5 +1038,3 @@ function render(top){
 render(true);
 })();
 </script>
-
-</body></html>
