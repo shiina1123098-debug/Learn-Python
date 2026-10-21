@@ -107,6 +107,32 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .stars.big{gap:6px}
 .next-week{margin-top:18px;font-size:.88rem;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
 
+/* Separador de semana: cartel con estado (bloqueada, desbloqueada, completada, próximamente) */
+.weeks{display:grid;gap:34px;margin-top:6px}
+.week{display:grid;gap:6px}
+.wbanner{position:relative;overflow:hidden;border-radius:18px;padding:16px;display:grid;gap:10px;background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);box-shadow:0 3px 0 var(--line);
+  transition:background-color .6s ease,color .6s ease,border-color .6s ease,box-shadow .6s ease}
+.wbanner::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent-deep));opacity:0;transition:opacity .7s ease;pointer-events:none}
+.wbanner>*{position:relative}
+.wbanner[data-s="open"]{color:var(--accent-ink);border-color:transparent;box-shadow:0 4px 0 var(--accent-deep)}
+.wbanner[data-s="open"]::before{opacity:1}
+.wbanner[data-s="done"]{background:var(--good);color:var(--on-good);border-color:transparent;box-shadow:0 4px 0 var(--good-deep)}
+.wbanner[data-s="soon"]{background:transparent;border-style:dashed;box-shadow:none}
+.wb-head{display:flex;align-items:center;gap:12px}
+.wb-ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--lock-bg);color:var(--lock-fg);transition:background-color .6s ease,color .6s ease}
+.wb-ico .ic{width:24px;height:24px}
+.wbanner[data-s="open"] .wb-ico,.wbanner[data-s="done"] .wb-ico{color:inherit;background:rgba(127,127,127,.25);background:color-mix(in srgb,currentColor 22%,transparent)}
+.wb-txt{display:grid;gap:2px;min-width:0}
+.wb-kicker{font-size:.76rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.wbanner[data-s="locked"] .wb-kicker,.wbanner[data-s="soon"] .wb-kicker{color:var(--muted)}
+.wb-title{font-family:var(--f-display);font-weight:800;font-size:1.4rem;line-height:1.1;text-wrap:balance}
+.wb-desc{font-size:.92rem;line-height:1.4;max-width:46ch}
+.wbanner[data-s="locked"] .wb-desc,.wbanner[data-s="soon"] .wb-desc{color:var(--muted)}
+.wb-chips{display:flex;flex-wrap:wrap;gap:6px}
+.wb-chip{font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:rgba(127,127,127,.18);background:color-mix(in srgb,currentColor 14%,transparent)}
+.wbanner.unlocking{animation:bpop .8s cubic-bezier(.3,1.5,.5,1)}
+@keyframes bpop{0%{transform:scale(.93)}100%{transform:scale(1)}}
 /* Lección */
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
 .icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none;color:var(--muted)}
@@ -124,6 +150,7 @@ b{font-weight:700}
 .code-tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface2)}
 .code pre{margin:0;padding:12px 12px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;color:var(--ink)}
 .card .code{margin:0}
+.card .code pre{font-size:12px}
 .kw{color:var(--kw);font-weight:500}.str{color:var(--str)}.num-t{color:var(--num)}.cm{color:var(--cm);font-style:italic}.fn{color:var(--fn)}
 .blank{display:inline-block;min-width:3.6ch;min-height:1.6em;vertical-align:baseline;padding:0 .5ch;margin:0 1px;border:0;border-bottom:2px dashed var(--accent);background:var(--accent-soft);color:var(--ink);font:inherit;border-radius:5px;text-align:center;line-height:1.5}
 .blank.filled{border-bottom-style:solid}
@@ -775,6 +802,7 @@ const ICONS={
   check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
   lock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  unlock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 7.6-1.7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
   play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>',
   star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>'
 };
@@ -901,15 +929,58 @@ function feedback(c){
 function stat(ic,tone,val,label){
   return el('div',{class:'stat'},el('div',{class:'row t-'+tone},icon(ic),el('span',{},String(val))),el('small',{},label));
 }
-/* ---------- Mapa de lecciones ---------- */
+/* ---------- Mapa de lecciones, separado por semanas ---------- */
 const MAP_W=360, STEP=132, Y0=100, XL=92, XR=268;
 const NS='http://www.w3.org/2000/svg';
 let celebrate=null, homeAfter=null, homeTimers=[];
-const pos=i=>({x:i%2===0?XL:XR,y:Y0+i*STEP});
-function connD(i){const a=pos(i),b=pos(i+1),m=(a.y+b.y)/2;return 'M'+a.x+' '+a.y+' C'+a.x+' '+m+' '+b.x+' '+m+' '+b.x+' '+b.y;}
+/* Lo que se muestra en el cartel de cada semana. Si una lección trae weekName, se usa como respaldo del nombre. */
+const WEEKS={
+  1:{name:'Fundamentos',desc:'La base de todo: guardar datos, hacer cuentas, decidir y repetir.',topics:['Variables','Operadores','Entrada y salida','Condicionales','Bucles']},
+  2:{name:'Colecciones',desc:'Cómo guardar y manejar muchos datos a la vez.',topics:['Listas','Slicing','Tuplas','Diccionarios','Sets','Comprensiones']},
+  3:{name:'Funciones',desc:'Agrupar código en piezas reutilizables y pasarles datos.',topics:['def y return','Parámetros','Alcance','lambda']},
+  4:{name:'Errores y archivos',desc:'Que el programa no se rompa, y leer y guardar información.',topics:['try y except','Archivos','JSON','Módulos','pip y venv']},
+  5:{name:'Clases y objetos',desc:'Organizar programas más grandes con clases, métodos y herencia.',topics:['Clases','Métodos','Herencia','Propiedades']},
+  6:{name:'Práctica y proyectos',desc:'Depurar, probar tu código y armar proyectos completos.',topics:['Depuración','pytest','Buenas prácticas','Proyectos']}
+};
+const pos=j=>({x:j%2===0?XL:XR,y:Y0+j*STEP});
+function connD(j){const a=pos(j),b=pos(j+1),m=(a.y+b.y)/2;return 'M'+a.x+' '+a.y+' C'+a.x+' '+m+' '+b.x+' '+m+' '+b.x+' '+b.y;}
 function firstNotDone(set){for(let i=0;i<LESSONS.length;i++) if(!set.has(i)) return i; return -1;}
 function statesOf(set){const f=firstNotDone(set);return LESSONS.map((_,i)=>set.has(i)?'done':(i===f?'current':'locked'));}
 function svgEl(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs) e.setAttribute(k,attrs[k]);return e;}
+/* Lecciones consecutivas con la misma semana forman un grupo; en cada grupo el camino vuelve a empezar */
+function weekGroups(){
+  const g=[];
+  LESSONS.forEach((l,i)=>{
+    const w=l.week||1, last=g[g.length-1];
+    if(last&&last.week===w) last.idx.push(i); else g.push({week:w,name:l.weekName||'',idx:[i]});
+  });
+  return g;
+}
+function bannerState(g,st){
+  if(g.idx.every(i=>st[i]==='done')) return 'done';
+  return g.idx.some(i=>st[i]!=='locked')?'open':'locked';
+}
+function bannerKicker(w,s){
+  if(s==='locked') return 'Semana '+w+' · Bloqueada';
+  if(s==='soon') return 'Semana '+w+' · Próximamente';
+  if(s==='done') return 'Semana '+w+' · Completada';
+  return w===1?'Semana 1 · Empezá acá':'Semana '+w+' desbloqueada';
+}
+function paintBanner(b,s){
+  const w=+b.dataset.w; b.dataset.s=s;
+  b.querySelector('.wb-kicker').textContent=bannerKicker(w,s);
+  const ic=b.querySelector('.wb-ico'); ic.replaceChildren(icon(s==='done'?'check':s==='open'?'unlock':'lock'));
+  b.setAttribute('aria-label',bannerKicker(w,s)+': '+b.querySelector('.wb-title').textContent);
+}
+function buildBanner(w,fallbackName,s){
+  const c=WEEKS[w]||{};
+  const b=el('div',{class:'wbanner','data-w':String(w),role:'group'},
+    el('div',{class:'wb-head'},el('span',{class:'wb-ico'}),el('div',{class:'wb-txt'},el('span',{class:'wb-kicker'}),el('h2',{class:'wb-title'},c.name||fallbackName||('Semana '+w)))),
+    c.desc?el('p',{class:'wb-desc'},c.desc):null,
+    (c.topics&&c.topics.length)?el('div',{class:'wb-chips'},c.topics.map(t=>el('span',{class:'wb-chip'},t))):null);
+  paintBanner(b,s);
+  return b;
+}
 function paintNode(nd,s){
   const i=+nd.dataset.i, les=LESSONS[i], d=save.done[i];
   nd.dataset.s=s;
@@ -922,40 +993,76 @@ function paintNode(nd,s){
   if(s==='done'&&d) slot.append(stars(d.stars));
 }
 function buildMap(set){
-  const n=LESSONS.length, H=Y0+(n-1)*STEP+72, st=statesOf(set);
-  const map=el('div',{class:'map',style:'aspect-ratio:'+MAP_W+'/'+H});
-  const svg=svgEl('svg',{class:'map-lines',viewBox:'0 0 '+MAP_W+' '+H,'aria-hidden':'true'});
-  for(let i=0;i<n-1;i++){
-    svg.append(svgEl('path',{class:'trk',d:connD(i)}));
-    svg.append(svgEl('path',{class:'prg'+(set.has(i)?' lit':''),d:connD(i),pathLength:'1','data-i':String(i)}));
-  }
-  map.append(svg);
-  LESSONS.forEach((les,i)=>{
-    const p=pos(i);
-    const nd=el('div',{class:'node '+(i%2?'right':'left'),'data-i':String(i),style:'left:'+(p.x/MAP_W*100)+'%;top:'+(p.y/H*100)+'%'},
-      el('span',{class:'tip'},'Empezar'),
-      el('button',{class:'node-btn',type:'button',onclick:()=>startLesson(i)},
-        el('span',{class:'glyph g-lock'},icon('lock')),
-        el('span',{class:'glyph g-play'},icon('play')),
-        el('span',{class:'glyph g-check'},icon('check'))),
-      el('div',{class:'nlabel'},el('span',{class:'nt'},les.title),el('span',{class:'ns'},les.sub),el('span',{class:'slot'})));
-    paintNode(nd,st[i]);
-    map.append(nd);
+  const st=statesOf(set), groups=weekGroups();
+  const root=el('div',{class:'weeks'});
+  groups.forEach(g=>{
+    const n=g.idx.length, H=Y0+(n-1)*STEP+72;
+    const sec=el('section',{class:'week'});
+    sec.append(buildBanner(g.week,g.name,bannerState(g,st)));
+    const map=el('div',{class:'map',style:'aspect-ratio:'+MAP_W+'/'+H});
+    const svg=svgEl('svg',{class:'map-lines',viewBox:'0 0 '+MAP_W+' '+H,'aria-hidden':'true'});
+    for(let j=0;j<n-1;j++){
+      svg.append(svgEl('path',{class:'trk',d:connD(j)}));
+      svg.append(svgEl('path',{class:'prg'+(set.has(g.idx[j])?' lit':''),d:connD(j),pathLength:'1','data-i':String(g.idx[j])}));
+    }
+    map.append(svg);
+    g.idx.forEach((gi,j)=>{
+      const les=LESSONS[gi], p=pos(j);
+      const nd=el('div',{class:'node '+(j%2?'right':'left'),'data-i':String(gi),style:'left:'+(p.x/MAP_W*100)+'%;top:'+(p.y/H*100)+'%'},
+        el('span',{class:'tip'},'Empezar'),
+        el('button',{class:'node-btn',type:'button',onclick:()=>startLesson(gi)},
+          el('span',{class:'glyph g-lock'},icon('lock')),
+          el('span',{class:'glyph g-play'},icon('play')),
+          el('span',{class:'glyph g-check'},icon('check'))),
+        el('div',{class:'nlabel'},el('span',{class:'nt'},les.title),el('span',{class:'ns'},les.sub),el('span',{class:'slot'})));
+      paintNode(nd,st[gi]);
+      map.append(nd);
+    });
+    sec.append(map);
+    root.append(sec);
   });
-  return map;
+  /* Aviso de la próxima semana, que todavía no tiene lecciones */
+  const nextW=groups[groups.length-1].week+1;
+  if(WEEKS[nextW]) root.append(el('section',{class:'week'},buildBanner(nextW,'','soon')));
+  return root;
 }
-/* Al volver de completar una lección: se muestra el estado anterior y se anima el cambio en tres tiempos */
-function afterHome(map,realSet,pending,initSet){
+/* Al volver de completar una lección: se muestra el estado anterior y se anima el cambio por etapas.
+   Si era la última de la semana, también se desbloquea el cartel de la semana siguiente. */
+function afterHome(root,realSet,pending,initSet){
   homeTimers.forEach(clearTimeout); homeTimers=[];
-  const nodeAt=i=>map.querySelector('.node[data-i="'+i+'"]');
+  const groups=weekGroups();
+  const nodeAt=i=>root.querySelector('.node[data-i="'+i+'"]');
+  const bannerAt=w=>root.querySelector('.wbanner[data-w="'+w+'"]');
   const go=(ms,fn)=>homeTimers.push(setTimeout(fn,ms));
-  const centerOn=(i,smooth)=>{const n=nodeAt(i); if(n) n.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});};
-  if(pending===null){const f=firstNotDone(realSet); if(f>=2) centerOn(f,false); return;}
+  const show=(e,smooth)=>{if(e) e.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});};
+  /* Si la lección es la primera de una semana que no es la 1, se muestra el cartel junto con el círculo */
+  const focusOf=i=>{const g=groups.find(x=>x.idx[0]===i&&x.week>1);return g?bannerAt(g.week):nodeAt(i);};
+  if(pending===null){
+    const f=firstNotDone(realSet);
+    if(f>=0){const t=focusOf(f); if(f>=2||(t&&t.classList.contains('wbanner'))) show(t,false);}
+    return;
+  }
   const before=statesOf(initSet), after=statesOf(realSet);
-  centerOn(pending,false);
-  go(500,()=>{after.forEach((s,i)=>{if(s==='done'&&before[i]!=='done') paintNode(nodeAt(i),'done');});});
-  go(1000,()=>{map.querySelectorAll('.prg').forEach(p=>{if(realSet.has(+p.dataset.i)) p.classList.add('lit');});});
-  go(2000,()=>{
+  const bBefore=groups.map(g=>bannerState(g,before)), bAfter=groups.map(g=>bannerState(g,after));
+  show(nodeAt(pending),false);
+  go(500,()=>{
+    after.forEach((s,i)=>{if(s==='done'&&before[i]!=='done') paintNode(nodeAt(i),'done');});
+    groups.forEach((g,k)=>{if(bAfter[k]==='done'&&bBefore[k]!=='done') paintBanner(bannerAt(g.week),'done');});
+  });
+  go(1000,()=>{root.querySelectorAll('.prg').forEach(p=>{if(realSet.has(+p.dataset.i)) p.classList.add('lit');});});
+  const opened=groups.map((g,k)=>(bBefore[k]==='locked'&&bAfter[k]!=='locked')?k:-1).filter(k=>k>=0);
+  let t=2000;
+  if(opened.length){
+    go(1400,()=>{
+      opened.forEach(k=>{
+        const b=bannerAt(groups[k].week); paintBanner(b,bAfter[k]); b.classList.add('unlocking');
+        b.addEventListener('animationend',()=>b.classList.remove('unlocking'),{once:true});
+      });
+      show(bannerAt(groups[opened[0]].week),true);
+    });
+    t=2900;
+  }
+  go(t,()=>{
     let first=-1;
     after.forEach((s,i)=>{
       if(s==='current'&&before[i]!=='current'){
@@ -964,7 +1071,7 @@ function afterHome(map,realSet,pending,initSet){
         if(first<0) first=i;
       }
     });
-    if(first>=0) centerOn(first,true);
+    if(first>=0) show(nodeAt(first),true);
   });
 }
 function Home(){
