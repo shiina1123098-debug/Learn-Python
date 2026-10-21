@@ -1,0 +1,63 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - 'apk/**'
+      - '.github/workflows/build-apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apk
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Instalar Capacitor
+        run: npm install
+
+      - name: Generar el proyecto Android
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Compilar el APK
+        working-directory: apk/android
+        run: ./gradlew assembleDebug
+
+      - name: Guardar el APK como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: Learn-Python-apk
+          path: apk/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publicar el APK en Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk Learn-Python.apk
+          gh release delete apk-latest --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          gh release create apk-latest Learn-Python.apk \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "APK mรกs reciente" \
+            --notes "Compilado desde el commit $GITHUB_SHA"
+            
