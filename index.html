@@ -1289,6 +1289,8 @@ from pyodide.ffi import to_js as _to_js
 __name__ = "__main__"
 class _NeedInput(BaseException):
     pass
+_need = [False]
+_tb = [None]
 _answers = _json.loads(_ans_json)
 _ai = [0]
 _buf = []
@@ -1311,10 +1313,31 @@ class _Out:
         pass
     def isatty(self):
         return False
+class _Err:
+    encoding = "utf-8"
+    def write(self, s):
+        s = str(s)
+        if _tb[0] == "drop":
+            return len(s)
+        if _tb[0] is not None:
+            _tb[0].append(s)
+            if "_pyodide" in s or "_base.py" in s:
+                _tb[0] = "drop"
+            return len(s)
+        if s.startswith("Traceback (most recent call last)"):
+            _tb[0] = [s]
+            return len(s)
+        _o.write(s)
+        return len(s)
+    def flush(self):
+        pass
+    def isatty(self):
+        return False
 _old_out = _sys.stdout
 _old_err = _sys.stderr
-_sys.stdout = _Out()
-_sys.stderr = _sys.stdout
+_o = _Out()
+_sys.stdout = _o
+_sys.stderr = _Err()
 _orig_input = getattr(_bi, "_orig_input", _bi.input)
 _bi._orig_input = _orig_input
 def _input(prompt=""):
@@ -1324,6 +1347,7 @@ def _input(prompt=""):
         _ai[0] += 1
         print(_a)
         return _a
+    _need[0] = True
     raise _NeedInput()
 _bi.input = _input
 _orig_sleep = getattr(_time, "_orig_sleep", _time.sleep)
@@ -1337,7 +1361,11 @@ _time.sleep = _sleep
 _random.seed(_seed)
 `;
 const TERM_EPILOGUE_SRC=String.raw`
+if isinstance(_tb[0], list):
+    for _x in _tb[0]:
+        _o.write(_x)
 _flush()
+_js.postMessage(_to_js({"type": "termflag", "id": _run_id, "need": _need[0]}, dict_converter=_js.Object.fromEntries))
 _sys.stdout = _old_out
 _sys.stderr = _old_err
 _bi.input = _orig_input
@@ -1413,6 +1441,7 @@ function pyStart(){
       else if(m.type==='initerr'){PY.state='error';PY.worker=null;try{w.terminate();}catch(_){} rej(new Error(m.msg));pyRefresh();}
       else if(m.type==='done'||m.type==='termdone'){const f=PY.pending[m.id];if(f){delete PY.pending[m.id];f(m);}}
       else if(m.type==='termout'){const f=PY.stream[m.id];if(f)f.chunk(m.chunk);}
+      else if(m.type==='termflag'){const f=PY.stream[m.id];if(f)f.need=!!m.need;}
       else if(m.type==='termstatus'){const f=PY.stream[m.id];if(f)f.status(m.text,m.reset);}
     };
     w.onerror=()=>{ if(PY.state==='loading'){PY.state='error';PY.worker=null;rej(new Error('worker'));pyRefresh();} };
@@ -1429,10 +1458,11 @@ async function pyTerm(code,answers,seed,onChunk,onStatus,ms){
   try{ await pyInit(); }catch(e){ return {status:'load',err:''}; }
   return new Promise(res=>{
     const id=++PY.n; let done=false, t=null;
-    const finish=(m)=>{ if(done) return; done=true; clearTimeout(t); delete PY.pending[id]; delete PY.stream[id]; if(PY.cancel===cancel) PY.cancel=null; res(m); };
+    const st={chunk:onChunk,status:onStatus,need:false};
+    const finish=(m)=>{ if(done) return; done=true; clearTimeout(t); delete PY.pending[id]; delete PY.stream[id]; if(PY.cancel===cancel) PY.cancel=null; if(st.need&&m.status==='error') m={status:'input',err:''}; res(m); };
     const cancel=()=>{ if(done) return; pyReset(); pyStart(); finish({status:'stopped',err:''}); };
     t=setTimeout(()=>{ if(done) return; pyReset(); pyStart(); finish({status:'timeout',err:''}); },ms);
-    PY.cancel=cancel; PY.pending[id]=finish; PY.stream[id]={chunk:onChunk,status:onStatus};
+    PY.cancel=cancel; PY.pending[id]=finish; PY.stream[id]=st;
     PY.worker.postMessage({type:'term',id,code,answers,seed});
   });
 }
