@@ -1,5 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Aprendé Python desde cero con lecciones cortas, ejercicios interactivos y código que se ejecuta en el navegador.">
+<meta name="theme-color" content="#EBF0F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B121B" media="(prefers-color-scheme: dark)">
 <title>Python desde cero</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -168,6 +175,28 @@ b{font-weight:700}
 .ln.bad{background:var(--bad-bg);outline:1px solid var(--bad)}
 .code .lines{padding:8px 6px}
 
+
+/* Ejercicios donde se escribe y se ejecuta código */
+.editor{margin-bottom:8px}
+.editor .fixed{border-bottom:0}
+.editor pre.fixed{background:transparent}
+.editor .ta{display:block;width:100%;box-sizing:border-box;margin:0;padding:10px 12px;border:0;border-left:3px solid var(--accent);background:var(--accent-soft);color:var(--ink);font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;white-space:pre;overflow:auto;resize:none;border-radius:0;outline:0}
+.editor .ta:focus{background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent)}
+.editor .ta[readonly]{opacity:1}
+.editor.okk .ta{border-left-color:var(--good);background:var(--good-bg)}
+.keys{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.keys button{font-family:var(--f-mono);font-size:1rem;min-width:40px;min-height:40px;padding:4px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--line);color:var(--ink)}
+.keys button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.runbox{display:grid;gap:8px;margin:0 0 14px}
+.runmsg{border-radius:12px;padding:11px 13px;font-size:.93rem;line-height:1.45;border:1px solid var(--line);background:var(--surface)}
+.runmsg.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--ink)}
+.runmsg.ok{background:var(--good-bg);border-color:var(--good)}
+.runmsg b{display:block;margin-bottom:2px}
+.runmsg code{font-family:var(--f-mono);font-size:.85em;word-break:break-word}
+.console{margin:0;padding:10px 12px;border-radius:10px;background:var(--code-bg);border:1px solid var(--line);font-family:var(--f-mono);font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+.console::before{content:"Salida";display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.sol-k{margin-top:6px}
+
 /* Opciones */
 .opts{display:grid;gap:10px}
 .opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:12px}
@@ -216,7 +245,8 @@ b{font-weight:700}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
-
+</head>
+<body>
 <div id="app" class="app"></div>
 
 <script>
@@ -750,6 +780,333 @@ const LESSONS=[
      why:'`remove` toma un solo argumento. Pasarle dos da TypeError.',
      fix:{q:'¿Cómo se arregla?', opts:['Quitar el `, 1`','Cambiar por `pop(2, 1)`','Agregar `:` al final','Cambiar `remove` por `delete`'], a:0}}
   ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Tu primera función', sub:'def y cómo llamarla',
+  cards:[
+    {h:'Por qué existen las funciones', p:['Imaginá que querés mostrar el mismo saludo en tres lugares del programa. Podés copiar el código tres veces, pero si después lo querés cambiar, tenés que cambiarlo tres veces.','Una **función** es un bloque de código con nombre. Lo escribís **una sola vez** y lo usás cuando quieras. Ya usaste funciones hechas por otros: `print()`, `len()`, `input()`. Ahora vas a escribir las tuyas.'],
+     code:L('# sin función: todo repetido','print("Hola, bienvenido")','print("Hola, bienvenido")','print("Hola, bienvenido")','','# con función: escrito una vez','saludar()','saludar()','saludar()')},
+    {h:'Cómo se define una función', p:['Se define con `def` (de "definir"), el nombre que vos elegís, paréntesis y `:`. El código de adentro va con sangría de 4 espacios, igual que en un `if`.','Ojo: **definir no ejecuta nada**. Es como escribir una receta: la receta existe, pero nadie cocinó todavía.'],
+     code:L('def saludar():','    print("Hola")','    print("Bienvenido")','','# Hasta acá no se imprimió nada')},
+    {h:'Cómo se llama una función', p:['Para ejecutarla, la **llamás**: escribís su nombre seguido de paréntesis. Cada llamada ejecuta todo el bloque de nuevo.','Los paréntesis son obligatorios: `saludar` solo nombra la función, `saludar()` la ejecuta.'],
+     code:L('def saludar():','    print("Hola")','','saludar()   # muestra Hola','saludar()   # muestra Hola otra vez')},
+    {h:'El orden importa', p:['Python lee de arriba hacia abajo. Para poder llamar a una función, tiene que haberla leído antes: si llamás a una función que todavía no definiste, da `NameError`.','Los tres errores típicos al empezar: olvidar el `:` del `def`, olvidar la sangría del cuerpo, y llamarla antes de definirla.'],
+     code:L('hola()   # NameError: todavía no existe','','def hola():','    print("Hola")','','hola()   # acá sí funciona')}
+  ],
+  ex:[
+    {t:'fill', q:'Definí una función llamada `saludar`.', code:L('___ saludar():','    print("Hola")'), ans:['def'], bank:['def','function','fun','return'],
+     why:'Las funciones se definen con `def`, después el nombre, los paréntesis y los dos puntos.'},
+    {t:'quiz', q:'¿Cuántas veces se imprime `Hola`?', code:L('def saludar():','    print("Hola")','','saludar()','saludar()'), opts:['Ninguna','Una','Dos','Da error'], a:2,
+     why:'Cada llamada ejecuta el cuerpo completo. Hay dos llamadas, así que se imprime dos veces.'},
+    {t:'quiz', q:'¿Qué imprime este programa?', code:L('def saludar():','    print("Hola")'), opts:['`Hola`','Nada: solo definió la función, no la llamó','Da error','`saludar`'], a:1,
+     why:'Definir una función no la ejecuta. Sin una llamada como `saludar()`, el cuerpo nunca corre.'},
+    {t:'fill', q:'Llamá a la función para que se ejecute.', code:L('def decir():','    print("Listo")','','___'), ans:['decir()'], bank:['decir()','decir','def decir','print(decir)'],
+     why:'Para ejecutarla hay que escribir el nombre con paréntesis. Sin paréntesis, Python solo nombra la función y no hace nada.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('def avisar()','    print("Atención")','','avisar()'), line:0,
+     why:'La línea del `def` tiene que terminar en `:`. Sin los dos puntos Python lanza SyntaxError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `def`','Poner comillas en `avisar`','Sacar los paréntesis','Cambiar `def` por `fun`'], a:0}},
+    {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('hola()','','def hola():','    print("Hola")'), line:0,
+     why:'Python lee de arriba hacia abajo: cuando llega a `hola()` todavía no leyó el `def`, así que ese nombre no existe.',
+     fix:{q:'¿Cómo se arregla?', opts:['Mover la llamada debajo del `def`','Agregar `:` a la llamada','Cambiar `print` por `input`','Borrar el `def`'], a:0}},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea del error.', code:L('def decir():','print("Hola")','','decir()'), line:1,
+     why:'El cuerpo de una función tiene que ir con sangría. Sin los 4 espacios Python no sabe que ese `print` pertenece a la función.',
+     fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Borrar los paréntesis del `def`','Agregar `:` al `print`','Mover `decir()` arriba'], a:0}},
+    {t:'code', q:'Completá el cuerpo de la función: tiene que mostrar `Hola`.', pre:'def saludar():', init:'    ', sol:'    print("Hola")', post:'',
+     test:L('assert salida(saludar).strip() == "Hola", "Al llamar a saludar() tiene que mostrarse Hola (con H mayúscula)."'),
+     hint:'El cuerpo va con 4 espacios de sangría y usa `print("...")`.',
+     why:'Una línea con sangría debajo del `def` forma el cuerpo. `print("Hola")` muestra el texto cada vez que se llama.'},
+    {t:'code', q:'La función ya está definida. Escribí la línea que la llama.', pre:L('def chau():','    print("Chau")',''), init:'', sol:'chau()', post:'',
+     test:L('assert salida_codigo.strip() == "Chau", "Tenés que llamar a la función con paréntesis: chau()"'),
+     hint:'Escribí el nombre de la función seguido de paréntesis.',
+     why:'La llamada `chau()` ejecuta el cuerpo y se imprime Chau. Sin paréntesis no pasaría nada.'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Parámetros', sub:'Pasarle datos a la función',
+  cards:[
+    {h:'Funciones que reciben datos', p:['Una función que siempre hace lo mismo sirve poco. Con un **parámetro** le podés pasar un dato distinto cada vez.','El parámetro es un nombre que va **entre los paréntesis del `def`** y funciona como una variable dentro de la función. El valor que ponés al llamarla se llama **argumento**.'],
+     code:L('def saludar(nombre):   # nombre = parámetro','    print("Hola", nombre)','','saludar("Ana")   # "Ana" = argumento','saludar("Leo")   # Hola Leo')},
+    {h:'Parámetro y argumento', p:['Parámetro y argumento son dos caras de lo mismo. El **parámetro** es el nombre que aparece al definir la función. El **argumento** es el valor real con el que la llamás.','Cuando llamás `saludar("Ana")`, Python hace por dentro `nombre = "Ana"` y después ejecuta el cuerpo.'],
+     code:L('def doble(n):','    print(n * 2)','','doble(4)    # n vale 4, muestra 8','doble(10)   # n vale 10, muestra 20')},
+    {h:'Varios parámetros', p:['Si la función necesita más de un dato, separás los parámetros con coma. Al llamarla, los argumentos se asignan **en el mismo orden**: el primero al primer parámetro, el segundo al segundo.','Tiene que haber exactamente un argumento por cada parámetro. Si falta o sobra alguno, Python lanza `TypeError`.'],
+     code:L('def restar(a, b):','    print(a - b)','','restar(10, 3)   # a=10, b=3 → 7','restar(3, 10)   # a=3, b=10 → -7','restar(5)       # TypeError: falta b')},
+    {h:'Argumentos: valores, variables o cuentas', p:['Como argumento podés pasar un valor directo, una variable o una cuenta. Python primero calcula el valor y después lo manda a la función.','Un texto va entre comillas. Si escribís `saludar(Ana)` sin comillas, Python busca una variable llamada `Ana` y da `NameError`.'],
+     code:L('def saludar(nombre):','    print(f"Hola, {nombre}")','','saludar("Ana")      # un texto','amigo = "Leo"','saludar(amigo)      # una variable','saludar("A" + "na") # una cuenta')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Cuál es el parámetro?', code:L('def saludar(nombre):','    print(nombre)','','saludar("Ana")'), opts:['`nombre`','`"Ana"`','`saludar`','`print`'], a:0,
+     why:'El parámetro es el nombre que aparece entre los paréntesis del `def`. `"Ana"` es el argumento.'},
+    {t:'quiz', q:'¿Cuál es el argumento?', code:L('def doble(n):','    print(n * 2)','','doble(5)'), opts:['`n`','`5`','`doble`','`print`'], a:1,
+     why:'El argumento es el valor con el que se llama a la función. `n` es el parámetro.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def doble(n):','    print(n * 2)','','doble(4)','doble(10)'), opts:['`8` y `20`','`4` y `10`','`8` y `10`','Da error'], a:0,
+     why:'Primero `n` vale 4 y se imprime 8. Después `n` vale 10 y se imprime 20.'},
+    {t:'fill', q:'La función recibe dos números. Completá el segundo parámetro.', code:L('def sumar(a, ___):','    print(a + b)'), ans:['b'], bank:['b','"b"','2','sumar'],
+     why:'Los parámetros son nombres. Como el cuerpo usa `b`, el segundo parámetro tiene que llamarse `b`, sin comillas.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def restar(a, b):','    print(a - b)','','restar(10, 3)'), opts:['`7`','`-7`','`13`','`10`'], a:0,
+     why:'Los argumentos se asignan en orden: `a` vale 10 y `b` vale 3, así que 10 - 3 = 7.'},
+    {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('def sumar(a, b):','    print(a + b)','','sumar(5)'), line:3,
+     why:'La función pide dos argumentos y la llamada manda solo uno, así que falta `b`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Pasar los dos argumentos: `sumar(5, 3)`','Agregar `:` a la llamada','Cambiar `def` por `fun`','Borrar los paréntesis'], a:0}},
+    {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('def saludar(nombre):','    print(f"Hola {nombre}")','','saludar(Ana)'), line:3,
+     why:'Sin comillas, Python busca una variable llamada `Ana`, que no existe. Un texto tiene que ir entre comillas.',
+     fix:{q:'¿Cómo se arregla?', opts:['Poner `"Ana"` entre comillas','Agregar `:` al final','Borrar el `f` del `print`','Poner `Ana` dentro de una lista'], a:0}},
+    {t:'code', q:'Completá el cuerpo: tiene que mostrar `Hola, ` y el nombre.', pre:'def saludar(nombre):', init:'    ', sol:'    print(f"Hola, {nombre}")', post:'',
+     test:L('assert salida(saludar, "Ana").strip() == "Hola, Ana", "saludar(\\"Ana\\") tendría que mostrar: Hola, Ana"','assert salida(saludar, "Leo").strip() == "Hola, Leo", "Tiene que funcionar con cualquier nombre, no solo con Ana."'),
+     hint:'Usá una f-string: `f"Hola, {nombre}"`.',
+     why:'Con una f-string metés el valor del parámetro dentro del texto, así que sirve para cualquier nombre.'},
+    {t:'code', q:'Escribí la función completa: `cuadrado(n)` muestra `n * n`.', pre:'', init:'', sol:L('def cuadrado(n):','    print(n * n)'), post:'',
+     test:L('assert salida(cuadrado, 4).strip() == "16", "cuadrado(4) tendría que mostrar 16"','assert salida(cuadrado, 5).strip() == "25", "cuadrado(5) tendría que mostrar 25"'),
+     hint:'Empezá con `def cuadrado(n):` y, abajo y con sangría, el `print`.',
+     why:'Un parámetro `n` recibe el valor y el cuerpo lo usa como una variable más.'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'return', sub:'Devolver un resultado',
+  cards:[
+    {h:'Mostrar no es lo mismo que devolver', p:['Hasta ahora las funciones **mostraban** cosas con `print`. Pero muchas veces querés que la función **te entregue un resultado** para usarlo después: guardarlo, sumarlo, compararlo.','Para eso está `return`: la función termina y **devuelve** ese valor a quien la llamó. Cuando llamás `doble(4)`, es como si Python reemplazara esa llamada por el valor devuelto.'],
+     code:L('def doble(n):','    return n * 2','','x = doble(4)   # x guarda 8','print(x)       # muestra 8')},
+    {h:'Usar lo que devuelve', p:['Como la llamada se reemplaza por el valor, la podés usar donde irían un número o un texto: en una cuenta, en un `print`, en una comparación, o como argumento de otra función.'],
+     code:L('def doble(n):','    return n * 2','','print(doble(3))          # 6','print(doble(3) + 1)      # 7','print(doble(doble(2)))   # 8','x = doble(5) > 8         # True')},
+    {h:'return corta la función', p:['En cuanto Python ejecuta un `return`, la función **termina ahí** y lo que haya debajo no se ejecuta.','Si una función no tiene `return`, devuelve `None`, que significa "nada". Eso pasa con las que solo usan `print`: muestran algo, pero no entregan ningún valor.'],
+     code:L('def f():','    return 1','    print("nunca llega")','','def g():','    print("hola")   # no devuelve nada','','x = g()    # muestra hola','print(x)    # None')},
+    {h:'Devolver True o False', p:['Una función puede devolver el resultado de una comparación. Así armás preguntas reutilizables, y después las usás en un `if`.'],
+     code:L('def es_par(n):','    return n % 2 == 0','','print(es_par(4))   # True','print(es_par(7))   # False','','if es_par(10):','    print("Es par")')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('def triple(n):','    return n * 3','','x = triple(4)','print(x)'), opts:['`12`','`None`','`4`','Da error'], a:0,
+     why:'`triple(4)` devuelve 12 y ese valor queda guardado en `x`.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def triple(n):','    print(n * 3)','','x = triple(4)','print(x)'), opts:['`12` y `12`','`12` y `None`','Solo `12`','Da error'], a:1,
+     why:'Dentro de la función el `print` muestra 12. Pero como no hay `return`, la función devuelve `None`, y eso es lo que muestra el segundo `print`.'},
+    {t:'fill', q:'Hacé que la función devuelva el doble.', code:L('def doble(n):','    ___ n * 2'), ans:['return'], bank:['return','print','def','input'],
+     why:'`return` entrega el valor a quien llamó a la función. `print` solo lo mostraría.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def f():','    return 1','    print("hola")','','print(f())'), opts:['`1`','`hola` y después `1`','`hola`','Da error'], a:0,
+     why:'`return` corta la función: el `print("hola")` nunca se ejecuta. Solo se muestra el 1 del `print` de afuera.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def doble(n):','    return n * 2','','print(doble(3) + doble(4))'), opts:['`14`','`7`','`24`','`6` y `8`'], a:0,
+     why:'Cada llamada se reemplaza por su valor: 6 + 8 = 14.'},
+    {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('def suma(a, b):','    print(a + b)','','total = suma(2, 3) + 1'), line:3,
+     why:'`suma` no tiene `return`, así que devuelve `None`. Y `None + 1` no se puede calcular.',
+     fix:{q:'¿Cómo se arregla?', opts:['Cambiar el `print` de `suma` por `return`','Cambiar `+ 1` por `- 1`','Agregar `:` a la última línea','Borrar los paréntesis'], a:0}},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('def es_mayor(edad):','    return edad >= 18','','if es_mayor 20:','    print("Pasá")'), line:3,
+     why:'Para usar una función hay que llamarla con paréntesis: `es_mayor(20)`. Sin ellos Python lanza SyntaxError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Llamarla con paréntesis: `es_mayor(20)`','Cambiar `>=` por `=>`','Borrar el `return`','Poner `20` entre comillas'], a:0}},
+    {t:'code', q:'Completá el cuerpo: que devuelva el doble de `n`.', pre:'def doble(n):', init:'    ', sol:'    return n * 2', post:'',
+     test:L('r = doble(3)','assert r is not None, "doble(3) devolvió None: ¿usaste print en vez de return?"','assert r == 6, f"doble(3) devolvió {r!r} y tendría que devolver 6"','assert doble(-2) == -4, "doble(-2) tendría que devolver -4"'),
+     hint:'Usá `return` seguido de la cuenta, no `print`.',
+     why:'`return n * 2` entrega el resultado para que quien llamó lo use como quiera.'},
+    {t:'code', q:'Completá el cuerpo: que devuelva `True` si `n` es par.', pre:'def es_par(n):', init:'    ', sol:'    return n % 2 == 0', post:'',
+     test:L('assert es_par(4) is True, "es_par(4) tendría que devolver True"','assert es_par(7) is False, "es_par(7) tendría que devolver False"','assert es_par(0) is True, "es_par(0) tendría que devolver True"'),
+     hint:'Un número es par si el resto de dividirlo por 2 es 0: `n % 2 == 0`.',
+     why:'La comparación `n % 2 == 0` ya da `True` o `False`, así que se puede devolver directamente.'},
+    {t:'code', q:'Completá el cuerpo: devolvé el área de un rectángulo (base por altura).', pre:'def area(base, altura):', init:'    ', sol:'    return base * altura', post:'',
+     test:L('assert area(4, 3) == 12, "area(4, 3) tendría que devolver 12"','assert area(5, 5) == 25, "area(5, 5) tendría que devolver 25"'),
+     hint:'`return` y la multiplicación de los dos parámetros.',
+     why:'Con dos parámetros la función puede calcular con ambos y devolver el resultado.'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Valores por defecto', sub:'Parámetros opcionales y con nombre',
+  cards:[
+    {h:'Parámetros con valor por defecto', p:['A veces un parámetro casi siempre vale lo mismo. Le podés dar un **valor por defecto** con `=` en el `def`. Si al llamar a la función no pasás ese argumento, Python usa el valor por defecto.','Si lo pasás, se usa el tuyo. Los parámetros con valor por defecto van **siempre al final**, después de los obligatorios.'],
+     code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar("Ana")           # Hola, Ana','saludar("Ana", "Chau")   # Chau, Ana')},
+    {h:'Argumentos con nombre', p:['Al llamar a una función podés indicar **a qué parámetro** va cada valor, escribiendo `parámetro=valor`. Así el orden deja de importar y la llamada se entiende mejor.','Podés mezclar: primero los comunes, por orden, y después los que llevan nombre.'],
+     code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar(saludo="Buen día", nombre="Leo")','# Buen día, Leo','','saludar("Leo", saludo="Chau")','# Chau, Leo')},
+    {h:'Ya los usaste: sep y end', p:['`print` también tiene parámetros con valor por defecto. `sep` es lo que va **entre** los valores (por defecto un espacio) y `end` es lo que va **al final** (por defecto un salto de línea).','Como son parámetros con nombre, se cambian así: `sep="-"` o `end=""`.'],
+     code:L('print("a", "b")             # a b','print("a", "b", sep="-")   # a-b','','print("Hola", end="")','print("Mundo")   # HolaMundo')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar("Ana")'), opts:['`Hola, Ana`','`saludo, Ana`','Da error','`Ana, Hola`'], a:0,
+     why:'No se pasó `saludo`, así que se usa el valor por defecto `"Hola"`.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar("Ana", "Chau")'), opts:['`Hola, Ana`','`Chau, Ana`','`Ana, Chau`','Da error'], a:1,
+     why:'Si se pasa el argumento, reemplaza al valor por defecto: `saludo` vale `"Chau"`.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar(saludo="Buen día", nombre="Leo")'), opts:['`Buen día, Leo`','`Leo, Buen día`','`Hola, Leo`','Da error'], a:0,
+     why:'Con argumentos con nombre cada valor va al parámetro indicado, sin importar el orden.'},
+    {t:'fill', q:'Dale a `saludo` el valor por defecto `"Hola"`.', code:L('def saludar(nombre, saludo___"Hola"):','    print(f"{saludo}, {nombre}")'), ans:['='], bank:['=','==','=>',','],
+     why:'El valor por defecto se escribe con un `=` pegado al nombre del parámetro.'},
+    {t:'fill', q:'Llamá a la función indicando el parámetro por su nombre.', code:L('def potencia(base, exp=2):','    return base ** exp','','print(potencia(3, ___=3))'), ans:['exp'], bank:['exp','base','3','2'],
+     why:'`exp=3` le dice a Python que ese 3 es para el parámetro `exp`. Da 3 ** 3 = 27.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('def sumar(a=1, b):','    return a + b'), line:0,
+     why:'Los parámetros con valor por defecto tienen que ir después de los obligatorios. Si no, Python lanza SyntaxError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Poner `b` antes de `a=1`','Borrar el `return`','Cambiar `=` por `==`','Agregar comillas a `1`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:'print("a", "b", sep="-")', opts:['`a b`','`a-b`','`ab`','`a, b`'], a:1,
+     why:'`sep` es lo que se pone entre los valores. Acá es un guion en lugar del espacio.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('print("Hola", end="")','print("Mundo")'), opts:['`Hola Mundo`','`HolaMundo`','`Hola` y abajo `Mundo`','`Mundo`'], a:1,
+     why:'`end=""` hace que el primer `print` no agregue el salto de línea, así que el segundo escribe pegado.'},
+    {t:'code', q:'Completá el cuerpo: devolvé el porcentaje de `monto`. Si no se indica, es el 10 %.', pre:'def propina(monto, porcentaje=10):', init:'    ', sol:'    return monto * porcentaje / 100', post:'',
+     test:L('assert propina(200) == 20, "propina(200) tendría que devolver 20 (el 10 por ciento de 200)"','assert propina(200, 15) == 30, "propina(200, 15) tendría que devolver 30"'),
+     hint:'El porcentaje de un monto es `monto * porcentaje / 100`.',
+     why:'El parámetro `porcentaje` ya trae el 10 por defecto, así que la función sirve con y sin ese dato.'},
+    {t:'code', q:'Mostrá `2025`, `10` y `21` separados por guiones, usando `sep`.', pre:'', init:'', sol:'print("2025", "10", "21", sep="-")', post:'',
+     test:L('assert salida_codigo.strip() == "2025-10-21", "Tiene que mostrarse 2025-10-21. Usá sep=\\"-\\" dentro del print."'),
+     hint:'`print("2025", "10", "21", sep="-")`.',
+     why:'`sep` cambia lo que se pone entre los valores, así que no hace falta armar el texto a mano.'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Alcance', sub:'Dónde vive cada variable',
+  cards:[
+    {h:'Variables locales', p:['Una variable que creás **dentro** de una función es **local**: existe solo mientras la función se ejecuta. Cuando termina, desaparece.','Por eso, desde afuera no podés verla: si la nombrás, Python da `NameError`. Lo mismo pasa con los parámetros.'],
+     code:L('def calcular():','    resultado = 3 * 4   # local','    print(resultado)','','calcular()          # 12','print(resultado)    # NameError')},
+    {h:'Variables globales', p:['Una variable creada **afuera** de todas las funciones es **global**. Las funciones pueden **leerla**.','El "alcance" (scope) es justamente eso: la zona del programa donde un nombre existe.'],
+     code:L('IVA = 21   # global','','def con_iva(precio):','    return precio + precio * IVA / 100','','print(con_iva(100))   # 121.0')},
+    {h:'Mismo nombre, otra variable', p:['Si dentro de una función le asignás un valor a un nombre, Python crea una variable **local nueva**, aunque afuera exista otra con el mismo nombre. La de afuera no se toca.','Con los parámetros pasa igual: cambiar `n` adentro no cambia la variable que pasaste al llamar.'],
+     code:L('x = 10','','def f():','    x = 99      # otra x, local','    print(x)    # 99','','f()','print(x)        # 10 (no cambió)')},
+    {h:'Cambiar una global desde adentro', p:['Como asignar crea una variable local, `contador += 1` dentro de una función falla: Python cree que `contador` es local y no la encuentra (da `UnboundLocalError`).','Se arregla con `global contador` al principio de la función. Pero es mejor evitarlo: **pasá los datos por parámetro y devolvé el resultado con `return`**. El código queda más fácil de entender.'],
+     code:L('contador = 0','','def sumar():','    global contador   # "usá la de afuera"','    contador += 1','','sumar()','print(contador)   # 1','','# mejor: contador = sumar(contador)')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué pasa al correr esto?', code:L('def f():','    x = 5','','f()','print(x)'), opts:['Imprime `5`','`NameError`: `x` solo existe dentro de `f`','Imprime `None`','Imprime `x`'], a:1,
+     why:'`x` es local: se crea al ejecutar `f()` y desaparece al terminar. Afuera no existe.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('mensaje = "Hola"','','def decir():','    print(mensaje)','','decir()'), opts:['`Hola`','`mensaje`','Nada','`NameError`'], a:0,
+     why:'Las funciones pueden leer las variables globales, y `mensaje` está definida afuera.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('x = 10','','def f():','    x = 99','    print(x)','','f()','print(x)'), opts:['`99` y `99`','`99` y `10`','`10` y `99`','`10` y `10`'], a:1,
+     why:'Dentro de `f`, `x = 99` crea una `x` local. La `x` de afuera sigue valiendo 10.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def f(n):','    n = n + 1','    return n','','n = 10','print(f(n))','print(n)'), opts:['`11` y `11`','`11` y `10`','`10` y `10`','`10` y `11`'], a:1,
+     why:'El `n` de la función es otro `n`, local. Sumarle 1 adentro no cambia el `n` de afuera.'},
+    {t:'bug', q:'Esto lanza UnboundLocalError. Tocá la línea donde salta.', code:L('contador = 0','','def sumar():','    contador += 1','','sumar()'), line:3,
+     why:'Como `contador` se asigna dentro de la función, Python la trata como local. Pero todavía no tiene valor, y no puede sumarle 1.',
+     fix:{q:'¿Cómo se arregla?', opts:['Agregar `global contador` dentro de la función','Borrar la línea `contador = 0`','Poner `return` antes del `+=`','Cambiar `+=` por `==`'], a:0}},
+    {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('def calcular():','    resultado = 3 * 4','','calcular()','print(resultado)'), line:4,
+     why:'`resultado` es local de `calcular`: afuera no existe. Hay que devolverlo con `return` y guardarlo.',
+     fix:{q:'¿Cómo se arregla?', opts:['Devolver el valor con `return` y guardarlo afuera','Agregar `:` al `print`','Cambiar `calcular()` por `calcular`','Poner `resultado` entre comillas'], a:0}},
+    {t:'fill', q:'Usá la palabra que permite cambiar la variable de afuera.', code:L('puntos = 0','','def sumar():','    ___ puntos','    puntos += 10','','sumar()','print(puntos)'), ans:['global'], bank:['global','local','def','return'],
+     why:'`global puntos` le dice a Python que use la variable de afuera en vez de crear una local.'},
+    {t:'code', q:'La función calcula, pero no entrega nada. Escribí la línea que falta para devolver `total`.', pre:L('def total_con_iva(precio):','    total = precio * 1.21'), init:'    ', sol:'    return total', post:'',
+     test:L('r = total_con_iva(100)','assert r is not None, "La función devolvió None: falta el return."','assert round(r, 2) == 121.0, f"total_con_iva(100) devolvió {r!r} y tendría que devolver 121.0"'),
+     hint:'Para sacar el valor de la función usá `return total`.',
+     why:'`total` es local: para usarlo afuera hay que devolverlo con `return`.'},
+    {t:'code', q:'Usá la variable global `IVA` para devolver el precio más el IVA.', pre:L('IVA = 21','','def con_iva(precio):'), init:'    ', sol:'    return precio + precio * IVA / 100', post:'',
+     test:L('assert con_iva(100) == 121, "con_iva(100) tendría que devolver 121"','assert con_iva(200) == 242, "con_iva(200) tendría que devolver 242"'),
+     hint:'El IVA es `precio * IVA / 100`. Sumáselo al precio.',
+     why:'La función lee la global `IVA` sin problema: leer no necesita nada especial.'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Funciones con listas', sub:'Recorrer, acumular y devolver',
+  cards:[
+    {h:'Recibir una lista y recorrerla', p:['Una función puede recibir una lista como parámetro y recorrerla con `for`, igual que afuera. El patrón más común: crear un acumulador, recorrer sumando y **devolver** el resultado al final.','El `return` va **después** del bucle (con una sangría menos que el `for`). Si lo ponés adentro, la función termina en la primera vuelta.'],
+     code:L('def total(nums):','    r = 0','    for n in nums:','        r += n','    return r   # fuera del for','','print(total([1, 2, 3]))   # 6')},
+    {h:'return adentro del bucle', p:['A veces querés cortar apenas encontrás algo. Ahí sí sirve el `return` dentro del bucle: devuelve en cuanto se cumple la condición y la función termina.','Si el bucle termina sin encontrar nada, se ejecuta el `return` de abajo.'],
+     code:L('def tiene(lista, x):','    for e in lista:','        if e == x:','            return True   # lo encontró','    return False          # no lo encontró','','print(tiene([4, 5, 6], 5))   # True','print(tiene([4, 5, 6], 9))   # False')},
+    {h:'Una función puede usar otra', p:['Dentro de una función podés llamar a otras funciones. Así partís un problema grande en pasos chicos, cada uno con su nombre.'],
+     code:L('def es_par(n):','    return n % 2 == 0','','def contar_pares(nums):','    c = 0','    for n in nums:','        if es_par(n):   # usa la otra','            c += 1','    return c')},
+    {h:'Las listas se modifican por dentro', p:['Cuando pasás una lista, la función trabaja sobre **la misma lista**, no sobre una copia. Si adentro hacés `append`, la lista de afuera también cambia.','Eso es distinto de los números y los textos, que no se pueden modificar por dentro. Por eso una función que modifica una lista a veces no necesita devolver nada.'],
+     code:L('def agregar(lista):','    lista.append(0)   # cambia la original','','nums = [1, 2]','agregar(nums)','print(nums)   # [1, 2, 0]')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('def total(nums):','    r = 0','    for n in nums:','        r += n','    return r','','print(total([1, 2, 3]))'), opts:['`3`','`6`','`0`','`[1, 2, 3]`'], a:1,
+     why:'El acumulador suma 1 + 2 + 3 = 6 y el `return` de afuera del bucle lo devuelve.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def primero(lista):','    for x in lista:','        return x','','print(primero([7, 8, 9]))'), opts:['`7`','`9`','`[7, 8, 9]`','`None`'], a:0,
+     why:'El `return` dentro del `for` corta la función en la primera vuelta, con `x` valiendo 7.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def agregar(lista):','    lista.append(0)','','nums = [1, 2]','agregar(nums)','print(nums)'), opts:['`[1, 2]`','`[1, 2, 0]`','`[0]`','`None`'], a:1,
+     why:'La función recibe la misma lista, no una copia. El `append` la modifica también afuera.'},
+    {t:'fill', q:'Hacé que la función devuelva el contador.', code:L('def contar_pares(nums):','    c = 0','    for n in nums:','        if n % 2 == 0:','            c += 1','    ___ c'), ans:['return'], bank:['return','print','break','continue'],
+     why:'Después del bucle se devuelve el acumulador con `return c`.'},
+    {t:'fill', q:'Completá la comparación para quedarte con el mayor.', code:L('def maximo(nums):','    m = nums[0]','    for n in nums:','        if n ___ m:','            m = n','    return m'), ans:['>'], bank:['>','<','==','!='],
+     why:'Si `n` es mayor que el máximo actual, se convierte en el nuevo máximo.'},
+    {t:'bug', q:'Esta función tendría que sumar todo, pero devuelve el primer valor. Tocá la línea del error.', code:L('def total(nums):','    r = 0','    for n in nums:','        r += n','        return r'), line:4,
+     why:'El `return` está dentro del `for`, así que la función termina en la primera vuelta.',
+     fix:{q:'¿Cómo se arregla?', opts:['Sacar el `return` del bucle (una sangría menos)','Cambiar `+=` por `-=`','Borrar `r = 0`','Cambiar `for` por `while`'], a:0}},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def duplicar(lista):','    nueva = []','    for x in lista:','        nueva.append(x * 2)','','print(duplicar([1, 2]))'), opts:['`[2, 4]`','`[1, 2]`','`None`','Da error'], a:2,
+     why:'La función arma `nueva`, pero nunca la devuelve. Sin `return`, el resultado es `None`.'},
+    {t:'code', q:'Escribí el bucle que suma todos los números en `total`.', pre:L('def sumar(nums):','    total = 0'), init:'    ', sol:L('    for n in nums:','        total += n'), post:'    return total',
+     test:L('assert sumar([1, 2, 3]) == 6, "sumar([1, 2, 3]) tendría que devolver 6"','assert sumar([]) == 0, "sumar([]) tendría que devolver 0"','assert sumar([-1, 1, 5]) == 5, "sumar([-1, 1, 5]) tendría que devolver 5"'),
+     hint:'Recorrés con `for n in nums:` y adentro, con sangría, `total += n`.',
+     why:'El bucle acumula en `total` y el `return` de abajo devuelve la suma completa.'},
+    {t:'code', q:'Escribí el bucle que cuenta cuántos números son pares.', pre:L('def contar_pares(nums):','    c = 0'), init:'    ', sol:L('    for n in nums:','        if n % 2 == 0:','            c += 1'), post:'    return c',
+     test:L('assert contar_pares([1, 2, 3, 4]) == 2, "contar_pares([1, 2, 3, 4]) tendría que devolver 2"','assert contar_pares([1, 3, 5]) == 0, "contar_pares([1, 3, 5]) tendría que devolver 0"','assert contar_pares([2, 4, 6]) == 3, "contar_pares([2, 4, 6]) tendría que devolver 3"'),
+     hint:'Un `for` con un `if n % 2 == 0:` adentro que haga `c += 1`.',
+     why:'Combinás un bucle, una condición y un acumulador, y devolvés el contador al final.'},
+    {t:'code', q:'Escribí el cuerpo: devolvé `True` si `x` está en la lista y `False` si no.', pre:'def tiene(lista, x):', init:'    ', sol:L('    for e in lista:','        if e == x:','            return True','    return False'), post:'',
+     test:L('assert tiene([4, 5, 6], 5) is True, "tiene([4, 5, 6], 5) tendría que devolver True"','assert tiene([4, 5, 6], 9) is False, "tiene([4, 5, 6], 9) tendría que devolver False"','assert tiene([], 1) is False, "con una lista vacía tendría que devolver False"'),
+     hint:'Recorré la lista: si un elemento es igual a `x`, `return True`. Si el bucle termina, `return False`.',
+     why:'El `return True` adentro corta apenas lo encuentra, y el `return False` de afuera cubre el caso de que no esté.'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Lambda', sub:'Funciones de una línea',
+  cards:[
+    {h:'Una función en una línea', p:['Una **lambda** es una función mini, sin nombre propio y de una sola línea. Se escribe `lambda parámetros: expresión` y **devuelve el resultado de la expresión**, sin escribir `return`.','Es equivalente a un `def` corto. Podés guardarla en una variable y llamarla como cualquier función.'],
+     code:L('def doble(n):','    return n * 2','','doble = lambda n: n * 2   # lo mismo','','print(doble(5))   # 10')},
+    {h:'Varios parámetros', p:['Si necesita más de un dato, separás los parámetros con coma, igual que en un `def`.'],
+     code:L('suma = lambda a, b: a + b','print(suma(2, 3))   # 5','','es_par = lambda n: n % 2 == 0','print(es_par(4))    # True')},
+    {h:'Las funciones también son valores', p:['En Python una función se puede **pasar como dato**: guardarla en una variable, una lista o un diccionario, o dársela a otra función. Para eso se escribe su nombre **sin paréntesis**, porque con paréntesis se ejecutaría.','`sorted`, `min` y `max` aceptan un parámetro `key`: una función que se aplica a cada elemento para decidir el orden.'],
+     code:L('palabras = ["sol", "casa", "a"]','print(sorted(palabras, key=len))','# ["a", "sol", "casa"]  (por largo)','','pares = [("Ana", 30), ("Leo", 25)]','print(sorted(pares, key=lambda t: t[1]))','# [("Leo", 25), ("Ana", 30)] (por edad)')},
+    {h:'Cuándo usar lambda', p:['Las lambdas sirven para cosas cortas que usás una sola vez, como el `key` de un `sorted`. Si la función necesita varias líneas, un `if` o un bucle, usá `def`: se lee mucho mejor.','Dentro de una lambda no se escribe `return`: ya devuelve el resultado.'],
+     code:L('# lambda: corto, para usar una vez','sorted(nums, key=lambda n: -n)','','# def: cuando hay varios pasos','def categoria(edad):','    if edad >= 18:','        return "adulto"','    return "menor"')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('doble = lambda n: n * 2','print(doble(5))'), opts:['`10`','`5`','`n * 2`','Da error'], a:0,
+     why:'La lambda devuelve `n * 2` sin necesidad de `return`. Con `n` valiendo 5, da 10.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('suma = lambda a, b: a + b','print(suma(2, 3))'), opts:['`5`','`23`','`2, 3`','Da error'], a:0,
+     why:'Los parámetros se asignan en orden: `a` vale 2 y `b` vale 3, y devuelve 5.'},
+    {t:'fill', q:'Escribí una lambda que resta 1.', code:L('menos_uno = ___ n: n - 1','print(menos_uno(10))'), ans:['lambda'], bank:['lambda','def','return','fun'],
+     why:'Las funciones de una línea empiezan con `lambda`, después los parámetros, `:` y la expresión.'},
+    {t:'fill', q:'Ordená las palabras por su largo usando el parámetro de orden.', code:L('palabras = ["sol", "casa", "a"]','print(sorted(palabras, ___=len))'), ans:['key'], bank:['key','sort','by','len'],
+     why:'`key` recibe la función que se aplica a cada elemento para decidir el orden. Acá se usa `len` sin paréntesis.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('p = ["sol", "casa", "a"]','print(sorted(p, key=len))'), opts:['`["a", "sol", "casa"]`','`["a", "casa", "sol"]`','`["casa", "sol", "a"]`','`["sol", "casa", "a"]`'], a:0,
+     why:'Se ordena por el largo de cada texto: `"a"` tiene 1, `"sol"` tiene 3 y `"casa"` tiene 4.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('pares = [("Ana", 30), ("Leo", 25)]','print(sorted(pares, key=lambda t: t[1]))'), opts:['`[("Leo", 25), ("Ana", 30)]`','`[("Ana", 30), ("Leo", 25)]`','`[25, 30]`','Da error'], a:0,
+     why:'La lambda toma cada tupla `t` y devuelve `t[1]`, la edad. Se ordena de menor a mayor por edad.'},
+    {t:'bug', q:'Tocá la línea con el error.', code:L('doble = lambda n: return n * 2','print(doble(4))'), line:0,
+     why:'Una lambda ya devuelve el resultado de su expresión. Escribir `return` adentro es un SyntaxError.',
+     fix:{q:'¿Cómo se arregla?', opts:['Sacar el `return`','Agregar `:` después del `return`','Cambiar `lambda` por `def`','Poner `n * 2` entre comillas'], a:0}},
+    {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('p = ["sol", "casa", "a"]','print(max(p, key=len()))'), line:1,
+     why:'Con `len()` se ejecuta la función sin argumento. Para pasarla como dato se escribe sin paréntesis: `key=len`.',
+     fix:{q:'¿Cómo se arregla?', opts:['Escribir `key=len` sin paréntesis','Agregar `:` al final','Cambiar `max` por `min`','Poner `abs` entre comillas'], a:0}},
+    {t:'code', q:'Escribí una lambda llamada `cuadrado` que devuelva `n` al cuadrado.', pre:'', init:'cuadrado = ', sol:'cuadrado = lambda n: n ** 2', post:'',
+     test:L('assert cuadrado(5) == 25, "cuadrado(5) tendría que devolver 25"','assert cuadrado(-3) == 9, "cuadrado(-3) tendría que devolver 9"'),
+     hint:'`lambda n: ...` y, después de los dos puntos, la cuenta.',
+     why:'Después de `lambda n:` va la expresión que se devuelve. No hace falta `return`.'},
+    {t:'code', q:'Guardá en `resultado` las palabras ordenadas por largo.', pre:L('palabras = ["pera", "uva", "manzana"]',''), init:'', sol:'resultado = sorted(palabras, key=len)', post:'',
+     test:L('assert resultado == ["uva", "pera", "manzana"], "resultado tendría que ser [\\"uva\\", \\"pera\\", \\"manzana\\"]"'),
+     hint:'`sorted(palabras, key=len)` y guardalo con `resultado = ...`.',
+     why:'`key=len` ordena según el largo de cada palabra: uva (3), pera (4), manzana (7).'}
+  ]
+},
+{
+  week:3, weekName:'Funciones',
+  title:'Repaso Semana 3', sub:'Funciones, todo junto',
+  cards:[
+    {h:'Todo lo de esta semana', p:['Una función se define con `def`, se ejecuta al llamarla con paréntesis y puede recibir **parámetros**. Con `return` devuelve un resultado; sin `return` devuelve `None`.','Los parámetros pueden tener **valor por defecto** y se pueden pasar **por nombre**. Las variables de adentro son **locales**; las de afuera, **globales**. Una **lambda** es una función corta de una línea.'],
+     code:L('def promedio(nums, decimales=1):','    prom = sum(nums) / len(nums)','    return round(prom, decimales)','','print(promedio([7, 8, 10]))     # 8.3','print(promedio([7, 8, 10], 2))  # 8.33','','por_dos = lambda n: n * 2')}
+  ],
+  ex:[
+    {t:'quiz', q:'¿Qué imprime?', code:L('def f(a, b=2):','    return a * b','','print(f(5))'), opts:['`10`','`5`','`7`','Da error'], a:0,
+     why:'`b` no se pasó, así que vale 2 por defecto: 5 * 2 = 10.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def f(a, b=2):','    return a * b','','print(f(5, b=3))'), opts:['`10`','`15`','`8`','Da error'], a:1,
+     why:'`b=3` reemplaza el valor por defecto: 5 * 3 = 15.'},
+    {t:'quiz', q:'¿Qué imprime?', code:L('def hola():','    print("Hola")','','x = hola()','print(x)'), opts:['`Hola` y `None`','`Hola` y `Hola`','Solo `Hola`','Solo `None`'], a:0,
+     why:'`hola()` muestra Hola, pero no devuelve nada: `x` es `None`.'},
+    {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('def sumar(a, b):','    return a + b','','print(sumar(1))'), line:3,
+     why:'La función necesita dos argumentos y solo recibe uno.',
+     fix:{q:'¿Cómo se arregla?', opts:['Pasar los dos argumentos','Cambiar `return` por `print`','Agregar `:` al final','Borrar los paréntesis'], a:0}},
+    {t:'bug', q:'Esto lanza IndentationError. Tocá la línea del error.', code:L('def mayor(a, b):','if a > b:','        return a','    return b'), line:1,
+     why:'El `if` forma parte del cuerpo de la función, así que necesita sangría de 4 espacios.',
+     fix:{q:'¿Cómo se arregla?', opts:['Indentar el `if` con 4 espacios','Borrar el `return b`','Cambiar `>` por `>=`','Agregar `:` al `def`'], a:0}},
+    {t:'code', q:'Completá el cuerpo: devolvé `True` si `edad` es 18 o más.', pre:'def es_mayor_de_edad(edad):', init:'    ', sol:'    return edad >= 18', post:'',
+     test:L('assert es_mayor_de_edad(18) is True, "con 18 tendría que devolver True"','assert es_mayor_de_edad(17) is False, "con 17 tendría que devolver False"'),
+     hint:'Devolvé directamente la comparación `edad >= 18`.',
+     why:'La comparación ya es `True` o `False`, así que no hace falta un `if`.'},
+    {t:'code', q:'Completá `responder`: devuelve `"Pong"` si `texto` es `"!ping"` y `"No existe"` en cualquier otro caso.', pre:'def responder(texto):', init:'    ', sol:L('    if texto == "!ping":','        return "Pong"','    return "No existe"'), post:'',
+     test:L('assert responder("!ping") == "Pong", "responder(\\"!ping\\") tendría que devolver Pong"','assert responder("!w") == "No existe", "responder(\\"!w\\") tendría que devolver No existe"'),
+     hint:'Un `if texto == "!ping":` con su `return`, y después un `return` para el resto.',
+     why:'El primer `return` corta la función si se cumple el `if`; si no, sigue y devuelve "No existe".'},
+    {t:'code', q:'Armá el diccionario `comandos`: la clave `"!ping"` con la función `ping` y `"!w"` con la función `w`. Sin paréntesis.', pre:L('def ping():','    return "Pong"','','def w():','    return "Agarraste la pala"',''), init:'', sol:'comandos = {"!ping": ping, "!w": w}', post:'',
+     test:L('assert comandos["!ping"]() == "Pong", "comandos[\\"!ping\\"] tendría que ser la función ping"','assert comandos["!w"]() == "Agarraste la pala", "comandos[\\"!w\\"] tendría que ser la función w"'),
+     hint:'Un diccionario `{clave: valor, ...}` donde el valor es el nombre de la función, sin `()`.',
+     why:'Las funciones son valores: guardadas en un diccionario, `comandos[texto]()` busca y ejecuta la que corresponda. Así se arma un bot sin una cadena de `if`.'},
+    {t:'code', q:'Completá el cuerpo: devolvé el promedio de la lista (la suma dividida por la cantidad).', pre:'def promedio(nums):', init:'    ', sol:'    return sum(nums) / len(nums)', post:'',
+     test:L('assert promedio([2, 4, 6]) == 4, "promedio([2, 4, 6]) tendría que devolver 4"','assert promedio([10]) == 10, "promedio([10]) tendría que devolver 10"'),
+     hint:'Usá `sum(...)` y `len(...)` con la lista.',
+     why:'`sum` suma todo y `len` cuenta los elementos; dividir una por la otra da el promedio.'}
+  ]
 }
 ];
 
@@ -863,10 +1220,186 @@ function codeBug(c){
 
 /* ---------- Estado ---------- */
 let S=null; // null = inicio
+
+/* ---------- Ejecutar Python de verdad (Pyodide en un Worker) ---------- */
+const PYURL='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+const TEST_HELPERS='import io as _io, contextlib as _cx\ndef salida(_f, *_a, **_k):\n    _b = _io.StringIO()\n    with _cx.redirect_stdout(_b):\n        _f(*_a, **_k)\n    return _b.getvalue()\n';
+const PY={state:'idle',worker:null,ready:null,pending:{},n:0};
+const WORKER_SRC=`
+let py=null;
+self.onmessage=async(e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      importScripts(m.url+'pyodide.js');
+      py=await loadPyodide({indexURL:m.url});
+      py.setStdin({stdin:()=>null});
+      self.postMessage({type:'ready'});
+    }catch(err){ self.postMessage({type:'initerr',msg:String(err&&err.message||err)}); }
+    return;
+  }
+  if(m.type==='run'){
+    const out=[]; let shown='', stage='code', g=null;
+    try{
+      py.setStdout({batched:s=>out.push(s)});
+      py.setStderr({batched:s=>out.push(s)});
+      g=py.globals.get('dict')();
+      await py.runPythonAsync(m.code,{globals:g});
+      shown=out.join('\\n'); stage='test'; g.set('salida_codigo',shown);
+      if(m.test) await py.runPythonAsync(m.test,{globals:g});
+      self.postMessage({type:'done',id:m.id,ok:true,out:shown});
+    }catch(err){
+      self.postMessage({type:'done',id:m.id,ok:false,stage,out:stage==='code'?out.join('\\n'):shown,err:String(err&&err.message||err)});
+    }finally{ try{g&&g.destroy();}catch(_){} }
+  }
+};`;
+function pyStart(){
+  PY.state='loading';
+  PY.ready=new Promise((res,rej)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'}))); }
+    catch(err){ PY.state='error'; rej(err); return; }
+    PY.worker=w;
+    w.onmessage=(e)=>{
+      const m=e.data;
+      if(m.type==='ready'){PY.state='ready';res();if(S&&S.cur&&S.cur.ex.t==='code'){if(document.activeElement&&document.activeElement.tagName==='TEXTAREA'){document.querySelectorAll('.runbox .runmsg').forEach(n=>{if(/^Cargando/.test(n.textContent))n.remove();});}else render();}}
+      else if(m.type==='initerr'){PY.state='error';PY.worker=null;try{w.terminate();}catch(_){} rej(new Error(m.msg));if(S&&S.cur&&S.cur.ex.t==='code')render();}
+      else if(m.type==='done'){const f=PY.pending[m.id];if(f){delete PY.pending[m.id];f(m);}}
+    };
+    w.onerror=()=>{ if(PY.state==='loading'){PY.state='error';PY.worker=null;rej(new Error('worker'));if(S&&S.cur&&S.cur.ex.t==='code')render();} };
+    w.postMessage({type:'init',url:PYURL});
+  });
+  PY.ready.catch(()=>{});
+  return PY.ready;
+}
+function pyInit(){ return (PY.state==='idle'||PY.state==='error')?pyStart():PY.ready; }
+function pyReset(){ try{PY.worker&&PY.worker.terminate();}catch(_){} PY.worker=null;PY.state='idle';PY.pending={}; }
+async function pyRun(code,test){
+  try{ await pyInit(); }catch(e){ return {ok:false,stage:'load',err:'No se pudo cargar Python.',out:''}; }
+  return new Promise(res=>{
+    const id=++PY.n; let done=false;
+    const t=setTimeout(()=>{ if(done) return; done=true; delete PY.pending[id]; pyReset(); pyStart(); res({ok:false,stage:'timeout',out:'',err:''}); },6000);
+    PY.pending[id]=(m)=>{ if(done) return; done=true; clearTimeout(t); res(m); };
+    PY.worker.postMessage({type:'run',id,code,test});
+  });
+}
+const ERR_ES={
+  SyntaxError:'Error de sintaxis: algo está mal escrito (revisá los `:`, los paréntesis y las comillas).',
+  IndentationError:'Error de sangría: revisá los espacios al principio de la línea (el bloque va con 4 espacios).',
+  TabError:'Mezclaste tabs y espacios.',
+  NameError:'Usaste un nombre que no existe: ¿está bien escrito o lo definiste antes?',
+  TypeError:'Error de tipos: estás mezclando cosas que no se pueden combinar, o pasaste mal los argumentos.',
+  ZeroDivisionError:'Dividiste por cero.',
+  IndexError:'Pediste una posición que no existe en la lista.',
+  KeyError:'Pediste una clave que no existe en el diccionario.',
+  ValueError:'Un valor no es válido para esa operación.',
+  AttributeError:'Ese objeto no tiene ese método o atributo.',
+  UnboundLocalError:'Usaste una variable local antes de darle un valor.',
+  RecursionError:'La función se llama a sí misma sin parar.'
+};
+function fullSrc(ex,user){ return [ex.pre,user,ex.post].filter(x=>x!=null&&x!=='').join('\n'); }
+function analyseRun(c,r){
+  const ex=c.ex, preN=ex.pre?ex.pre.split('\n').length:0, userN=(c.text||'').split('\n').length;
+  if(r.ok) return {ok:true,out:r.out};
+  if(r.stage==='load') return {ok:false,kind:'load',head:'No pude cargar Python',body:'Hace falta internet la primera vez para descargar el ejecutor. Revisá la conexión y probá de nuevo.',out:''};
+  if(r.stage==='timeout') return {ok:false,kind:'timeout',head:'Tu código tardó demasiado',body:'Parece un bucle que no termina. Revisá la condición del `while` o el `for`.',out:r.out||''};
+  const lines=String(r.err||'').split('\n').filter(x=>x.trim()!==''); const last=lines[lines.length-1]||'';
+  const type=(last.match(/^([A-Za-z]+(?:Error|Exception))\b/)||[])[1]||'';
+  if(type==='AssertionError'&&r.stage==='test'){
+    const msg=last.replace(/^AssertionError:?\s*/,'');
+    return {ok:false,kind:'test',head:'Casi, todavía no',body:msg||'Se ejecutó sin errores, pero el resultado no es el esperado.',out:r.out||''};
+  }
+  let where=''; const m=[...String(r.err||'').matchAll(/File "<exec>", line (\d+)/g)]; const ln=m.length?+m[m.length-1][1]:0;
+  if(r.stage==='code'&&ln>preN&&ln<=preN+userN) where='En la línea '+(ln-preN)+' de lo que escribiste. ';
+  else if(r.stage==='test') where='Falló al probar tu código. ';
+  return {ok:false,kind:'error',head:'Python encontró un error',body:where+(ERR_ES[type]||''),raw:last.slice(0,160),out:r.out||''};
+}
+async function runCode(){
+  const c=S.cur, ex=c.ex; if(!ready(c)) return;
+  c.running=true; render();
+  const r=await pyRun(fullSrc(ex,c.text),TEST_HELPERS+(ex.test||''));
+  if(!S||S.cur!==c) return;
+  c.running=false; c.res=analyseRun(c,r);
+  if(c.res.ok){ c.ok=true; settleCode(c); }
+  else{ if(c.res.kind!=='load') c.attempts++; render(); }
+}
+function settleCode(c){
+  const it=c.item; c.checked=true;
+  if(c.ok){ S.good++; S.xp+=it.retry?4:10; if(!it.retry&&c.attempts===0) S.first++; }
+  else if(it.tries<2){ S.queue.push({ex:c.ex,retry:true,tries:it.tries+1}); }
+  render();
+}
+function giveUpCode(){ const c=S.cur; c.ok=false; settleCode(c); }
+function skipCode(){ const c=S.cur; if(!c.item.retry) S.total=Math.max(1,S.total-1); next(); }
+function staticPre(code){
+  const pre=el('pre',{class:'fixed'});
+  code.split('\n').forEach((l,i,a)=>{pre.append(hlLine(l,()=>'___')); if(i<a.length-1) pre.append('\n');});
+  return pre;
+}
+function codeEditor(c){
+  const ex=c.ex, locked=c.checked||c.running;
+  const box=el('div',{class:'code editor'+(c.checked&&c.ok?' okk':'')},tag());
+  if(ex.pre) box.append(staticPre(ex.pre));
+  const base=Math.max(2,(ex.sol||'').split('\n').length);
+  const ta=el('textarea',{class:'ta',rows:Math.max(base,c.text.split('\n').length),spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off',wrap:'off','aria-label':'Tu código',placeholder:ex.ph||'# escribí tu código acá',readonly:locked});
+  ta.value=c.text;
+  const sync=()=>{
+    c.text=ta.value; ta.rows=Math.max(base,ta.value.split('\n').length);
+    const b=document.querySelector('.dock .btn'); if(b&&!c.checked&&!c.running) b.disabled=!c.text.trim();
+  };
+  const insert=(t)=>{ ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,'end'); sync(); };
+  ta.addEventListener('input',sync);
+  ta.addEventListener('keydown',e=>{ if(e.key==='Tab'){e.preventDefault();insert('    ');} });
+  ta.addEventListener('beforeinput',e=>{
+    if(e.inputType==='insertLineBreak'||e.inputType==='insertParagraph'){
+      e.preventDefault();
+      const v=ta.value, s=ta.selectionStart, ls=v.lastIndexOf('\n',s-1)+1, line=v.slice(ls,s);
+      let ind=line.match(/^ */)[0]; if(/:\s*(#.*)?$/.test(line)) ind+='    ';
+      insert('\n'+ind);
+    }
+  });
+  box.append(ta);
+  if(ex.post) box.append(staticPre(ex.post));
+  const wrap=el('div',{},box);
+  if(!locked){
+    const keys=el('div',{class:'keys',role:'group','aria-label':'Símbolos'});
+    [['⇥','    '],[':'],['('],[')'],['"'],['='],['['],[']'],['.'],[',']].forEach(k=>{
+      keys.append(el('button',{type:'button','aria-label':k[0]==='⇥'?'Sangría de 4 espacios':k[0],onmousedown:e=>e.preventDefault(),onclick:()=>{ta.focus();insert(k[1]||k[0]);}},k[0]));
+    });
+    wrap.append(keys);
+  }
+  return wrap;
+}
+function runPanel(c){
+  const box=el('div',{class:'runbox'});
+  if(PY.state==='loading'||PY.state==='idle') box.append(el('div',{class:'runmsg'},'Cargando Python… (la primera vez tarda unos segundos)'));
+  else if(PY.state==='error') box.append(el('div',{class:'runmsg bad'},el('b',{},'No pude cargar Python'),'Hace falta internet la primera vez. Revisá la conexión y reintentá.'));
+  if(c.running) box.append(el('div',{class:'runmsg'},'Ejecutando…'));
+  const r=c.res;
+  if(r&&!c.running){
+    if(r.out) box.append(el('pre',{class:'console'},r.out));
+    if(r.ok) box.append(el('div',{class:'runmsg ok',role:'status'},el('b',{},'Funciona'),'Tu código se ejecutó y pasó todas las pruebas.'));
+    else{
+      const m=el('div',{class:'runmsg bad',role:'status'},el('b',{},r.head),rich(r.body));
+      if(r.raw) m.append(el('div',{},el('code',{},r.raw)));
+      if(c.ex.hint&&c.attempts>=1&&r.kind!=='load') m.append(el('div',{},el('b',{},'Pista'),rich(c.ex.hint)));
+      box.append(m);
+    }
+  }
+  return box;
+}
+function codeDock(c){
+  const kids=[btn(c.running?'Ejecutando…':'Ejecutar y comprobar',runCode,!ready(c))];
+  if(c.attempts>=2) kids.push(btn('Ver la solución',giveUpCode,c.running,true));
+  if(PY.state==='error') kids.push(btn('Reintentar la carga',()=>{pyReset();pyInit().catch(()=>{});render();},false,true),btn('Saltar este ejercicio',skipCode,false,true));
+  return dock('',kids);
+}
+
 function startLesson(i){
   celebrate=null;
   const les=LESSONS[i];
   S={li:i,les,view:les.cards.length?'cards':'ex',ci:0,queue:les.ex.map(ex=>({ex,retry:false,tries:0})),qi:0,cur:null,first:0,good:0,xp:0,total:les.ex.length,stars:0};
+  if(les.ex.some(e=>e.t==='code')) pyInit().catch(()=>{});
   if(S.view==='ex') S.cur=prep(S.queue[0]);
   render(true);
 }
@@ -875,6 +1408,7 @@ function prep(item){
   if(ex.t==='fill'){c.bank=shuffle(Array.from(new Set(ex.bank)));c.filled=ex.ans.map(()=>null);}
   if(ex.t==='quiz'){c.opts=shuffle(ex.opts.map((t,i)=>({t,ok:i===ex.a})));c.sel=null;}
   if(ex.t==='bug'){c.sel=null;c.fixOpts=shuffle(ex.fix.opts.map((t,i)=>({t,ok:i===ex.fix.a})));c.fixSel=null;c.wrongLine=false;}
+  if(ex.t==='code'){c.text=ex.init||'';c.attempts=0;c.running=false;c.res=null;}
   return c;
 }
 function goHome(){S=null;render(true);}
@@ -883,6 +1417,7 @@ function ready(c){
   if(ex.t==='fill') return c.filled.every(v=>v!==null);
   if(ex.t==='quiz') return c.sel!==null;
   if(ex.t==='bug') return c.step===0?c.sel!==null:c.fixSel!==null;
+  if(ex.t==='code') return c.text.trim().length>0&&!c.running;
   return false;
 }
 function check(){
@@ -917,6 +1452,7 @@ function finish(){
 function feedback(c){
   const ex=c.ex, out=[];
   if(c.ok){ out.push(ex.why); return {head:'Correcto',body:out}; }
+  if(ex.t==='code'){ out.push('Mirá abajo una forma de resolverlo.'); out.push(ex.why); return {head:'Esta vez no salió',body:out}; }
   if(ex.t==='fill') out.push('Era: '+ex.ans.map(a=>'`'+a+'`').join(' y ')+'.');
   else if(ex.t==='quiz') out.push('La respuesta era '+ex.opts[ex.a]+'.');
   else if(c.wrongLine) out.push('El error está en la línea '+(ex.line+1)+'.');
@@ -1112,7 +1648,7 @@ function Cards(){
   })]);
   return [main,d];
 }
-const KICK={fill:'Completá el código',bug:'Encontrá el error',quiz:'Elegí la respuesta'};
+const KICK={code:'Escribí y ejecutá',fill:'Completá el código',bug:'Encontrá el error',quiz:'Elegí la respuesta'};
 function Exercise(){
   const c=S.cur, ex=c.ex;
   const sec=el('section',{},Topbar(),el('p',{class:'kicker'},KICK[ex.t]),el('h2',{class:'q'},rich(ex.q)));
@@ -1146,8 +1682,12 @@ function Exercise(){
       })));
     }
   }
+  if(ex.t==='code'){
+    sec.append(codeEditor(c),runPanel(c));
+    if(c.checked&&!c.ok) sec.append(el('p',{class:'kicker sol-k'},'Una solución posible'),codeStatic(fullSrc(ex,ex.sol)));
+  }
   let d;
-  if(!c.checked) d=dock('',[btn('Comprobar',check,!ready(c))]);
+  if(!c.checked) d=ex.t==='code'?codeDock(c):dock('',[btn('Comprobar',check,!ready(c))]);
   else{
     const f=feedback(c);
     d=dock(c.ok?'good':'bad',[
@@ -1186,3 +1726,6 @@ function render(top){
 render(true);
 })();
 </script>
+<noscript>Esta app necesita JavaScript para funcionar.</noscript>
+</body>
+</html>
