@@ -197,6 +197,43 @@ b{font-weight:700}
 .console::before{content:"Salida";display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 .sol-k{margin-top:6px}
 
+
+/* Barra inferior (Lecciones / Editor) */
+.app.has-nav{padding-bottom:100px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:8px;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.tab{flex:1;max-width:272px;min-height:54px;border:0;border-radius:12px;background:transparent;color:var(--muted);display:grid;justify-items:center;align-content:center;gap:2px;font-weight:700;font-size:.78rem;letter-spacing:.02em}
+.tab .ic{width:24px;height:24px}
+.tab.on{background:var(--accent-soft);color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));z-index:40;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:.9rem;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+/* Editor libre */
+.ftabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;margin-bottom:2px;scrollbar-width:thin}
+.ftab{flex:none;font-family:var(--f-mono);font-size:.85rem;min-height:40px;padding:6px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.ftab.on{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.ftab.add{min-width:42px;padding:6px 10px;color:var(--accent)}
+.ftab .ic{width:18px;height:18px;vertical-align:middle}
+.edbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:12px}
+.edbar .btn{min-height:48px;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:8px}
+.edbar .btn .ic{width:20px;height:20px}
+.btn.stop{background:var(--bad);color:#fff;box-shadow:0 3px 0 color-mix(in srgb,var(--bad) 60%,black)}
+.sbtn{min-height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:700;box-shadow:0 2px 0 var(--line)}
+.sbtn.on{background:var(--accent-soft);border-color:var(--accent)}
+.fmenu{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:12px}
+.fmenu button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);font-weight:600;font-size:.9rem;text-align:left;padding:0 12px}
+.fmenu .danger{color:var(--bad)}
+.fmenu .wide{grid-column:1/-1}
+.fmenu p{grid-column:1/-1;font-size:.9rem}
+.fmenu input{grid-column:1/-1;min-height:44px;border-radius:10px;border:1px solid var(--accent);padding:0 12px;font-family:var(--f-mono);font-size:1rem;background:var(--bg);color:var(--ink);min-width:0}
+.edwrap{display:grid;grid-template-columns:auto minmax(0,1fr)}
+.gut{margin:0;padding:10px 8px 10px 12px;color:var(--muted);text-align:right;font-family:var(--f-mono);font-size:13px;line-height:1.7;user-select:none;border-right:1px solid var(--line);background:var(--surface2)}
+.edwrap textarea{display:block;width:100%;box-sizing:border-box;margin:0;padding:10px 12px;border:0;background:var(--code-bg);color:var(--ink);font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;white-space:pre;overflow-x:auto;overflow-y:hidden;resize:none;outline:0;border-radius:0}
+.edwrap textarea:focus{background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent)}
+.ed-in{margin:0 0 12px}
+.ed-in textarea{width:100%;box-sizing:border-box;min-height:84px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--f-mono);font-size:13px;line-height:1.6;resize:vertical}
+.ed-in label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.edhead{margin-bottom:14px}
+
 /* Opciones */
 .opts{display:grid;gap:10px}
 .opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:12px}
@@ -1161,6 +1198,10 @@ const ICONS={
   lock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
   unlock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 7.6-1.7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
   play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>',
+  book:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 4 4.5v13c3 0 6 .5 8 2 2-1.5 5-2 8-2v-13c-3 0-6 .5-8 2zM12 6.5v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  code:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4.5l-4 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  stop:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
   star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>'
 };
 function icon(n,cls){const s=el('span',{class:'ic'+(cls?' '+cls:'')});s.innerHTML=ICONS[n];return s;}
@@ -1241,6 +1282,7 @@ self.onmessage=async(e)=>{
   if(m.type==='run'){
     const out=[]; let shown='', stage='code', g=null;
     try{
+      py.setStdin({stdin:()=>(m.stdin&&m.stdin.length)?m.stdin.shift():null});
       py.setStdout({batched:s=>out.push(s)});
       py.setStderr({batched:s=>out.push(s)});
       g=py.globals.get('dict')();
@@ -1262,25 +1304,30 @@ function pyStart(){
     PY.worker=w;
     w.onmessage=(e)=>{
       const m=e.data;
-      if(m.type==='ready'){PY.state='ready';res();if(S&&S.cur&&S.cur.ex.t==='code'){if(document.activeElement&&document.activeElement.tagName==='TEXTAREA'){document.querySelectorAll('.runbox .runmsg').forEach(n=>{if(/^Cargando/.test(n.textContent))n.remove();});}else render();}}
-      else if(m.type==='initerr'){PY.state='error';PY.worker=null;try{w.terminate();}catch(_){} rej(new Error(m.msg));if(S&&S.cur&&S.cur.ex.t==='code')render();}
+      if(m.type==='ready'){PY.state='ready';res();if(S&&S.cur&&S.cur.ex.t==='code'){if(document.activeElement&&document.activeElement.tagName==='TEXTAREA'){document.querySelectorAll('.runbox .runmsg').forEach(n=>{if(/^Cargando/.test(n.textContent))n.remove();});}else render();}else if(!S&&TAB==='editor'&&!(document.activeElement&&document.activeElement.tagName==='TEXTAREA'))render();}
+      else if(m.type==='initerr'){PY.state='error';PY.worker=null;try{w.terminate();}catch(_){} rej(new Error(m.msg));pyRefresh();}
       else if(m.type==='done'){const f=PY.pending[m.id];if(f){delete PY.pending[m.id];f(m);}}
     };
-    w.onerror=()=>{ if(PY.state==='loading'){PY.state='error';PY.worker=null;rej(new Error('worker'));if(S&&S.cur&&S.cur.ex.t==='code')render();} };
+    w.onerror=()=>{ if(PY.state==='loading'){PY.state='error';PY.worker=null;rej(new Error('worker'));pyRefresh();} };
     w.postMessage({type:'init',url:PYURL});
   });
   PY.ready.catch(()=>{});
   return PY.ready;
 }
+function pyRefresh(){ if(S&&S.cur&&S.cur.ex.t==='code') render(); else if(!S&&TAB==='editor') render(); }
+function pyStop(){ if(PY.cancel) PY.cancel(); }
 function pyInit(){ return (PY.state==='idle'||PY.state==='error')?pyStart():PY.ready; }
 function pyReset(){ try{PY.worker&&PY.worker.terminate();}catch(_){} PY.worker=null;PY.state='idle';PY.pending={}; }
-async function pyRun(code,test){
+async function pyRun(code,test,opt){
+  opt=opt||{};
   try{ await pyInit(); }catch(e){ return {ok:false,stage:'load',err:'No se pudo cargar Python.',out:''}; }
   return new Promise(res=>{
-    const id=++PY.n; let done=false;
-    const t=setTimeout(()=>{ if(done) return; done=true; delete PY.pending[id]; pyReset(); pyStart(); res({ok:false,stage:'timeout',out:'',err:''}); },6000);
-    PY.pending[id]=(m)=>{ if(done) return; done=true; clearTimeout(t); res(m); };
-    PY.worker.postMessage({type:'run',id,code,test});
+    const id=++PY.n; let done=false, t=null;
+    const finish=(r)=>{ if(done) return; done=true; clearTimeout(t); delete PY.pending[id]; if(PY.cancel===cancel) PY.cancel=null; res(r); };
+    const cancel=()=>{ if(done) return; pyReset(); pyStart(); finish({ok:false,stage:'stopped',out:'',err:''}); };
+    t=setTimeout(()=>{ if(done) return; pyReset(); pyStart(); finish({ok:false,stage:'timeout',out:'',err:''}); },opt.ms||6000);
+    PY.cancel=cancel; PY.pending[id]=finish;
+    PY.worker.postMessage({type:'run',id,code,test,stdin:opt.stdin});
   });
 }
 const ERR_ES={
@@ -1295,6 +1342,7 @@ const ERR_ES={
   ValueError:'Un valor no es válido para esa operación.',
   AttributeError:'Ese objeto no tiene ese método o atributo.',
   UnboundLocalError:'Usaste una variable local antes de darle un valor.',
+  EOFError:'El programa pidió un `input()` pero no hay más entradas. Escribilas en el recuadro de entradas.',
   RecursionError:'La función se llama a sí misma sin parar.'
 };
 function fullSrc(ex,user){ return [ex.pre,user,ex.post].filter(x=>x!=null&&x!=='').join('\n'); }
@@ -1394,6 +1442,168 @@ function codeDock(c){
   if(PY.state==='error') kids.push(btn('Reintentar la carga',()=>{pyReset();pyInit().catch(()=>{});render();},false,true),btn('Saltar este ejercicio',skipCode,false,true));
   return dock('',kids);
 }
+
+/* ---------- Editor libre: varios archivos, importar, exportar y ejecutar ---------- */
+const EDKEY='python-desde-cero-editor-v1';
+const STARTER='# Escribí tu código acá y tocá "Ejecutar"\nnombre = "mundo"\nprint(f"Hola, {nombre}")\n';
+let TAB='lessons';
+const ED={files:[],active:null,stdin:'',menu:false,ask:null,showIn:false,running:false,resBy:{}};
+function edLoad(){
+  try{ const d=JSON.parse(localStorage.getItem(EDKEY)||'null');
+    if(d&&Array.isArray(d.files)){ ED.files=d.files.filter(f=>f&&typeof f.code==='string'&&typeof f.name==='string'&&f.id); ED.active=d.active; ED.stdin=typeof d.stdin==='string'?d.stdin:''; }
+  }catch(e){}
+  if(!ED.files.length) ED.files=[{id:'f1',name:'main.py',code:STARTER}];
+  if(!ED.files.some(f=>f.id===ED.active)) ED.active=ED.files[0].id;
+}
+function edSave(){ try{localStorage.setItem(EDKEY,JSON.stringify({files:ED.files,active:ED.active,stdin:ED.stdin}));}catch(e){} }
+const edCur=()=>ED.files.find(f=>f.id===ED.active)||ED.files[0];
+const edId=()=>'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function edNorm(n){ n=String(n||'').replace(/[\\/:*?"<>|]/g,'').trim(); if(!n) n='archivo'; if(!/\.py$/i.test(n)) n+='.py'; return n; }
+function edUnique(n,skip){
+  n=edNorm(n); const base=n.replace(/\.py$/i,''); let k=1, out=n;
+  while(ED.files.some(f=>f.name.toLowerCase()===out.toLowerCase()&&f.id!==skip)){ k++; out=base+' ('+k+').py'; }
+  return out;
+}
+function toast(t){ const o=document.querySelector('.toast'); if(o) o.remove(); const n=el('div',{class:'toast',role:'status'},t); document.body.append(n); setTimeout(()=>n.remove(),3400); }
+function edGo(fn){ ED.menu=false; ED.ask=null; fn(); edSave(); render(); }
+function edNew(){ edGo(()=>{ const f={id:edId(),name:edUnique('archivo'),code:''}; ED.files.push(f); ED.active=f.id; }); setTimeout(()=>{const t=document.querySelector('.edwrap textarea'); if(t) t.focus();},50); }
+function edRename(n){ edGo(()=>{ const f=edCur(); f.name=edUnique(n,f.id); }); }
+function edDup(){ edGo(()=>{ const f=edCur(); const g={id:edId(),name:edUnique(f.name.replace(/\.py$/i,'')+' copia'),code:f.code}; ED.files.push(g); ED.active=g.id; }); }
+function edDelete(){ edGo(()=>{ const i=ED.files.findIndex(f=>f.id===ED.active); delete ED.resBy[ED.active]; ED.files.splice(i,1); if(!ED.files.length) ED.files.push({id:edId(),name:'main.py',code:''}); ED.active=ED.files[Math.max(0,i-1)].id; }); }
+async function saveText(name,text,mime){
+  const file=new File([text],name,{type:mime});
+  const mobile=/Android|iPhone|iPad/i.test(navigator.userAgent);
+  try{ if(mobile&&navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:name}); return 'share'; } }
+  catch(e){ if(e&&e.name==='AbortError') return 'cancel'; }
+  try{ const u=URL.createObjectURL(file); const a=el('a',{href:u,download:name}); a.style.display='none'; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),5000); return 'download'; }
+  catch(e){ return 'fail'; }
+}
+async function edExport(){ ED.menu=false; render(); const f=edCur(); const r=await saveText(f.name,f.code,'text/x-python'); if(r==='download') toast('Listo. Si no se descargó, usá "Copiar código".'); else if(r==='fail') toast('No pude descargarlo. Usá "Copiar código".'); }
+async function edExportAll(){ ED.menu=false; render(); const r=await saveText('mis-codigos.json',JSON.stringify({app:'python-desde-cero',files:ED.files.map(f=>({name:f.name,code:f.code}))},null,1),'application/json'); if(r==='download') toast('Listo. Importalo después para recuperar todo.'); else if(r==='fail') toast('No pude descargarlo.'); }
+async function edCopy(){ ED.menu=false; render(); const f=edCur(); try{ await navigator.clipboard.writeText(f.code); toast('Código copiado'); }catch(e){ const t=document.querySelector('.edwrap textarea'); if(t){t.focus();t.select();} toast('Seleccioné todo: copialo con el menú del teclado'); } }
+function edImport(){
+  ED.menu=false;
+  const inp=el('input',{type:'file',accept:'.py,.txt,.json,text/plain,application/json',multiple:true});
+  inp.style.display='none'; document.body.append(inp);
+  inp.addEventListener('change',async()=>{
+    let n=0, last=null;
+    for(const file of Array.from(inp.files||[])){
+      let text=''; try{ text=await file.text(); }catch(e){ continue; }
+      let list=null;
+      if(/\.json$/i.test(file.name)){ try{ const d=JSON.parse(text); if(d&&Array.isArray(d.files)) list=d.files.filter(x=>x&&typeof x.code==='string'&&typeof x.name==='string'); }catch(e){} if(!list) continue; }
+      else list=[{name:file.name,code:text}];
+      list.forEach(x=>{ const f={id:edId(),name:edUnique(x.name),code:x.code}; ED.files.push(f); last=f; n++; });
+    }
+    inp.remove();
+    if(last){ ED.active=last.id; edSave(); render(); toast(n===1?'Archivo importado':n+' archivos importados'); } else if(inp.files&&inp.files.length) toast('No pude leer ese archivo');
+  });
+  inp.click();
+}
+function analyseFree(r){
+  if(r.ok) return {ok:true,out:r.out};
+  if(r.stage==='load') return {ok:false,head:'No pude cargar Python',body:'Hace falta internet la primera vez para descargar el ejecutor. Revisá la conexión y probá de nuevo.',out:''};
+  if(r.stage==='timeout') return {ok:false,head:'Se cortó la ejecución',body:'Pasaron más de 15 segundos. Si es un bucle que no termina, revisá la condición del `while` o del `for`.',out:''};
+  if(r.stage==='stopped') return {ok:false,head:'Detenido',body:'Cortaste la ejecución.',out:'',neutral:true};
+  const lines=String(r.err||'').split('\n').filter(x=>x.trim()!==''); const last=lines[lines.length-1]||'';
+  const type=(last.match(/^([A-Za-z]+(?:Error|Exception))\b/)||[])[1]||'';
+  const m=[...String(r.err||'').matchAll(/File "<exec>", line (\d+)/g)]; const ln=m.length?+m[m.length-1][1]:0;
+  return {ok:false,head:'Python encontró un error',body:(ln?'En la línea '+ln+'. ':'')+(ERR_ES[type]||''),raw:last.slice(0,200),out:r.out||''};
+}
+async function edRun(){
+  if(ED.running) return;
+  const f=edCur(); ED.running=true; ED.resBy[f.id]=null; render();
+  const stdin=ED.stdin.length?ED.stdin.split('\n'):[];
+  const r=await pyRun(f.code,'',{ms:15000,stdin});
+  ED.running=false; ED.resBy[f.id]=analyseFree(r);
+  if(TAB==='editor'&&!S){ render(); const o=document.querySelector('.edout'); if(o) o.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+}
+function setupTA(ta,onChange){
+  const insert=(t)=>{ ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,'end'); onChange(); };
+  ta.addEventListener('input',onChange);
+  ta.addEventListener('keydown',e=>{ if(e.key==='Tab'){e.preventDefault();insert('    ');} });
+  ta.addEventListener('beforeinput',e=>{
+    if(e.inputType==='insertLineBreak'||e.inputType==='insertParagraph'){
+      e.preventDefault();
+      const v=ta.value, st=ta.selectionStart, ls=v.lastIndexOf('\n',st-1)+1, line=v.slice(ls,st);
+      let ind=line.match(/^ */)[0]; if(/:\s*(#.*)?$/.test(line)) ind+='    ';
+      insert('\n'+ind);
+    }
+  });
+  return insert;
+}
+function keyRow(ta,insert){
+  const keys=el('div',{class:'keys',role:'group','aria-label':'Símbolos'});
+  [['⇥','    '],[':'],['('],[')'],['"'],['='],['['],[']'],['{'],['}'],['.'],[','],['#']].forEach(k=>{
+    keys.append(el('button',{type:'button','aria-label':k[0]==='⇥'?'Sangría de 4 espacios':k[0],onmousedown:e=>e.preventDefault(),onclick:()=>{ta.focus();insert(k[1]||k[0]);}},k[0]));
+  });
+  return keys;
+}
+function edMenu(){
+  const f=edCur(), m=el('div',{class:'fmenu',role:'group','aria-label':'Acciones de archivos'});
+  if(ED.ask==='rename'){
+    const inp=el('input',{type:'text',value:f.name,'aria-label':'Nombre del archivo',autocapitalize:'none',autocomplete:'off',spellcheck:'false'});
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') edRename(inp.value); });
+    m.append(inp,el('button',{type:'button',onclick:()=>edRename(inp.value)},'Guardar nombre'),el('button',{type:'button',onclick:()=>{ED.ask=null;render();}},'Cancelar'));
+    setTimeout(()=>{inp.focus();inp.select();},30);
+    return m;
+  }
+  if(ED.ask==='del'){
+    m.append(el('p',{},'¿Eliminar `'.replace(/`/g,'')+f.name+'`? No se puede deshacer.'),el('button',{type:'button',class:'danger',onclick:edDelete},'Sí, eliminar'),el('button',{type:'button',onclick:()=>{ED.ask=null;render();}},'Cancelar'));
+    return m;
+  }
+  [['Nuevo archivo',edNew],['Importar…',edImport],['Renombrar',()=>{ED.ask='rename';render();}],['Duplicar',edDup],['Exportar (.py)',edExport],['Copiar código',edCopy],['Exportar todos (.json)',edExportAll,'wide']].forEach(a=>m.append(el('button',{type:'button',class:a[2]||'',onclick:a[1]},a[0])));
+  m.append(el('button',{type:'button',class:'danger wide',onclick:()=>{ED.ask='del';render();}},'Eliminar este archivo'));
+  return m;
+}
+function Editor(){
+  pyInit().catch(()=>{});
+  const f=edCur();
+  const tabs=el('div',{class:'ftabs',role:'tablist','aria-label':'Archivos'});
+  ED.files.forEach(x=>tabs.append(el('button',{class:'ftab'+(x.id===ED.active?' on':''),type:'button',role:'tab','aria-selected':String(x.id===ED.active),onclick:()=>{ if(x.id===ED.active) return; ED.active=x.id; ED.menu=false; ED.ask=null; edSave(); render(); }},x.name)));
+  tabs.append(el('button',{class:'ftab add',type:'button','aria-label':'Archivo nuevo',onclick:edNew},icon('plus')));
+  const nLines=()=>Math.max(1,f.code.split('\n').length);
+  const gut=el('pre',{class:'gut','aria-hidden':'true'},Array.from({length:Math.max(10,nLines())},(_,i)=>i+1).join('\n'));
+  const ta=el('textarea',{rows:Math.max(10,nLines()),spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off',wrap:'off','aria-label':'Código de '+f.name,placeholder:'# escribí tu código acá'});
+  ta.value=f.code; let timer=null;
+  const sync=()=>{
+    f.code=ta.value; const n=Math.max(10,nLines()); ta.rows=n; gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');
+    clearTimeout(timer); timer=setTimeout(edSave,400);
+  };
+  const insert=setupTA(ta,sync);
+  const box=el('div',{class:'code'},el('div',{class:'code-tag'},f.name),el('div',{class:'edwrap'},gut,ta));
+  box.style.marginBottom='8px';
+  const bar=el('div',{class:'edbar'},
+    ED.running?el('button',{class:'btn stop',type:'button',onclick:pyStop},icon('stop'),'Detener')
+              :el('button',{class:'btn',type:'button',onclick:edRun},icon('play'),'Ejecutar'),
+    el('button',{class:'sbtn'+(ED.menu?' on':''),type:'button','aria-expanded':String(ED.menu),onclick:()=>{ED.menu=!ED.menu;ED.ask=null;render();}},'Archivos'));
+  const inBox=el('div',{class:'ed-in'});
+  if(ED.showIn){
+    const it=el('textarea',{rows:3,spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off','aria-label':'Entradas para input()',placeholder:'Una línea por cada input(), en orden'}); it.value=ED.stdin;
+    it.addEventListener('input',()=>{ED.stdin=it.value; clearTimeout(timer); timer=setTimeout(edSave,400);});
+    inBox.append(el('label',{},'Entradas para ',el('code',{},'input()'),' (una línea por cada vez que el programa pida algo)'),it);
+  }
+  const out=el('div',{class:'runbox edout'});
+  if(PY.state!=='ready'&&PY.state!=='error') out.append(el('div',{class:'runmsg'},'Cargando Python… (la primera vez tarda unos segundos)'));
+  if(PY.state==='error') out.append(el('div',{class:'runmsg bad'},el('b',{},'No pude cargar Python'),'Hace falta internet la primera vez. Revisá la conexión.',el('div',{},el('button',{class:'sbtn',type:'button',style:'margin-top:8px;min-height:40px',onclick:()=>{pyReset();pyInit().catch(()=>{});render();}},'Reintentar'))));
+  if(ED.running) out.append(el('div',{class:'runmsg'},'Ejecutando…'));
+  const r=ED.resBy[f.id];
+  if(r&&!ED.running){
+    if(r.out) out.append(el('pre',{class:'console'},r.out));
+    if(r.ok) out.append(el('div',{class:'runmsg ok',role:'status'},el('b',{},'Terminó sin errores'),r.out?'':'No mostró nada: usá print() para ver resultados.'));
+    else{ const m=el('div',{class:'runmsg'+(r.neutral?'':' bad'),role:'status'},el('b',{},r.head),rich(r.body)); if(r.raw) m.append(el('div',{},el('code',{},r.raw))); out.append(m); }
+  }
+  return el('div',{},
+    el('header',{class:'head edhead'},el('p',{class:'eyebrow'},'Tu espacio'),el('h1',{},'Editor de Python')),
+    tabs, bar, ED.menu?edMenu():null, box, keyRow(ta,insert),
+    el('button',{class:'sbtn'+(ED.showIn?' on':''),type:'button',style:'width:100%;margin-bottom:12px;min-height:44px','aria-expanded':String(ED.showIn),onclick:()=>{ED.showIn=!ED.showIn;render();}},ED.showIn?'Ocultar entradas de input()':'Entradas para input()'),
+    inBox, out);
+}
+function TabBar(){
+  const b=(ic,label,id)=>{ const on=TAB===id; return el('button',{class:'tab'+(on?' on':''),type:'button','aria-current':on?'page':null,onclick:()=>{ if(TAB===id){window.scrollTo(0,0);return;} edSave(); TAB=id; render(true); }},icon(ic),el('span',{},label)); };
+  return el('nav',{class:'tabbar','aria-label':'Secciones'},b('book','Lecciones','lessons'),b('code','Editor','editor'));
+}
+edLoad();
+window.addEventListener('pagehide',edSave);
 
 function startLesson(i){
   celebrate=null;
@@ -1714,7 +1924,7 @@ function render(top){
   homeTimers.forEach(clearTimeout); homeTimers=[];
   const y=window.scrollY;
   root.replaceChildren();
-  if(!S){ root.className='app'; root.append(Home()); }
+  if(!S){ root.className='app has-nav'; root.append(TAB==='editor'?Editor():Home(),TabBar()); }
   else{
     const parts=S.view==='cards'?Cards():S.view==='ex'?Exercise():Done();
     root.className='app has-dock';
