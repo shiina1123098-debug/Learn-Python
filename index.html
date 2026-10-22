@@ -234,6 +234,21 @@ b{font-weight:700}
 .ed-in label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
 .edhead{margin-bottom:14px}
 
+
+/* Barra de símbolos sobre el teclado */
+.kbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;gap:6px;overflow-x:auto;padding:6px max(8px,env(safe-area-inset-left));background:var(--surface2);border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(0,0,0,.08);scrollbar-width:none}
+.kbar::-webkit-scrollbar{display:none}
+.kbar[hidden]{display:none}
+.kbar button{flex:none;min-width:40px;min-height:42px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--f-mono);font-size:1.05rem;box-shadow:0 2px 0 var(--line)}
+.kbar button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+body.kbopen .tabbar{display:none}
+body.kbopen .app.has-nav{padding-bottom:70px}
+/* Consola */
+.term{background:#0E151D;color:#E6EDF3;border:1px solid #223044;border-radius:12px;padding:12px;margin:0 0 12px;max-height:55vh;overflow:auto;font-family:var(--f-mono);font-size:13px;line-height:1.55}
+.term-line{white-space:pre-wrap;word-break:break-word}
+.term-in{display:inline-block;min-width:5ch;width:9ch;max-width:100%;box-sizing:border-box;margin:0 0 0 2px;padding:0 4px;border:0;border-bottom:1px solid #5AB8EE;background:transparent;color:#7FD99F;font:inherit;outline:0;border-radius:0}
+.term-end{margin-top:6px;color:#8795A8;font-size:.82rem}
+
 /* Opciones */
 .opts{display:grid;gap:10px}
 .opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:12px}
@@ -1265,8 +1280,72 @@ let S=null; // null = inicio
 /* ---------- Ejecutar Python de verdad (Pyodide en un Worker) ---------- */
 const PYURL='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
 const TEST_HELPERS='import io as _io, contextlib as _cx\ndef salida(_f, *_a, **_k):\n    _b = _io.StringIO()\n    with _cx.redirect_stdout(_b):\n        _f(*_a, **_k)\n    return _b.getvalue()\n';
-const PY={state:'idle',worker:null,ready:null,pending:{},n:0};
+const PY={state:'idle',worker:null,ready:null,pending:{},stream:{},n:0};
+
+const TERM_PRELUDE_SRC=String.raw`
+import sys as _sys, time as _time, random as _random, builtins as _bi, json as _json
+import js as _js
+from pyodide.ffi import to_js as _to_js
+__name__ = "__main__"
+class _NeedInput(BaseException):
+    pass
+_answers = _json.loads(_ans_json)
+_ai = [0]
+_buf = []
+_last = [0.0]
+def _flush():
+    if _buf:
+        _s = "".join(_buf)
+        _buf.clear()
+        _js.postMessage(_to_js({"type": "termout", "id": _run_id, "chunk": _s}, dict_converter=_js.Object.fromEntries))
+    _last[0] = _time.time()
+class _Out:
+    encoding = "utf-8"
+    def write(self, s):
+        s = str(s)
+        _buf.append(s)
+        if _time.time() - _last[0] > 0.05:
+            _flush()
+        return len(s)
+    def flush(self):
+        pass
+    def isatty(self):
+        return False
+_old_out = _sys.stdout
+_old_err = _sys.stderr
+_sys.stdout = _Out()
+_sys.stderr = _sys.stdout
+_orig_input = getattr(_bi, "_orig_input", _bi.input)
+_bi._orig_input = _orig_input
+def _input(prompt=""):
+    print(prompt, end="")
+    if _ai[0] < len(_answers):
+        _a = _answers[_ai[0]]
+        _ai[0] += 1
+        print(_a)
+        return _a
+    raise _NeedInput()
+_bi.input = _input
+_orig_sleep = getattr(_time, "_orig_sleep", _time.sleep)
+_time._orig_sleep = _orig_sleep
+def _sleep(x):
+    if _ai[0] < len(_answers):
+        return
+    _flush()
+    _orig_sleep(x)
+_time.sleep = _sleep
+_random.seed(_seed)
+`;
+const TERM_EPILOGUE_SRC=String.raw`
+_flush()
+_sys.stdout = _old_out
+_sys.stderr = _old_err
+_bi.input = _orig_input
+_time.sleep = _orig_sleep
+`;
 const WORKER_SRC=`
+const TERM_PRELUDE=${JSON.stringify(TERM_PRELUDE_SRC)};
+const TERM_EPILOGUE=${JSON.stringify(TERM_EPILOGUE_SRC)};
 let py=null;
 self.onmessage=async(e)=>{
   const m=e.data;
@@ -1277,6 +1356,32 @@ self.onmessage=async(e)=>{
       py.setStdin({stdin:()=>null});
       self.postMessage({type:'ready'});
     }catch(err){ self.postMessage({type:'initerr',msg:String(err&&err.message||err)}); }
+    return;
+  }
+  if(m.type==='term'){
+    let g=null;
+    try{
+      try{ await py.loadPackagesFromImports(m.code); }catch(_){}
+      let tries=0, status='done', err='';
+      while(true){
+        g=py.globals.get('dict')();
+        g.set('_ans_json',JSON.stringify(m.answers)); g.set('_seed',m.seed); g.set('_run_id',m.id);
+        await py.runPythonAsync(TERM_PRELUDE,{globals:g});
+        status='done'; err='';
+        try{ await py.runPythonAsync(m.code,{globals:g}); }
+        catch(e){ const msg=String(e&&e.message||e); if(/_NeedInput/.test(msg)) status='input'; else { status='error'; err=msg; } }
+        try{ await py.runPythonAsync(TERM_EPILOGUE,{globals:g}); }catch(_){}
+        try{ g.destroy(); }catch(_){} g=null;
+        const mm=/ModuleNotFoundError: No module named '([^'.]+)/.exec(err);
+        if(status==='error'&&mm&&tries<3){
+          tries++; self.postMessage({type:'termstatus',id:m.id,text:'Instalando '+mm[1]+'…'});
+          try{ await py.loadPackage('micropip'); const mp=py.pyimport('micropip'); await mp.install(mm[1]); self.postMessage({type:'termstatus',id:m.id,text:'',reset:true}); continue; }
+          catch(_){ self.postMessage({type:'termstatus',id:m.id,text:''}); break; }
+        }
+        break;
+      }
+      self.postMessage({type:'termdone',id:m.id,status,err});
+    }catch(e){ try{g&&g.destroy();}catch(_){} self.postMessage({type:'termdone',id:m.id,status:'error',err:String(e&&e.message||e)}); }
     return;
   }
   if(m.type==='run'){
@@ -1306,7 +1411,9 @@ function pyStart(){
       const m=e.data;
       if(m.type==='ready'){PY.state='ready';res();if(S&&S.cur&&S.cur.ex.t==='code'){if(document.activeElement&&document.activeElement.tagName==='TEXTAREA'){document.querySelectorAll('.runbox .runmsg').forEach(n=>{if(/^Cargando/.test(n.textContent))n.remove();});}else render();}else if(!S&&TAB==='editor'&&!(document.activeElement&&document.activeElement.tagName==='TEXTAREA'))render();}
       else if(m.type==='initerr'){PY.state='error';PY.worker=null;try{w.terminate();}catch(_){} rej(new Error(m.msg));pyRefresh();}
-      else if(m.type==='done'){const f=PY.pending[m.id];if(f){delete PY.pending[m.id];f(m);}}
+      else if(m.type==='done'||m.type==='termdone'){const f=PY.pending[m.id];if(f){delete PY.pending[m.id];f(m);}}
+      else if(m.type==='termout'){const f=PY.stream[m.id];if(f)f.chunk(m.chunk);}
+      else if(m.type==='termstatus'){const f=PY.stream[m.id];if(f)f.status(m.text,m.reset);}
     };
     w.onerror=()=>{ if(PY.state==='loading'){PY.state='error';PY.worker=null;rej(new Error('worker'));pyRefresh();} };
     w.postMessage({type:'init',url:PYURL});
@@ -1317,7 +1424,18 @@ function pyStart(){
 function pyRefresh(){ if(S&&S.cur&&S.cur.ex.t==='code') render(); else if(!S&&TAB==='editor') render(); }
 function pyStop(){ if(PY.cancel) PY.cancel(); }
 function pyInit(){ return (PY.state==='idle'||PY.state==='error')?pyStart():PY.ready; }
-function pyReset(){ try{PY.worker&&PY.worker.terminate();}catch(_){} PY.worker=null;PY.state='idle';PY.pending={}; }
+function pyReset(){ try{PY.worker&&PY.worker.terminate();}catch(_){} PY.worker=null;PY.state='idle';PY.pending={};PY.stream={}; }
+async function pyTerm(code,answers,seed,onChunk,onStatus,ms){
+  try{ await pyInit(); }catch(e){ return {status:'load',err:''}; }
+  return new Promise(res=>{
+    const id=++PY.n; let done=false, t=null;
+    const finish=(m)=>{ if(done) return; done=true; clearTimeout(t); delete PY.pending[id]; delete PY.stream[id]; if(PY.cancel===cancel) PY.cancel=null; res(m); };
+    const cancel=()=>{ if(done) return; pyReset(); pyStart(); finish({status:'stopped',err:''}); };
+    t=setTimeout(()=>{ if(done) return; pyReset(); pyStart(); finish({status:'timeout',err:''}); },ms);
+    PY.cancel=cancel; PY.pending[id]=finish; PY.stream[id]={chunk:onChunk,status:onStatus};
+    PY.worker.postMessage({type:'term',id,code,answers,seed});
+  });
+}
 async function pyRun(code,test,opt){
   opt=opt||{};
   try{ await pyInit(); }catch(e){ return {ok:false,stage:'load',err:'No se pudo cargar Python.',out:''}; }
@@ -1331,6 +1449,8 @@ async function pyRun(code,test,opt){
   });
 }
 const ERR_ES={
+  ModuleNotFoundError:'No encontré ese módulo. Los de la librería estándar (`random`, `time`, `math`, `json`...) ya vienen incluidos. Otros se intentan instalar solos, con internet.',
+  ImportError:'No pude importar eso: revisá el nombre del módulo o de lo que importás.',
   SyntaxError:'Error de sintaxis: algo está mal escrito (revisá los `:`, los paréntesis y las comillas).',
   IndentationError:'Error de sangría: revisá los espacios al principio de la línea (el bloque va con 4 espacios).',
   TabError:'Mezclaste tabs y espacios.',
@@ -1389,33 +1509,16 @@ function codeEditor(c){
   const box=el('div',{class:'code editor'+(c.checked&&c.ok?' okk':'')},tag());
   if(ex.pre) box.append(staticPre(ex.pre));
   const base=Math.max(2,(ex.sol||'').split('\n').length);
-  const ta=el('textarea',{class:'ta',rows:Math.max(base,c.text.split('\n').length),spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off',wrap:'off','aria-label':'Tu código',placeholder:ex.ph||'# escribí tu código acá',readonly:locked});
+  const ta=el('textarea',{class:'ta ce',rows:Math.max(base,c.text.split('\n').length),spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off',wrap:'off','aria-label':'Tu código',placeholder:ex.ph||'# escribí tu código acá',readonly:locked});
   ta.value=c.text;
   const sync=()=>{
     c.text=ta.value; ta.rows=Math.max(base,ta.value.split('\n').length);
     const b=document.querySelector('.dock .btn'); if(b&&!c.checked&&!c.running) b.disabled=!c.text.trim();
   };
-  const insert=(t)=>{ ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,'end'); sync(); };
-  ta.addEventListener('input',sync);
-  ta.addEventListener('keydown',e=>{ if(e.key==='Tab'){e.preventDefault();insert('    ');} });
-  ta.addEventListener('beforeinput',e=>{
-    if(e.inputType==='insertLineBreak'||e.inputType==='insertParagraph'){
-      e.preventDefault();
-      const v=ta.value, s=ta.selectionStart, ls=v.lastIndexOf('\n',s-1)+1, line=v.slice(ls,s);
-      let ind=line.match(/^ */)[0]; if(/:\s*(#.*)?$/.test(line)) ind+='    ';
-      insert('\n'+ind);
-    }
-  });
+  setupTA(ta,sync);
   box.append(ta);
   if(ex.post) box.append(staticPre(ex.post));
   const wrap=el('div',{},box);
-  if(!locked){
-    const keys=el('div',{class:'keys',role:'group','aria-label':'Símbolos'});
-    [['⇥','    '],[':'],['('],[')'],['"'],['='],['['],[']'],['.'],[',']].forEach(k=>{
-      keys.append(el('button',{type:'button','aria-label':k[0]==='⇥'?'Sangría de 4 espacios':k[0],onmousedown:e=>e.preventDefault(),onclick:()=>{ta.focus();insert(k[1]||k[0]);}},k[0]));
-    });
-    wrap.append(keys);
-  }
   return wrap;
 }
 function runPanel(c){
@@ -1447,15 +1550,15 @@ function codeDock(c){
 const EDKEY='python-desde-cero-editor-v1';
 const STARTER='# Escribí tu código acá y tocá "Ejecutar"\nnombre = "mundo"\nprint(f"Hola, {nombre}")\n';
 let TAB='lessons';
-const ED={files:[],active:null,stdin:'',menu:false,ask:null,showIn:false,running:false,resBy:{}};
+const ED={files:[],active:null,menu:false,ask:null};
 function edLoad(){
   try{ const d=JSON.parse(localStorage.getItem(EDKEY)||'null');
-    if(d&&Array.isArray(d.files)){ ED.files=d.files.filter(f=>f&&typeof f.code==='string'&&typeof f.name==='string'&&f.id); ED.active=d.active; ED.stdin=typeof d.stdin==='string'?d.stdin:''; }
+    if(d&&Array.isArray(d.files)){ ED.files=d.files.filter(f=>f&&typeof f.code==='string'&&typeof f.name==='string'&&f.id); ED.active=d.active; }
   }catch(e){}
   if(!ED.files.length) ED.files=[{id:'f1',name:'main.py',code:STARTER}];
   if(!ED.files.some(f=>f.id===ED.active)) ED.active=ED.files[0].id;
 }
-function edSave(){ try{localStorage.setItem(EDKEY,JSON.stringify({files:ED.files,active:ED.active,stdin:ED.stdin}));}catch(e){} }
+function edSave(){ try{localStorage.setItem(EDKEY,JSON.stringify({files:ED.files,active:ED.active}));}catch(e){} }
 const edCur=()=>ED.files.find(f=>f.id===ED.active)||ED.files[0];
 const edId=()=>'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function edNorm(n){ n=String(n||'').replace(/[\\/:*?"<>|]/g,'').trim(); if(!n) n='archivo'; if(!/\.py$/i.test(n)) n+='.py'; return n; }
@@ -1469,7 +1572,7 @@ function edGo(fn){ ED.menu=false; ED.ask=null; fn(); edSave(); render(); }
 function edNew(){ edGo(()=>{ const f={id:edId(),name:edUnique('archivo'),code:''}; ED.files.push(f); ED.active=f.id; }); setTimeout(()=>{const t=document.querySelector('.edwrap textarea'); if(t) t.focus();},50); }
 function edRename(n){ edGo(()=>{ const f=edCur(); f.name=edUnique(n,f.id); }); }
 function edDup(){ edGo(()=>{ const f=edCur(); const g={id:edId(),name:edUnique(f.name.replace(/\.py$/i,'')+' copia'),code:f.code}; ED.files.push(g); ED.active=g.id; }); }
-function edDelete(){ edGo(()=>{ const i=ED.files.findIndex(f=>f.id===ED.active); delete ED.resBy[ED.active]; ED.files.splice(i,1); if(!ED.files.length) ED.files.push({id:edId(),name:'main.py',code:''}); ED.active=ED.files[Math.max(0,i-1)].id; }); }
+function edDelete(){ edGo(()=>{ const i=ED.files.findIndex(f=>f.id===ED.active); ED.files.splice(i,1); if(!ED.files.length) ED.files.push({id:edId(),name:'main.py',code:''}); ED.active=ED.files[Math.max(0,i-1)].id; }); }
 async function saveText(name,text,mime){
   const file=new File([text],name,{type:mime});
   const mobile=/Android|iPhone|iPad/i.test(navigator.userAgent);
@@ -1502,42 +1605,86 @@ function edImport(){
 function analyseFree(r){
   if(r.ok) return {ok:true,out:r.out};
   if(r.stage==='load') return {ok:false,head:'No pude cargar Python',body:'Hace falta internet la primera vez para descargar el ejecutor. Revisá la conexión y probá de nuevo.',out:''};
-  if(r.stage==='timeout') return {ok:false,head:'Se cortó la ejecución',body:'Pasaron más de 15 segundos. Si es un bucle que no termina, revisá la condición del `while` o del `for`.',out:''};
-  if(r.stage==='stopped') return {ok:false,head:'Detenido',body:'Cortaste la ejecución.',out:'',neutral:true};
   const lines=String(r.err||'').split('\n').filter(x=>x.trim()!==''); const last=lines[lines.length-1]||'';
   const type=(last.match(/^([A-Za-z]+(?:Error|Exception))\b/)||[])[1]||'';
   const m=[...String(r.err||'').matchAll(/File "<exec>", line (\d+)/g)]; const ln=m.length?+m[m.length-1][1]:0;
   return {ok:false,head:'Python encontró un error',body:(ln?'En la línea '+ln+'. ':'')+(ERR_ES[type]||''),raw:last.slice(0,200),out:r.out||''};
 }
-async function edRun(){
-  if(ED.running) return;
-  const f=edCur(); ED.running=true; ED.resBy[f.id]=null; render();
-  const stdin=ED.stdin.length?ED.stdin.split('\n'):[];
-  const r=await pyRun(f.code,'',{ms:15000,stdin});
-  ED.running=false; ED.resBy[f.id]=analyseFree(r);
-  if(TAB==='editor'&&!S){ render(); const o=document.querySelector('.edout'); if(o) o.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+/* Consola del editor: el programa se ejecuta en vivo y, cuando pide input(), la consola espera la respuesta */
+const T={fileId:null,running:false,waiting:false,answers:[],code:'',seed:0,out:'',newOut:'',status:'idle',res:null,msg:''};
+const termShown=()=>T.newOut.length>=T.out.length?T.newOut:T.out;
+function termPaint(){
+  const o=document.querySelector('.term-text'); if(o) o.textContent=termShown();
+  const b=document.querySelector('.term'); if(b) b.scrollTop=b.scrollHeight;
+  const m=document.querySelector('.term-msg'); if(m) m.textContent=T.msg||'Ejecutando…';
 }
+async function termExec(){
+  T.running=true; T.waiting=false; T.newOut=''; T.msg=''; T.res=null; T.status='running'; render();
+  const r=await pyTerm(T.code,T.answers,T.seed,c=>{T.newOut+=c;termPaint();},(t,reset)=>{T.msg=t; if(reset) T.newOut=''; termPaint();},25000);
+  T.running=false; T.msg=''; T.out=T.newOut; T.status=r.status; T.waiting=r.status==='input';
+  if(r.status==='error') T.res=analyseFree({ok:false,stage:'code',err:r.err,out:''});
+  else if(r.status==='load') T.res=analyseFree({ok:false,stage:'load'});
+  if(TAB==='editor'&&!S){ render(); const i=document.querySelector('.term-in'); if(i){ i.focus(); i.scrollIntoView({block:'center'}); } else { const o=document.querySelector('.term'); if(o) o.scrollIntoView({block:'nearest',behavior:'smooth'}); } }
+}
+function termStart(){ if(T.running) return; const f=edCur(); T.fileId=f.id; T.code=f.code; T.answers=[]; T.out=''; T.seed=Math.floor(Math.random()*1e9); termExec(); }
+function termSubmit(v){ if(!T.waiting||T.running) return; T.answers.push(v); T.waiting=false; termExec(); }
+/* Escritura de código: cierra paréntesis y comillas solo, sangría automática y barra de símbolos sobre el teclado */
+const PAIRS={'(':')','[':']','{':'}','"':'"',"'":"'"};
+const CLOSERS=new Set([')',']','}','"',"'"]);
 function setupTA(ta,onChange){
-  const insert=(t)=>{ ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,'end'); onChange(); };
+  const edit=(from,to,text,a,b)=>{ ta.setRangeText(text,from,to,'end'); if(a!=null){ ta.selectionStart=a; ta.selectionEnd=b==null?a:b; } onChange(); };
+  const typeChar=(ch)=>{
+    const v=ta.value, s=ta.selectionStart, e=ta.selectionEnd, prev=v[s-1]||'', next=v[e]||'';
+    if(s===e&&CLOSERS.has(ch)&&next===ch){ ta.selectionStart=ta.selectionEnd=s+1; onChange(); return true; }
+    if(PAIRS[ch]){
+      if(s!==e){ const sel=v.slice(s,e); edit(s,e,ch+sel+PAIRS[ch],s+1,s+1+sel.length); return true; }
+      const quote=(ch==='"'||ch==="'");
+      const pref=/^[frbuFRBU]$/.test(prev)&&!/\w/.test(v[s-2]||'');
+      if(quote&&(prev===ch||prev==='\\'||(/\w/.test(prev)&&!pref))) return false;
+      if(!/^$|[\s)\]}.,:;]/.test(next)) return false;
+      edit(s,e,ch+PAIRS[ch],s+1); return true;
+    }
+    return false;
+  };
+  const plain=(t)=>edit(ta.selectionStart,ta.selectionEnd,t);
+  ta._act=(k)=>{
+    if(k==='tab') plain('    ');
+    else if(k==='left'){ const p=Math.max(0,ta.selectionStart-1); ta.selectionStart=ta.selectionEnd=p; }
+    else if(k==='right'){ const p=Math.min(ta.value.length,ta.selectionEnd+1); ta.selectionStart=ta.selectionEnd=p; }
+    else if(!typeChar(k)) plain(k);
+  };
   ta.addEventListener('input',onChange);
-  ta.addEventListener('keydown',e=>{ if(e.key==='Tab'){e.preventDefault();insert('    ');} });
+  ta.addEventListener('keydown',e=>{ if(e.key==='Tab'){ e.preventDefault(); plain('    '); } });
   ta.addEventListener('beforeinput',e=>{
+    if(e.isComposing) return;
+    if(e.inputType==='insertText'&&e.data&&e.data.length===1&&typeChar(e.data)){ e.preventDefault(); return; }
     if(e.inputType==='insertLineBreak'||e.inputType==='insertParagraph'){
       e.preventDefault();
       const v=ta.value, st=ta.selectionStart, ls=v.lastIndexOf('\n',st-1)+1, line=v.slice(ls,st);
       let ind=line.match(/^ */)[0]; if(/:\s*(#.*)?$/.test(line)) ind+='    ';
-      insert('\n'+ind);
+      plain('\n'+ind);
+    }
+    if(e.inputType==='deleteContentBackward'&&ta.selectionStart===ta.selectionEnd){
+      const v=ta.value, st=ta.selectionStart, a=v[st-1], b=v[st];
+      if(a&&PAIRS[a]===b){ e.preventDefault(); edit(st-1,st+1,'',st-1); }
     }
   });
-  return insert;
 }
-function keyRow(ta,insert){
-  const keys=el('div',{class:'keys',role:'group','aria-label':'Símbolos'});
-  [['⇥','    '],[':'],['('],[')'],['"'],['='],['['],[']'],['{'],['}'],['.'],[','],['#']].forEach(k=>{
-    keys.append(el('button',{type:'button','aria-label':k[0]==='⇥'?'Sangría de 4 espacios':k[0],onmousedown:e=>e.preventDefault(),onclick:()=>{ta.focus();insert(k[1]||k[0]);}},k[0]));
-  });
-  return keys;
+/* Barra de símbolos: aparece sobre el teclado cuando se escribe código */
+const KB=el('div',{class:'kbar',role:'toolbar','aria-label':'Símbolos',hidden:true});
+let KBTA=null;
+[['⇥','tab'],['(','('],[')',')'],['[','['],[']',']'],['{','{'],['}','}'],['"','"'],["'","'"],[':',':'],['=','='],[',',','],['.','.'],['#','#'],['_','_'],['+','+'],['-','-'],['*','*'],['/','/'],['<','<'],['>','>'],['!','!'],['%','%'],['\\','\\'],['←','left'],['→','right']].forEach(k=>{
+  KB.append(el('button',{type:'button','aria-label':k[0]==='⇥'?'Sangría de 4 espacios':k[0],onpointerdown:e=>e.preventDefault(),onmousedown:e=>e.preventDefault(),onclick:()=>{ if(KBTA&&KBTA._act){ KBTA.focus(); KBTA._act(k[1]); } }},k[0]));
+});
+function kbLayout(){
+  const vv=window.visualViewport; const b=vv?Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop)):0;
+  const d=document.querySelector('.dock'); KB.style.bottom=(b+(d?d.offsetHeight:0))+'px';
 }
+function kbShow(on){ KB.hidden=!on; document.body.classList.toggle('kbopen',on); if(on) kbLayout(); }
+document.body.append(KB);
+document.addEventListener('focusin',e=>{ const t=e.target; if(t&&t.classList&&t.classList.contains('ce')){ KBTA=t; kbShow(true); } });
+document.addEventListener('focusout',()=>{ setTimeout(()=>{ const a=document.activeElement; if(!(a&&a.classList&&a.classList.contains('ce'))) kbShow(false); },150); });
+if(window.visualViewport){ window.visualViewport.addEventListener('resize',kbLayout); window.visualViewport.addEventListener('scroll',kbLayout); }
 function edMenu(){
   const f=edCur(), m=el('div',{class:'fmenu',role:'group','aria-label':'Acciones de archivos'});
   if(ED.ask==='rename'){
@@ -1563,40 +1710,38 @@ function Editor(){
   tabs.append(el('button',{class:'ftab add',type:'button','aria-label':'Archivo nuevo',onclick:edNew},icon('plus')));
   const nLines=()=>Math.max(1,f.code.split('\n').length);
   const gut=el('pre',{class:'gut','aria-hidden':'true'},Array.from({length:Math.max(10,nLines())},(_,i)=>i+1).join('\n'));
-  const ta=el('textarea',{rows:Math.max(10,nLines()),spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off',wrap:'off','aria-label':'Código de '+f.name,placeholder:'# escribí tu código acá'});
+  const ta=el('textarea',{class:'ce',rows:Math.max(10,nLines()),spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off',wrap:'off','aria-label':'Código de '+f.name,placeholder:'# escribí tu código acá'});
   ta.value=f.code; let timer=null;
   const sync=()=>{
     f.code=ta.value; const n=Math.max(10,nLines()); ta.rows=n; gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');
     clearTimeout(timer); timer=setTimeout(edSave,400);
   };
-  const insert=setupTA(ta,sync);
+  setupTA(ta,sync);
   const box=el('div',{class:'code'},el('div',{class:'code-tag'},f.name),el('div',{class:'edwrap'},gut,ta));
-  box.style.marginBottom='8px';
+  box.style.marginBottom='12px';
   const bar=el('div',{class:'edbar'},
-    ED.running?el('button',{class:'btn stop',type:'button',onclick:pyStop},icon('stop'),'Detener')
-              :el('button',{class:'btn',type:'button',onclick:edRun},icon('play'),'Ejecutar'),
+    T.running?el('button',{class:'btn stop',type:'button',onclick:pyStop},icon('stop'),'Detener')
+             :el('button',{class:'btn',type:'button',onclick:termStart},icon('play'),'Ejecutar'),
     el('button',{class:'sbtn'+(ED.menu?' on':''),type:'button','aria-expanded':String(ED.menu),onclick:()=>{ED.menu=!ED.menu;ED.ask=null;render();}},'Archivos'));
-  const inBox=el('div',{class:'ed-in'});
-  if(ED.showIn){
-    const it=el('textarea',{rows:3,spellcheck:'false',autocapitalize:'none',autocomplete:'off',autocorrect:'off','aria-label':'Entradas para input()',placeholder:'Una línea por cada input(), en orden'}); it.value=ED.stdin;
-    it.addEventListener('input',()=>{ED.stdin=it.value; clearTimeout(timer); timer=setTimeout(edSave,400);});
-    inBox.append(el('label',{},'Entradas para ',el('code',{},'input()'),' (una línea por cada vez que el programa pida algo)'),it);
-  }
-  const out=el('div',{class:'runbox edout'});
-  if(PY.state!=='ready'&&PY.state!=='error') out.append(el('div',{class:'runmsg'},'Cargando Python… (la primera vez tarda unos segundos)'));
-  if(PY.state==='error') out.append(el('div',{class:'runmsg bad'},el('b',{},'No pude cargar Python'),'Hace falta internet la primera vez. Revisá la conexión.',el('div',{},el('button',{class:'sbtn',type:'button',style:'margin-top:8px;min-height:40px',onclick:()=>{pyReset();pyInit().catch(()=>{});render();}},'Reintentar'))));
-  if(ED.running) out.append(el('div',{class:'runmsg'},'Ejecutando…'));
-  const r=ED.resBy[f.id];
-  if(r&&!ED.running){
-    if(r.out) out.append(el('pre',{class:'console'},r.out));
-    if(r.ok) out.append(el('div',{class:'runmsg ok',role:'status'},el('b',{},'Terminó sin errores'),r.out?'':'No mostró nada: usá print() para ver resultados.'));
-    else{ const m=el('div',{class:'runmsg'+(r.neutral?'':' bad'),role:'status'},el('b',{},r.head),rich(r.body)); if(r.raw) m.append(el('div',{},el('code',{},r.raw))); out.append(m); }
+  const out=el('div',{});
+  if(PY.state!=='ready'&&PY.state!=='error') out.append(el('div',{class:'runmsg',style:'margin-bottom:12px'},'Cargando Python… (la primera vez tarda unos segundos)'));
+  if(PY.state==='error') out.append(el('div',{class:'runmsg bad',style:'margin-bottom:12px'},el('b',{},'No pude cargar Python'),'Hace falta internet la primera vez. Revisá la conexión.',el('div',{},el('button',{class:'sbtn',type:'button',style:'margin-top:8px;min-height:40px',onclick:()=>{pyReset();pyInit().catch(()=>{});render();}},'Reintentar'))));
+  if(T.fileId===f.id&&(T.running||T.status!=='idle')){
+    const line=el('div',{class:'term-line'},el('span',{class:'term-text'},termShown()));
+    if(T.waiting){
+      const inp=el('input',{class:'term-in',type:'text',autocapitalize:'none',autocomplete:'off',autocorrect:'off',spellcheck:'false',enterkeyhint:'send','aria-label':'Escribí la respuesta y tocá Enter'});
+      inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); termSubmit(inp.value); } });
+      line.append(inp);
+    }
+    const endTxt={done:'Programa terminado',error:'Terminó con un error',timeout:'Se cortó a los 25 segundos',stopped:'Detenido'}[T.status];
+    out.append(el('div',{class:'term',role:'log','aria-live':'polite'},line,
+      T.running?el('div',{class:'term-end term-msg'},T.msg||'Ejecutando…'):(endTxt?el('div',{class:'term-end'},'— '+endTxt+' —'):null)));
+    const r=T.res;
+    if(r&&!T.running){ const m=el('div',{class:'runmsg bad',role:'status',style:'margin-bottom:12px'},el('b',{},r.head),rich(r.body)); if(r.raw) m.append(el('div',{},el('code',{},r.raw))); out.append(m); }
   }
   return el('div',{},
     el('header',{class:'head edhead'},el('p',{class:'eyebrow'},'Tu espacio'),el('h1',{},'Editor de Python')),
-    tabs, bar, ED.menu?edMenu():null, box, keyRow(ta,insert),
-    el('button',{class:'sbtn'+(ED.showIn?' on':''),type:'button',style:'width:100%;margin-bottom:12px;min-height:44px','aria-expanded':String(ED.showIn),onclick:()=>{ED.showIn=!ED.showIn;render();}},ED.showIn?'Ocultar entradas de input()':'Entradas para input()'),
-    inBox, out);
+    tabs, bar, ED.menu?edMenu():null, box, out);
 }
 function TabBar(){
   const b=(ic,label,id)=>{ const on=TAB===id; return el('button',{class:'tab'+(on?' on':''),type:'button','aria-current':on?'page':null,onclick:()=>{ if(TAB===id){window.scrollTo(0,0);return;} edSave(); TAB=id; render(true); }},icon(ic),el('span',{},label)); };
