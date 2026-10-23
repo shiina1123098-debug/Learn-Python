@@ -11,7 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: una sola columna tipo cuaderno de ejercicios, pensada para el pulgar. Lista de lecciones -> tarjetas de lectura -> ejercicios con barra inferior de comprobación. */
 :root{
   --bg:#EBF0F5; --surface:#FFFFFF; --surface2:#F4F7FA; --ink:#0F1B2D; --muted:#566478; --line:#D3DBE6;
   --accent:#0E6BA8; --accent-deep:#0A4F7C; --accent-ink:#FFFFFF; --accent-soft:#DAEAF6;
@@ -60,8 +59,6 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);col
 .app.has-dock{padding-bottom:190px}
 .ic{display:inline-flex;width:1.25em;height:1.25em;flex:none}
 .ic svg{width:100%;height:100%;fill:currentColor}
-
-/* Inicio */
 .head{display:grid;gap:6px;padding:6px 0 18px}
 .eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8rem);line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
@@ -71,7 +68,6 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .stat small{font-size:.74rem;color:var(--muted);line-height:1.2}
 .t-flame{color:var(--flame)} .t-spark{color:var(--spark)} .t-good{color:var(--good)}
 .lead{color:var(--muted);margin:16px 0 18px;max-width:46ch}
-/* Mapa de lecciones: camino serpenteante, círculos alternando izquierda y derecha */
 .map{position:relative;width:100%;max-width:360px;margin:6px auto 0}
 .map-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .map-lines path{fill:none;stroke-width:15;stroke-linecap:butt}
@@ -81,9 +77,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .node{position:absolute;width:0;height:0;z-index:1;--bg:var(--lock-bg);--sh:var(--lock-shadow);--fg:var(--lock-fg)}
 .node[data-s="done"]{--bg:var(--good);--sh:var(--good-deep);--fg:var(--on-good)}
 .node[data-s="current"]{--bg:var(--accent);--sh:var(--accent-deep);--fg:var(--accent-ink)}
-.node-btn{position:absolute;left:-42px;top:-42px;width:84px;height:84px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;
-  background:var(--bg);color:var(--fg);box-shadow:0 7px 0 var(--sh);
-  transition:background-color .5s ease,color .5s ease,box-shadow .5s ease,transform .12s ease}
+.node-btn{position:absolute;left:-42px;top:-42px;width:84px;height:84px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;background:var(--bg);color:var(--fg);box-shadow:0 7px 0 var(--sh);transition:background-color .5s ease,color .5s ease,box-shadow .5s ease,transform .12s ease}
 .node-btn:active:not(:disabled){transform:translateY(5px);box-shadow:0 2px 0 var(--sh)}
 .node-btn:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
 .node-btn:disabled{cursor:not-allowed}
@@ -92,9 +86,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .node[data-s="locked"] .g-lock,.node[data-s="current"] .g-play,.node[data-s="done"] .g-check{opacity:1;transform:none}
 .node[data-s="current"] .node-btn::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid var(--accent);opacity:.45;pointer-events:none;animation:ring 1.9s ease-out infinite}
 .node.unlocking .node-btn{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
-.tip{position:absolute;left:0;bottom:58px;transform:translateX(-50%);white-space:nowrap;background:var(--surface);color:var(--accent);
-  border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-family:var(--f-display);font-weight:800;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
-  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}
+.tip{position:absolute;left:0;bottom:58px;transform:translateX(-50%);white-space:nowrap;background:var(--surface);color:var(--accent);border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-family:var(--f-display);font-weight:800;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}
 .tip::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
 .node[data-s="current"] .tip{opacity:1;visibility:visible;animation:bob 1.4s ease-in-out infinite}
 .nlabel{position:absolute;top:0;transform:translateY(-50%);width:150px;display:grid;gap:2px;pointer-events:none}
@@ -112,14 +104,9 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .stars .on{color:var(--spark)}
 .stars.big .ic{width:2.6rem;height:2.6rem}
 .stars.big{gap:6px}
-.next-week{margin-top:18px;font-size:.88rem;color:var(--muted);border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
-
-/* Separador de semana: cartel con estado (bloqueada, desbloqueada, completada, próximamente) */
 .weeks{display:grid;gap:34px;margin-top:6px}
 .week{display:grid;gap:6px}
-.wbanner{position:relative;overflow:hidden;border-radius:18px;padding:16px;display:grid;gap:10px;background:var(--surface);color:var(--ink);
-  border:1px solid var(--line);box-shadow:0 3px 0 var(--line);
-  transition:background-color .6s ease,color .6s ease,border-color .6s ease,box-shadow .6s ease}
+.wbanner{position:relative;overflow:hidden;border-radius:18px;padding:16px;display:grid;gap:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 3px 0 var(--line);transition:background-color .6s ease,color .6s ease,border-color .6s ease,box-shadow .6s ease}
 .wbanner::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent-deep));opacity:0;transition:opacity .7s ease;pointer-events:none}
 .wbanner>*{position:relative}
 .wbanner[data-s="open"]{color:var(--accent-ink);border-color:transparent;box-shadow:0 4px 0 var(--accent-deep)}
@@ -140,7 +127,6 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .wb-chip{font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:rgba(127,127,127,.18);background:color-mix(in srgb,currentColor 14%,transparent)}
 .wbanner.unlocking{animation:bpop .8s cubic-bezier(.3,1.5,.5,1)}
 @keyframes bpop{0%{transform:scale(.93)}100%{transform:scale(1)}}
-/* Lección */
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
 .icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none;color:var(--muted)}
 .bar{flex:1;height:12px;background:var(--line);border-radius:99px;overflow:hidden}
@@ -151,8 +137,6 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,9vw,2.8re
 .card h2{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
 .card p{max-width:60ch}
 b{font-weight:700}
-
-/* Código */
 .code{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:4px 0 14px}
 .code-tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface2)}
 .code pre{margin:0;padding:12px 12px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;color:var(--ink)}
@@ -174,9 +158,6 @@ b{font-weight:700}
 .ln.ok{background:var(--good-bg);outline:1px solid var(--good)}
 .ln.bad{background:var(--bad-bg);outline:1px solid var(--bad)}
 .code .lines{padding:8px 6px}
-
-
-/* Ejercicios donde se escribe y se ejecuta código */
 .editor{margin-bottom:8px}
 .editor .fixed{border-bottom:0}
 .editor pre.fixed{background:transparent}
@@ -184,9 +165,6 @@ b{font-weight:700}
 .editor .ta:focus{background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent)}
 .editor .ta[readonly]{opacity:1}
 .editor.okk .ta{border-left-color:var(--good);background:var(--good-bg)}
-.keys{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-.keys button{font-family:var(--f-mono);font-size:1rem;min-width:40px;min-height:40px;padding:4px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--line);color:var(--ink)}
-.keys button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
 .runbox{display:grid;gap:8px;margin:0 0 14px}
 .runmsg{border-radius:12px;padding:11px 13px;font-size:.93rem;line-height:1.45;border:1px solid var(--line);background:var(--surface)}
 .runmsg.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--ink)}
@@ -196,18 +174,12 @@ b{font-weight:700}
 .console{margin:0;padding:10px 12px;border-radius:10px;background:var(--code-bg);border:1px solid var(--line);font-family:var(--f-mono);font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
 .console::before{content:"Salida";display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 .sol-k{margin-top:6px}
-
-
-/* Barra inferior (Lecciones / Editor) */
 .app.has-nav{padding-bottom:100px}
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:8px;background:var(--surface);border-top:1px solid var(--line);
-  padding:8px max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:8px;background:var(--surface);border-top:1px solid var(--line);padding:8px max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
 .tab{flex:1;max-width:272px;min-height:54px;border:0;border-radius:12px;background:transparent;color:var(--muted);display:grid;justify-items:center;align-content:center;gap:2px;font-weight:700;font-size:.78rem;letter-spacing:.02em}
 .tab .ic{width:24px;height:24px}
 .tab.on{background:var(--accent-soft);color:var(--accent)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));z-index:40;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:.9rem;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
-
-/* Editor libre */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));z-index:200;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:.9rem;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .ftabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;margin-bottom:2px;scrollbar-width:thin}
 .ftab{flex:none;font-family:var(--f-mono);font-size:.85rem;min-height:40px;padding:6px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .ftab.on{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
@@ -229,13 +201,7 @@ b{font-weight:700}
 .gut{margin:0;padding:10px 8px 10px 12px;color:var(--muted);text-align:right;font-family:var(--f-mono);font-size:13px;line-height:1.7;user-select:none;border-right:1px solid var(--line);background:var(--surface2)}
 .edwrap textarea{display:block;width:100%;box-sizing:border-box;margin:0;padding:10px 12px;border:0;background:var(--code-bg);color:var(--ink);font-family:var(--f-mono);font-size:13px;line-height:1.7;tab-size:4;white-space:pre;overflow-x:auto;overflow-y:hidden;resize:none;outline:0;border-radius:0}
 .edwrap textarea:focus{background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent)}
-.ed-in{margin:0 0 12px}
-.ed-in textarea{width:100%;box-sizing:border-box;min-height:84px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--f-mono);font-size:13px;line-height:1.6;resize:vertical}
-.ed-in label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
 .edhead{margin-bottom:14px}
-
-
-/* Barra de símbolos sobre el teclado */
 .kbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;gap:6px;overflow-x:auto;padding:6px max(8px,env(safe-area-inset-left));background:var(--surface2);border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(0,0,0,.08);scrollbar-width:none}
 .kbar::-webkit-scrollbar{display:none}
 .kbar[hidden]{display:none}
@@ -243,13 +209,10 @@ b{font-weight:700}
 .kbar button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
 body.kbopen .tabbar{display:none}
 body.kbopen .app.has-nav{padding-bottom:70px}
-/* Consola */
 .term{background:#0E151D;color:#E6EDF3;border:1px solid #223044;border-radius:12px;padding:12px;margin:0 0 12px;max-height:55vh;overflow:auto;font-family:var(--f-mono);font-size:13px;line-height:1.55}
 .term-line{white-space:pre-wrap;word-break:break-word}
 .term-in{display:inline-block;min-width:5ch;width:9ch;max-width:100%;box-sizing:border-box;margin:0 0 0 2px;padding:0 4px;border:0;border-bottom:1px solid #5AB8EE;background:transparent;color:#7FD99F;font:inherit;outline:0;border-radius:0}
 .term-end{margin-top:6px;color:#8795A8;font-size:.82rem}
-
-/* Opciones */
 .opts{display:grid;gap:10px}
 .opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:12px}
 .opt:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
@@ -262,11 +225,7 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 .opt.wrong .k{background:var(--bad);color:var(--bad-bg);border-color:var(--bad)}
 .sub-q{font-family:var(--f-display);font-weight:700;font-size:1.15rem;margin:18px 0 10px}
 .hint-ok{display:flex;align-items:center;gap:8px;color:var(--good);font-weight:600;margin:14px 0 0}
-
-/* Barra inferior */
-.dock{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
-  padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
 .dock.good{background:var(--good-bg);border-top-color:var(--good)}
 .dock.bad{background:var(--bad-bg);border-top-color:var(--bad)}
 .dock-in{max-width:560px;margin:0 auto;display:grid;gap:12px}
@@ -281,8 +240,6 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 .dock.good .btn{background:var(--good);color:var(--good-bg);box-shadow:0 3px 0 color-mix(in srgb,var(--good) 60%,black)}
 .dock.bad .btn{background:var(--bad);color:var(--bad-bg);box-shadow:0 3px 0 color-mix(in srgb,var(--bad) 60%,black)}
 .btn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1px solid var(--line);font-weight:700}
-
-/* Final */
 .done{display:grid;gap:18px;text-align:center;justify-items:center;padding-top:10px}
 .done h2{font-family:var(--f-display);font-weight:800;font-size:2.1rem;line-height:1.05;text-wrap:balance}
 .done .ttl{color:var(--muted)}
@@ -292,12 +249,21 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 .res span{font-size:.76rem;color:var(--muted)}
 
 /* Perfil */
+.prof-btn{display:inline-flex;align-items:center;gap:10px;margin:0 0 12px;padding:5px 14px 5px 5px;border:1px solid var(--line);background:var(--surface);border-radius:99px;font-weight:700;font-size:.88rem;color:var(--ink);box-shadow:0 2px 0 var(--line);transition:transform .12s ease}
+.prof-btn:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.prof-av{width:34px;height:34px;border-radius:50%;overflow:hidden;flex:none;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.prof-av .ic{width:20px;height:20px}
+.prof-av img{width:100%;height:100%;object-fit:cover;display:block}
+.prof-avatar-wrap{display:flex;justify-content:center;margin:2px 0 20px}
+.prof-avatar-big{position:relative;width:130px;height:150px;padding:0;border:0;background:transparent;cursor:pointer;display:grid;place-items:center}
+.prof-avatar-cv{width:110px;height:110px;border-radius:50%;overflow:hidden;background:var(--surface);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);display:grid;place-items:center;color:var(--muted)}
+.prof-avatar-cv .ic{width:52px;height:52px}
+.prof-avatar-cv img{width:100%;height:100%;object-fit:cover;display:block}
+.prof-avatar-edit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-ink);font-size:.72rem;font-weight:800;padding:4px 12px;border-radius:99px;box-shadow:0 2px 0 var(--accent-deep);white-space:nowrap}
 .prof-week{margin-top:22px}
 .prof-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px}
 .prof-day{display:grid;justify-items:center;gap:6px;min-width:0}
-.prof-circle{width:100%;max-width:46px;aspect-ratio:1;border-radius:50%;border:2px solid var(--line);
-  background:var(--surface2);display:grid;place-items:center;color:var(--good);
-  transition:background-color .3s ease,border-color .3s ease,box-shadow .3s ease}
+.prof-circle{width:100%;max-width:46px;aspect-ratio:1;border-radius:50%;border:2px solid var(--line);background:var(--surface2);display:grid;place-items:center;color:var(--good);transition:background-color .3s ease,border-color .3s ease,box-shadow .3s ease}
 .prof-circle .ic{width:55%;height:55%}
 .prof-day.on .prof-circle{background:var(--good-bg);border-color:var(--good)}
 .prof-day.today .prof-circle{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -306,8 +272,7 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 .prof-day.today .prof-dayname{color:var(--accent);font-weight:800}
 .prof-list{margin-top:24px}
 .prof-lessons{display:grid;gap:6px;margin-top:10px}
-.prof-lesson{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
-  padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+.prof-lesson{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
 .prof-num{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);min-width:1.8ch;text-align:right;font-variant-numeric:tabular-nums}
 .prof-title{font-weight:600;font-size:.95rem;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prof-status{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:4px}
@@ -316,28 +281,16 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 .prof-lesson.done .prof-num,.prof-lesson.done .prof-title{color:var(--good-deep)}
 .prof-lesson.done .prof-status{color:var(--good)}
 .prof-actions{display:grid;gap:10px;margin-top:24px}
+.prof-json{margin-top:24px}
+.prof-json .modal-hint{margin:6px 0 10px}
 
-.prof-btn{display:inline-flex;align-items:center;gap:10px;margin:0 0 12px;
-  padding:5px 14px 5px 5px;border:1px solid var(--line);background:var(--surface);
-  border-radius:99px;font-weight:700;font-size:.88rem;color:var(--ink);
-  box-shadow:0 2px 0 var(--line);transition:transform .12s ease}
-.prof-btn:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
-.prof-av{width:34px;height:34px;border-radius:50%;overflow:hidden;flex:none;
-  background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
-.prof-av .ic{width:20px;height:20px}
-.prof-av img{width:100%;height:100%;object-fit:cover;display:block}
-
-.prof-avatar-wrap{display:flex;justify-content:center;margin:2px 0 20px}
-.prof-avatar-big{position:relative;width:130px;height:150px;padding:0;border:0;
-  background:transparent;cursor:pointer;display:grid;place-items:center}
-.prof-avatar-cv{width:110px;height:110px;border-radius:50%;overflow:hidden;
-  background:var(--surface);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);
-  display:grid;place-items:center;color:var(--muted)}
-.prof-avatar-cv .ic{width:52px;height:52px}
-.prof-avatar-cv img{width:100%;height:100%;object-fit:cover;display:block}
-.prof-avatar-edit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  background:var(--accent);color:var(--accent-ink);font-size:.72rem;font-weight:800;
-  padding:4px 12px;border-radius:99px;box-shadow:0 2px 0 var(--accent-deep);white-space:nowrap}
+/* Modal de exportar */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:560px;width:100%;max-height:90vh;display:grid;gap:12px;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.modal h3{font-family:var(--f-display);font-weight:800;font-size:1.3rem;margin:0}
+.modal-hint{color:var(--muted);font-size:.9rem;margin:0;line-height:1.4}
+.modal-json{width:100%;box-sizing:border-box;min-height:180px;max-height:40vh;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--code-bg);color:var(--ink);font-family:var(--f-mono);font-size:11px;line-height:1.5;resize:vertical;white-space:pre}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 @media (prefers-reduced-motion:no-preference){
   .dock-in{animation:rise .18s ease-out}
@@ -352,8 +305,6 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 <script>
 (function(){
 'use strict';
-
-/* ---------- Contenido: Semana 1 ---------- */
 const L=(...a)=>a.join('\n');
 
 const LESSONS=[
@@ -393,20 +344,20 @@ const LESSONS=[
      code:L('puntos = 10','puntos += 5   # ahora vale 15','puntos -= 3   # ahora vale 12','print(puntos)  # 12')},
     {h:'Operadores con texto', p:['Con texto, `+` junta los dos textos y `*` repite el texto tantas veces como diga el número.'],
      code:L('"ab" + "cd"   # "abcd"','"ab" * 3      # "ababab"','"-" * 5       # "-----"')},
-    {h:'Preguntas que dan True o False', p:['Una comparación es una pregunta y Python responde `True` (sí) o `False` (no). `5 > 3` pregunta "¿5 es mayor que 3?": es verdad, así que da `True`. `3 > 5` da `False`.','Los operadores son `>` mayor, `<` menor, `>=` mayor o igual (el ≥ de matemática), `<=` menor o igual (el ≤), `==` igual y `!=` distinto. Se escribe `>=`, nunca `=>`.','Ojo con `=` y `==`: `=` guarda un valor y `==` pregunta si dos cosas son iguales.'],
-     code:L('5 > 3   # True (5 es mayor)','3 > 5   # False (3 es menor)','5 > 5   # False (son iguales)','5 >= 5  # True (mayor o igual)','5 != 3  # True (son distintos)','x = 5   # guarda 5 en x','x == 5  # True: ¿x vale 5?')},
+    {h:'Preguntas que dan True o False', p:['Una comparación es una pregunta y Python responde `True` (sí) o `False` (no). `5 > 3` pregunta "¿5 es mayor que 3?": es verdad, así que da `True`. `3 > 5` da `False`.','Los operadores son `>` mayor, `<` menor, `>=` mayor o igual, `<=` menor o igual, `==` igual y `!=` distinto. Se escribe `>=`, nunca `=>`.','Ojo con `=` y `==`: `=` guarda un valor y `==` pregunta si dos cosas son iguales.'],
+     code:L('5 > 3   # True','3 > 5   # False','5 > 5   # False','5 >= 5  # True','5 != 3  # True','x = 5   # guarda 5 en x','x == 5  # True: ¿x vale 5?')},
     {h:'Combinar con and, or y not', p:['`and` da `True` solo si las dos preguntas dan `True`. `or` da `True` si al menos una lo da. `not` da lo contrario.','Python resuelve primero cada comparación y después las combina.'],
      code:L('3 > 1 and 8 > 5 # True (las dos)','3 > 1 and 8 > 9 # False (falla)','3 > 1 or 8 > 9 # True (basta una)','not 3 > 1 # False (invierte)')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:'print(7 // 2)', opts:['`3.5`','`3`','`4`','`2`'], a:1,
-     why:'`//` es división entera: el 2 entra 3 veces en el 7 (3 × 2 = 6) y se descarta lo que sobra.'},
+     why:'`//` es división entera: el 2 entra 3 veces en el 7 y se descarta lo que sobra.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print(10 % 3)', opts:['`3`','`0`','`1`','`3.33`'], a:2,
-     why:'`%` devuelve el resto. El 3 entra 3 veces en el 10 (3 × 3 = 9) y sobra 1.'},
+     why:'`%` devuelve el resto. El 3 entra 3 veces en el 10 y sobra 1.'},
     {t:'fill', q:'Completá para saber si `edad` es mayor o igual a 18.', code:L('edad = 20','es_mayor = edad ___ 18','print(es_mayor)'), ans:['>='], bank:['>=','=>','=','<'],
      why:'Se escribe `>=`. `=>` no existe en Python y `=` guarda un valor en vez de comparar.'},
     {t:'quiz', q:'¿Qué hace `x == 5` en este código?', code:L('x = 5','print(x == 5)'), opts:['Guarda 5 en `x`','Pregunta si `x` vale 5 y muestra `True`','Da error','Suma 5 a `x`'], a:1,
-     why:'`==` compara. Como `x` vale 5, la pregunta "¿x es igual a 5?" da `True`. Para guardar un valor se usa un solo `=`.'},
+     why:'`==` compara. Como `x` vale 5, la pregunta "¿x es igual a 5?" da `True`.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print(2 < 9 and 7 > 8)', opts:['`True`','`False`','`None`','Da error'], a:1,
      why:'`2 < 9` da `True`, pero `7 > 8` da `False`. Con `and` tienen que dar `True` las dos.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print(4 > 9 or 6 > 2)', opts:['`True`','`False`','`None`','Da error'], a:0,
@@ -418,35 +369,35 @@ const LESSONS=[
     {t:'quiz', q:'¿Qué imprime?', code:L('puntos = 10','puntos -= 4','print(puntos)'), opts:['`4`','`6`','`10`','`14`'], a:1,
      why:'`puntos -= 4` es `puntos = puntos - 4`, o sea 10 - 4 = 6.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print(8 % 2 == 0)', opts:['`True`','`False`','`0`','`4`'], a:0,
-     why:'`8 % 2` da 0 (sobra 0) y `0 == 0` es `True`. Así se pregunta si un número es par.'}
+     why:'`8 % 2` da 0 y `0 == 0` es `True`.'}
   ]
 },
 {
   title:'Entrada y salida', sub:'print, input y f-strings',
   cards:[
-    {h:'Hablar con quien usa el programa', p:['Hasta ahora los valores los escribías vos en el código. Un programa útil también **le pregunta cosas a la persona** y **le muestra resultados**. Para eso están `input()` (pedir) y `print()` (mostrar).','Cuando Python llega a un `input()`, se frena y espera a que se escriba algo y se apriete Enter. Lo que se escribió se guarda en la variable de la izquierda.'],
+    {h:'Hablar con quien usa el programa', p:['Un programa útil **le pregunta cosas a la persona** y **le muestra resultados**. Para eso están `input()` (pedir) y `print()` (mostrar).','Cuando Python llega a un `input()`, se frena y espera a que se escriba algo y se apriete Enter.'],
      code:L('nombre = input("¿Cómo te llamás? ")','print("Hola")','print(nombre)','','# Python muestra: ¿Cómo te llamás?','# alguien escribe: Ana  (y Enter)','# Python muestra: Hola','# Python muestra: Ana')},
 {h:'Pedir y mostrar datos', p:['`print()` muestra algo en pantalla. Si le pasás varias cosas separadas por coma, las muestra una al lado de la otra con un espacio en el medio.','`input()` pide un dato y lo devuelve siempre como texto (`str`), aunque se escriba un número.','Para usarlo como número hay que convertirlo con `int()` o `float()`.'],
      code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("Hola", nombre) # Hola Ana')},
     {h:'Texto y número no se mezclan', p:['Python no suma texto con número: `"20" + 1` da `TypeError`. Hay que convertir antes de hacer la cuenta.'],
      code:L('edad = input("Edad: ") # "20"','edad + 1 # TypeError','int(edad) + 1 # 21')},
-    {h:'El problema de mezclar a mano', p:['Armar frases con variables usando comas o `+` se vuelve incómodo: hay que acordarse de los espacios y de convertir los números a texto.','Las **f-strings** lo resuelven: escribís la frase completa y, donde va un valor, ponés la variable entre `{}`. Python la reemplaza por su valor.'],
-     code:L('nombre = "Ana"','edad = 30','','# incómodo: hay que convertir y cuidar los espacios','print("Hola " + nombre + ", tenés " + str(edad))','','# cómodo: la f antes de las comillas','print(f"Hola {nombre}, tenés {edad}")')},
+    {h:'El problema de mezclar a mano', p:['Armar frases con variables usando comas o `+` se vuelve incómodo.','Las **f-strings** lo resuelven: escribís la frase completa y, donde va un valor, ponés la variable entre `{}`. Python la reemplaza por su valor.'],
+     code:L('nombre = "Ana"','edad = 30','','# incómodo','print("Hola " + nombre + ", tenés " + str(edad))','','# cómodo','print(f"Hola {nombre}, tenés {edad}")')},
 {h:'f-strings', p:['Una `f` antes de las comillas permite meter variables o cuentas entre llaves.'],
      code:L('nombre = "Ana"','edad = 30','print(f"{nombre} tiene {edad}")','print(f"Próximo año: {edad + 1}")')}
   ],
   ex:[
     {t:'fill', q:'Completá para que el mensaje use el valor de `nombre`.', code:L('nombre = "Ana"','print(___"Hola {nombre}")'), ans:['f'], bank:['f','r','$','%'],
-     why:'La `f` antes de las comillas activa la f-string y reemplaza `{nombre}` por su valor.'},
+     why:'La `f` antes de las comillas activa la f-string.'},
     {t:'quiz', q:'Si la persona escribe 5, ¿de qué tipo es `x`?', code:'x = input("Número: ")', opts:['`int`','`float`','`str`','Depende de lo que escriba'], a:2,
      why:'`input` siempre devuelve texto (`str`), aunque se escriba un número.'},
     {t:'fill', q:'Convertí lo que se escribe en un número entero.', code:L('edad = ___(input("Edad: "))','print(edad + 1)'), ans:['int'], bank:['int','str','print','input'],
-     why:'`input` da texto; `int(...)` lo convierte a número para poder sumar.'},
+     why:'`input` da texto; `int(...)` lo convierte a número.'},
     {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta el error.', code:L('edad = input("Edad: ")','print(edad + 1)'), line:1,
-     why:'El error salta al sumar: `edad` es texto y `1` es número. Python no suma `str` con `int`.',
+     why:'`edad` es texto y `1` es número. Python no suma `str` con `int`.',
      fix:{q:'¿Cómo se arregla?', opts:['Convertir con `int(input(...))`','Cambiar `+` por `-`','Poner el 1 entre comillas','Usar `print` dos veces'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('n = 4','print(f"{n} x 2 = {n * 2}")'), opts:['`4 x 2 = 8`','`{n} x 2 = {n * 2}`','`4 x 2 = n * 2`','Da error'], a:0,
-     why:'Dentro de las llaves se evalúa cualquier expresión, así que `n * 2` se calcula.'},
+     why:'Dentro de las llaves se evalúa cualquier expresión.'},
     {t:'quiz', q:'¿Qué imprime?', code:'print("Hola", "mundo")', opts:['`Holamundo`','`Hola mundo`','`Hola, mundo`','`("Hola", "mundo")`'], a:1,
      why:'Por defecto `print` separa los valores con un espacio.'}
   ]
@@ -454,104 +405,104 @@ const LESSONS=[
 {
   title:'Condicionales', sub:'if, elif y else',
   cards:[
-    {h:'Un programa que decide', p:['Hasta ahora el código corría siempre línea por línea. Con `if` ("si") el programa **elige**: ejecuta un bloque solo **si** la condición es `True`. Si es `False`, lo saltea.','La condición es una pregunta como las de la lección de operadores (`>`, `==`...). El bloque es lo que va con sangría debajo del `:`.'],
-     code:L('edad = 20','if edad >= 18:','    print("Podés entrar")   # solo si la condición es True','print("Fin")                # esta siempre se ejecuta','','# edad vale 20 → 20 >= 18 es True → imprime "Podés entrar" y "Fin"','# si edad valiera 15 → es False → solo imprime "Fin"')},
+    {h:'Un programa que decide', p:['Con `if` ("si") el programa **elige**: ejecuta un bloque solo **si** la condición es `True`. Si es `False`, lo saltea.','La condición es una pregunta (`>`, `==`...). El bloque es lo que va con sangría debajo del `:`.'],
+     code:L('edad = 20','if edad >= 18:','    print("Podés entrar")   # solo si la condición es True','print("Fin")                # esta siempre se ejecuta')},
 {h:'Decidir qué código corre', p:['Python evalúa las condiciones de arriba hacia abajo y entra al primer bloque verdadero. `else` no lleva condición y cubre todo lo demás.','Cada línea con `if`, `elif` o `else` termina en `:` y el bloque va indentado (4 espacios). Si falta la sangría, Python da `IndentationError`.','Ojo con el límite: `edad > 18` deja afuera al 18, y `edad >= 18` lo incluye.'],
      code:L('nota = 7','if nota >= 6:','    print("Aprobado")','elif nota >= 4:','    print("Recuperatorio")','else:','    print("Desaprobado")')},
-    {h:'if, elif y else paso a paso', p:['Con varios caminos, Python prueba las condiciones **de arriba hacia abajo** y se queda con la primera que dé `True`. El resto ni lo mira.','Seguí el ejemplo: con `nota = 5` la primera pregunta da `False`, la segunda da `True`, así que entra ahí y **se saltea el `else`**.'],
-     code:L('nota = 5','if nota >= 6:         # 5 >= 6 es False → sigue','    print("Aprobado")','elif nota >= 4:       # 5 >= 4 es True → entra acá','    print("Recuperatorio")','else:                 # no se mira','    print("Desaprobado")','','# imprime: Recuperatorio')},
-{h:'Dos if o un elif', p:['Dos `if` seguidos son independientes: cada uno se evalúa por su cuenta y pueden entrar los dos.','Con `elif`, en cambio, Python se detiene en el primer bloque verdadero y se saltea el resto.'],
+    {h:'if, elif y else paso a paso', p:['Con varios caminos, Python prueba las condiciones **de arriba hacia abajo** y se queda con la primera que dé `True`.'],
+     code:L('nota = 5','if nota >= 6:         # 5 >= 6 es False → sigue','    print("Aprobado")','elif nota >= 4:       # 5 >= 4 es True → entra acá','    print("Recuperatorio")','else:                 # no se mira','    print("Desaprobado")')},
+{h:'Dos if o un elif', p:['Dos `if` seguidos son independientes. Con `elif`, Python se detiene en el primer bloque verdadero.'],
      code:L('x = 12','if x >= 10:','    print("A")','if x >= 5:','    print("B")','# Imprime A y B (dos if sueltos)')}
   ],
   ex:[
     {t:'fill', q:'Completá la sintaxis.', code:L('edad = 15','if edad >= 18___','    print("Mayor")','else___','    print("Menor")'), ans:[':',':'], bank:[':',';','then',')'],
-     why:'Tanto el `if` como el `else` terminan en dos puntos. Python no usa `then`.'},
+     why:'Tanto el `if` como el `else` terminan en dos puntos.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('edad = 20','if edad >= 18','    print("Mayor")'), line:1,
-     why:'Falta el `:` al final del `if`. Todo bloque (`if`, `else`, `for`, `while`) lo lleva.',
+     why:'Falta el `:` al final del `if`.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `if`','Cambiar `>=` por `>`','Quitar la indentación','Agregar `else`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('x = 5','if x >= 10:','    print("A")','elif x >= 3:','    print("B")','else:','    print("C")'), opts:['`A`','`B`','`C`','`B` y `C`'], a:1,
-     why:'`x >= 10` es falso, pero `x >= 3` es verdadero: entra a ese bloque y se saltea el `else`.'},
+     why:'`x >= 10` es falso, pero `x >= 3` es verdadero.'},
     {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('if 5 >= 3:','print("sí")'), line:1,
-     why:'Después de los dos puntos, el bloque va indentado. Esa sangría le dice a Python qué código pertenece al `if`.',
+     why:'Después de los dos puntos, el bloque va indentado.',
      fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Agregar `else`','Cambiar `>=` por `<=`','Quitar los dos puntos'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('x = 9','if x >= 7:','    print("A")','if x >= 4:','    print("B")'), opts:['Solo `A`','Solo `B`','`A` y `B`, en dos líneas','Nada'], a:2,
-     why:'Son dos `if` independientes y ambos son verdaderos. Con `elif`, solo entraría al primero.'},
+     why:'Son dos `if` independientes y ambos son verdaderos.'},
     {t:'fill', q:'Completá para imprimir "impar" cuando no sea par.', code:L('n = 7','if n % 2 == 0:','    print("par")','___:','    print("impar")'), ans:['else'], bank:['else','elif','if','otherwise'],
-     why:'`else` cubre todo lo que no cumplió el `if` y no lleva condición. `elif` necesitaría una.'},
+     why:'`else` cubre todo lo que no cumplió el `if`.'},
     {t:'quiz', q:'En una cadena if/elif/else, ¿cuántos bloques se ejecutan como máximo?', opts:['Uno','Todos los verdaderos','Dos','Depende del `else`'], a:0,
      why:'Entra solo el primer bloque verdadero, o el `else` si ninguno lo fue.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('edad = 18','if edad > 18:','    print("Mayor")','else:','    print("No es mayor")'), opts:['`Mayor`','`No es mayor`','Las dos','Da error'], a:1,
-     why:'`18 > 18` es falso porque son iguales. Para incluir al 18 habría que usar `>=`.'}
+     why:'`18 > 18` es falso porque son iguales.'}
   ]
 },
 {
   title:'Bucle for', sub:'Repetir con range',
   cards:[
-    {h:'¿Para qué sirve un bucle?', p:['Imaginá que querés escribir "Hola" 3 veces. Podés copiar el `print` tres veces, pero ¿y si fueran 100? Un **bucle** le dice a Python: "repetí esto tantas veces".','Python tiene dos tipos de bucle: `for` y `while`. Empezamos con `for`, que se usa cuando sabés cuántas veces querés repetir algo. Las dos versiones de abajo hacen exactamente lo mismo.'],
-     code:L('# Sin bucle: hay que copiar y pegar','print("Hola")','print("Hola")','print("Hola")','','# Con bucle: se escribe una sola vez','for vez in range(3):','    print("Hola")')},
-    {h:'Las partes de un for', p:['Mirá la primera línea: `for` avisa que empieza un bucle. `vez` (o `i`, o el nombre que quieras) es una variable que **crea el propio bucle**. `range(3)` dice cuántas vueltas dar. Y el `:` del final abre el bloque.','Las líneas con sangría (4 espacios hacia la derecha) son el **bloque**: justo lo que se repite en cada vuelta. En cuanto una línea vuelve a estar pegada a la izquierda, ya no es parte del bucle. Si te olvidás el `:` Python da `SyntaxError`.'],
-     code:L('for i in range(3):   # empieza el bucle','    print("Hola")    # con sangría: se repite','print("Fin")         # sin sangría: se ejecuta una sola vez, al final','','# Hola','# Hola','# Hola','# Fin')},
-    {h:'Qué es range(3)', p:['`range(3)` fabrica una lista de números para que el `for` los vaya usando uno por uno. Es: **0, 1, 2**.','Dos cosas que confunden al principio: en programación se cuenta **desde 0**, y el número final **no se incluye**. Por eso `range(3)` son 3 números (0, 1 y 2) y da 3 vueltas, pero el 3 no aparece.'],
+    {h:'¿Para qué sirve un bucle?', p:['Un **bucle** le dice a Python: "repetí esto tantas veces".','Python tiene dos tipos: `for` y `while`. Empezamos con `for`, que se usa cuando sabés cuántas veces querés repetir algo.'],
+     code:L('# Sin bucle','print("Hola")','print("Hola")','print("Hola")','','# Con bucle','for vez in range(3):','    print("Hola")')},
+    {h:'Las partes de un for', p:['`for` avisa que empieza un bucle. `vez` es una variable que **crea el propio bucle**. `range(3)` dice cuántas vueltas dar. Y el `:` del final abre el bloque.','Las líneas con sangría son el **bloque**: lo que se repite en cada vuelta.'],
+     code:L('for i in range(3):','    print("Hola")','print("Fin")','','# Hola','# Hola','# Hola','# Fin')},
+    {h:'Qué es range(3)', p:['`range(3)` fabrica los números **0, 1, 2**.','En programación se cuenta **desde 0**, y el número final **no se incluye**.'],
      code:L('for i in range(3):','    print(i)','# 0','# 1','# 2')},
-    {h:'Qué vale i en cada vuelta', p:['`i` es una variable común, pero la maneja el `for`: en cada vuelta le asigna el **siguiente número** de `range`. Cuando se acaban los números, el bucle termina solo.','Cuando un bucle te confunda, hacé esto: andá vuelta por vuelta, anotando cuánto vale la variable y qué hace el bloque.'],
-     code:L('for i in range(3):','    print("vuelta número", i)','','# 1ª vuelta: i vale 0 → "vuelta número 0"','# 2ª vuelta: i vale 1 → "vuelta número 1"','# 3ª vuelta: i vale 2 → "vuelta número 2"','# ya no quedan números: el bucle termina')},
-    {h:'Empezar en otro número y saltear', p:['`range` acepta más de un número. Con **dos**, `range(inicio, fin)`: empieza en `inicio` y llega hasta `fin - 1` (el `fin` sigue sin incluirse).','Con **tres**, `range(inicio, fin, paso)`: el tercero dice de a cuánto avanza. Con `paso` 2 va de dos en dos.'],
+    {h:'Qué vale i en cada vuelta', p:['`i` la maneja el `for`: en cada vuelta le asigna el **siguiente número** de `range`.'],
+     code:L('for i in range(3):','    print("vuelta número", i)','','# 1ª vuelta: i vale 0 → "vuelta número 0"','# 2ª vuelta: i vale 1 → "vuelta número 1"','# 3ª vuelta: i vale 2 → "vuelta número 2"')},
+    {h:'Empezar en otro número y saltear', p:['`range(inicio, fin)`: empieza en `inicio` y llega hasta `fin - 1`.','`range(inicio, fin, paso)`: el tercero dice de a cuánto avanza.'],
      code:L('range(5)          # 0, 1, 2, 3, 4','range(1, 6)       # 1, 2, 3, 4, 5','range(2, 6)       # 2, 3, 4, 5','range(0, 10, 2)   # 0, 2, 4, 6, 8')},
-    {h:'Recorrer un texto', p:['`for` no sirve solo con números: recorre **cualquier cosa que tenga elementos**. Un texto está hecho de letras, así que `for` lo recorre letra por letra, una por vuelta.','Fijate que la variable ahora se llama `letra` y no `i`: elegí el nombre que mejor describa lo que vale en cada vuelta.'],
+    {h:'Recorrer un texto', p:['`for` recorre **cualquier cosa que tenga elementos**. Un texto está hecho de letras.'],
      code:L('for letra in "sol":','    print(letra)','','# 1ª vuelta: letra vale "s"','# 2ª vuelta: letra vale "o"','# 3ª vuelta: letra vale "l"')},
-    {h:'Dentro o fuera del bucle', p:['La sangría decide **qué se repite**. Mismo código, una sola diferencia, resultados distintos: en el primero las dos líneas están dentro del bucle y se repiten juntas; en el segundo, `Chau` está afuera y se ejecuta una sola vez cuando el bucle ya terminó.'],
+    {h:'Dentro o fuera del bucle', p:['La sangría decide **qué se repite**.'],
      code:L('for i in range(2):','    print("Hola")','    print("Chau")','# Hola, Chau, Hola, Chau','','for i in range(2):','    print("Hola")','print("Chau")','# Hola, Hola, Chau')},
-    {h:'Acumular un total', p:['Un patrón que vas a usar muchísimo: crear una variable en 0 **antes** del bucle y, en cada vuelta, sumarle algo con `+=` (que es lo mismo que `suma = suma + n`).','Va antes del bucle a propósito: si `suma = 0` estuviera adentro, volvería a 0 en cada vuelta y perderías lo acumulado.'],
-     code:L('suma = 0','for n in range(1, 4):','    suma += n','print(suma)   # 6','','# n vale 1 → suma = 0 + 1 = 1','# n vale 2 → suma = 1 + 2 = 3','# n vale 3 → suma = 3 + 3 = 6')}
+    {h:'Acumular un total', p:['Crear una variable en 0 **antes** del bucle y, en cada vuelta, sumarle algo con `+=`.'],
+     code:L('suma = 0','for n in range(1, 4):','    suma += n','print(suma)   # 6')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(3):','    print(i)'), opts:['`0, 1, 2`','`1, 2, 3`','`0, 1, 2, 3`','`1, 2`'], a:0,
-     why:'`range(3)` empieza en 0 y llega hasta 2: el final no se incluye.'},
+     why:'`range(3)` empieza en 0 y llega hasta 2.'},
     {t:'fill', q:'Completá para repetir 5 veces.', code:L('for i in ___(5):','    print(i)'), ans:['range'], bank:['range','len','while','list'],
      why:'`range(5)` genera los números del 0 al 4.'},
     {t:'quiz', q:'¿Qué números recorre `range(2, 6)`?', opts:['`2, 3, 4, 5, 6`','`2, 3, 4, 5`','`3, 4, 5, 6`','`2, 6`'], a:1,
-     why:'Empieza en 2 e incluye hasta el 5; el 6 queda afuera.'},
+     why:'Empieza en 2 e incluye hasta el 5.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('for i in range(3)','    print(i)'), line:0,
      why:'Falta el `:` al final del `for`.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `for`','Cambiar `range(3)` por `range[3]`','Quitar el `print`','Indentar el `for`'], a:0}},
     {t:'fill', q:'Sumá cada `n` a `suma`.', code:L('suma = 0','for n in range(2, 5):','    suma ___ n','print(suma)'), ans:['+='], bank:['+=','=','==','++'],
-     why:'`+=` suma `n` a lo que ya hay en `suma`. Python no tiene `++`. El resultado es 2 + 3 + 4 = 9.'},
+     why:'`+=` suma `n` a lo que ya hay en `suma`. El resultado es 2 + 3 + 4 = 9.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('for letra in "sol":','    print(letra)'), opts:['`sol`, una vez','`s`, `o`, `l`, una por línea','`sol`, tres veces','Da error'], a:1,
      why:'Un `for` sobre un texto recorre sus letras, una por vuelta.'},
     {t:'quiz', q:'¿Cuántas veces imprime `hola`?', code:L('for i in range(4):','    print("hola")'), opts:['3','4','5','Una'], a:1,
-     why:'`range(4)` da 4 vueltas (0, 1, 2 y 3).'}
+     why:'`range(4)` da 4 vueltas.'}
   ]
 },
 {
   title:'Bucle while', sub:'Repetir hasta que se cumpla',
   cards:[
-    {h:'Repetir mientras algo sea cierto', p:['`for` se usa cuando sabés cuántas vueltas son. `while` ("mientras") se usa cuando **no lo sabés**, pero sí sabés hasta cuándo: repetís **mientras** una condición sea verdadera.','Pensalo como "mientras tengas hambre, seguí comiendo": no sabés cuántos bocados van a ser, depende de cuándo se te pase el hambre.'],
-     code:L('n = 3','while n > 0:      # "mientras n sea mayor que 0"','    print(n)','    n -= 1       # resta 1 a n','print("¡Despegue!")','','# 3','# 2','# 1','# ¡Despegue!')},
-    {h:'Cómo lo piensa Python', p:['En cada vuelta, Python hace siempre lo mismo: **1)** mira la condición. **2)** Si es `True`, ejecuta el bloque y vuelve al paso 1. **3)** Si es `False`, sale del bucle y sigue con lo que viene abajo.','Mirá el mismo ejemplo vuelta por vuelta. Fijate que cuando `n` llega a 0, la condición `0 > 0` es falsa y el bucle termina **sin imprimir el 0**.'],
-     code:L('n = 3','while n > 0:','    print(n)','    n -= 1','','# n vale 3 → 3 > 0 es True  → imprime 3, n pasa a 2','# n vale 2 → 2 > 0 es True  → imprime 2, n pasa a 1','# n vale 1 → 1 > 0 es True  → imprime 1, n pasa a 0','# n vale 0 → 0 > 0 es False → sale del bucle')},
-    {h:'Cuidado: el bucle infinito', p:['Para que un `while` termine, **algo dentro del bloque tiene que cambiar** hasta que la condición deje de cumplirse. Si no cambia nada, la condición es verdadera para siempre y el programa se queda repitiendo sin parar. Eso se llama **bucle infinito**.','Antes de escribir un `while`, preguntate: ¿qué línea de adentro hace que algún día la condición sea falsa?'],
-     code:L('n = 3','while n > 0:','    print(n)','    # falta "n -= 1": n siempre vale 3','    # y 3 > 0 es siempre True: nunca termina')},
-    {h:'while True y break', p:['`while True` es un bucle que **nunca termina por sí solo**, porque `True` siempre es verdadero. Se usa cuando querés que la salida se decida adentro, con `break`.','`break` significa "cortá el bucle ahora mismo". En el ejemplo, el programa sigue pidiendo texto una y otra vez, y solo sale cuando escribís "salir".'],
-     code:L('while True:','    texto = input("> ")','    if texto == "salir":','        break              # corta el bucle','    print("Escribiste:", texto)','','print("Chau")             # se ejecuta después del break')},
-    {h:'break y continue: la diferencia', p:['`break` es "me voy, se terminó": **corta todo el bucle**. `continue` es "esta vuelta no, paso a la siguiente": **saltea solo lo que falta de esa vuelta** y el bucle sigue.','Las dos sirven en `for` y en `while`. Comparalas con el mismo código: cuando `i` vale 3, en un caso se corta todo y en el otro solo se saltea el 3.'],
+    {h:'Repetir mientras algo sea cierto', p:['`while` ("mientras") se usa cuando **no sabés cuántas vueltas son**, pero sí sabés hasta cuándo: repetís **mientras** una condición sea verdadera.'],
+     code:L('n = 3','while n > 0:      # "mientras n sea mayor que 0"','    print(n)','    n -= 1       # resta 1 a n','print("¡Despegue!")')},
+    {h:'Cómo lo piensa Python', p:['En cada vuelta: **1)** mira la condición. **2)** Si es `True`, ejecuta el bloque. **3)** Si es `False`, sale del bucle.'],
+     code:L('n = 3','while n > 0:','    print(n)','    n -= 1','','# n vale 3 → 3 > 0 → imprime 3, n pasa a 2','# n vale 2 → 2 > 0 → imprime 2, n pasa a 1','# n vale 1 → 1 > 0 → imprime 1, n pasa a 0','# n vale 0 → 0 > 0 → False → sale')},
+    {h:'Cuidado: el bucle infinito', p:['Para que un `while` termine, **algo dentro del bloque tiene que cambiar** hasta que la condición deje de cumplirse.','Antes de escribir un `while`, preguntate: ¿qué línea de adentro hace que algún día la condición sea falsa?'],
+     code:L('n = 3','while n > 0:','    print(n)','    # falta "n -= 1": nunca termina')},
+    {h:'while True y break', p:['`while True` es un bucle que **nunca termina por sí solo**. Se usa cuando querés que la salida se decida adentro, con `break`.','`break` significa "cortá el bucle ahora mismo".'],
+     code:L('while True:','    texto = input("> ")','    if texto == "salir":','        break','    print("Escribiste:", texto)','','print("Chau")')},
+    {h:'break y continue: la diferencia', p:['`break` **corta todo el bucle**. `continue` **saltea solo lo que falta de esa vuelta** y el bucle sigue.'],
      code:L('for i in range(5):','    if i == 3:','        break','    print(i)    # 0, 1, 2','','for i in range(5):','    if i == 3:','        continue','    print(i)    # 0, 1, 2, 4')},
-    {h:'¿for o while?', p:['Usá `for` cuando sabés **cuántas vueltas** son o tenés **algo para recorrer**: un `range`, un texto, una lista.','Usá `while` cuando depende de **una condición** y no sabés cuántas vueltas hacen falta: por ejemplo, seguir pidiendo la clave hasta que acierten.'],
+    {h:'¿for o while?', p:['Usá `for` cuando sabés **cuántas vueltas** son. Usá `while` cuando depende de **una condición**.'],
      code:L('# for: sé que son 5 vueltas','for i in range(5):','    print(i)','','# while: depende de lo que escriba la persona','clave = ""','while clave != "1234":','    clave = input("Clave: ")')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('n = 3','while n > 0:','    print(n)','    n -= 1','print("¡Despegue!")'), opts:['`3, 2, 1, ¡Despegue!`','`3, 2, 1, 0, ¡Despegue!`','`2, 1, 0, ¡Despegue!`','Se repite infinito'], a:0,
-     why:'Cuando `n` llega a 0, `n > 0` es falso y el bucle termina sin imprimir el 0.'},
+     why:'Cuando `n` llega a 0, `n > 0` es falso.'},
     {t:'bug', q:'Este bucle nunca termina. Tocá la línea que lo causa.', code:L('n = 3','while n > 0:','    print(n)','    n += 1'), line:3,
-     why:'Con `n += 1`, `n` crece y `n > 0` nunca deja de ser verdadero. Para llegar a 0 hay que restar.',
+     why:'Con `n += 1`, `n` crece y `n > 0` nunca deja de ser verdadero.',
      fix:{q:'¿Cómo se arregla?', opts:['Cambiar `+=` por `-=`','Cambiar `>` por `<`','Quitar el `print`','Agregar `else`'], a:0}},
     {t:'fill', q:'Completá para salir del bucle cuando se escriba "salir".', code:L('while True:','    texto = input("> ")','    if texto == "salir":','        ___'), ans:['break'], bank:['break','continue','stop','exit'],
-     why:'`break` corta el bucle. `continue` solo vuelve al inicio.'},
+     why:'`break` corta el bucle.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(5):','    if i == 3:','        break','    print(i)'), opts:['`0, 1, 2`','`0, 1, 2, 3`','`0, 1, 2, 4`','`0, 1, 2, 3, 4`'], a:0,
-     why:'`break` corta el bucle apenas `i` vale 3, antes de imprimirlo.'},
+     why:'`break` corta el bucle apenas `i` vale 3.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('for i in range(4):','    if i == 2:','        continue','    print(i)'), opts:['`0, 1, 3`','`0, 1, 2, 3`','`0, 1`','`1, 3`'], a:0,
-     why:'`continue` se saltea el resto de esa vuelta, así que el 2 no se imprime, pero el bucle sigue.'},
+     why:'`continue` se saltea el resto de esa vuelta.'},
     {t:'quiz', q:'¿Cuándo conviene `while` en vez de `for`?', opts:['Cuando no sabés cuántas vueltas vas a dar','Cuando querés recorrer un texto','Nunca, `for` siempre es mejor','Cuando hay un `if` adentro'], a:0,
-     why:'Si sabés cuántas vueltas son, `for` con `range` es más claro. `while` sirve cuando depende de una condición, como esperar una respuesta.'}
+     why:'Si sabés cuántas vueltas son, `for` es más claro.'}
   ]
 },
 {
@@ -563,16 +514,16 @@ const LESSONS=[
     {t:'quiz', q:'¿Qué imprime?', code:L('x = "5"','y = 3','print(x * y)'), opts:['`15`','`555`','`8`','Da error'], a:1,
      why:'`x` es texto, y un texto multiplicado por 3 se repite tres veces.'},
     {t:'fill', q:'Completá para que "impar" salga cuando no sea par.', code:L('for i in range(1, 4):','    if i % 2 == 0:','        print("par")','    ___:','        print("impar")'), ans:['else'], bank:['else','elif','if','while'],
-     why:'`else` toma el caso contrario del `if`, sin condición.'},
+     why:'`else` toma el caso contrario del `if`.'},
     {t:'bug', q:'Esto corre, pero imprime las llaves literales. Tocá la línea que está mal.', code:L('nombre = input("Nombre: ")','edad = int(input("Edad: "))','print("{nombre} tiene {edad}")'), line:2,
-     why:'Sin la `f` delante de las comillas, las llaves se imprimen tal cual en lugar de reemplazarse por los valores.',
+     why:'Sin la `f` delante de las comillas, las llaves se imprimen tal cual.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `f` antes de las comillas','Usar comillas simples','Cambiar `{}` por `()`','Convertir el nombre con `int()`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('total = 0','for i in range(1, 5):','    if i % 2 == 0:','        total += i','print(total)'), opts:['`4`','`6`','`10`','`3`'], a:1,
      why:'Solo suma los pares del 1 al 4: 2 + 4 = 6.'},
     {t:'fill', q:'Completá el bucle.', code:L('vidas = 3','___ vidas > 0:','    vidas -= 1','print(vidas)'), ans:['while'], bank:['while','for','if','loop'],
-     why:'`while` repite mientras la condición sea verdadera. Al terminar, `vidas` vale 0 y eso es lo que se imprime.'},
+     why:'`while` repite mientras la condición sea verdadera.'},
     {t:'bug', q:'Esto lanza IndentationError. Tocá la línea con el problema.', code:L('for i in range(3):','    print(i)','  print("fin")'), line:2,
-     why:'La última línea tiene una sangría que no coincide con ninguna anterior. Para que corra al terminar el bucle debe ir alineada con el `for`.',
+     why:'La última línea tiene una sangría que no coincide.',
      fix:{q:'¿Cómo se arregla?', opts:['Alinear `print("fin")` con el `for`','Agregar `else`','Cambiar `range(3)` por `range(4)`','Agregar `break`'], a:0}}
   ]
 },
@@ -580,33 +531,33 @@ const LESSONS=[
   title:'Listas', sub:'Crear, indexar y modificar',
   week:2, weekName:'Colecciones',
   cards:[
-    {h:'¿Por qué una lista?', p:['Si tenés 30 notas, no vas a crear 30 variables (`nota1`, `nota2`...). Una **lista** guarda muchos valores bajo un solo nombre, en orden.','Pensala como una fila de casilleros: cada valor ocupa un lugar y el orden se mantiene.'],
-     code:L('# incómodo','nota1 = 8','nota2 = 6','nota3 = 9','','# mejor: una sola variable','notas = [8, 6, 9]')},
-{h:'Una lista guarda varios valores', p:['Una lista se escribe entre corchetes, con los elementos separados por comas. Puede mezclar tipos: números, textos, otras listas.','`len()` te dice cuántos elementos tiene.'],
+    {h:'¿Por qué una lista?', p:['Si tenés 30 notas, no vas a crear 30 variables. Una **lista** guarda muchos valores bajo un solo nombre, en orden.'],
+     code:L('# incómodo','nota1 = 8','nota2 = 6','nota3 = 9','','# mejor','notas = [8, 6, 9]')},
+{h:'Una lista guarda varios valores', p:['Se escribe entre corchetes, con los elementos separados por comas. Puede mezclar tipos.','`len()` te dice cuántos elementos tiene.'],
      code:L('precios = [10, 25, 8]','print(precios)   # [10, 25, 8]','print(len(precios))  # 3')},
-    {h:'Cada casillero tiene un número', p:['Para pedir un valor de la lista usás su **posición**, llamada **índice**, entre corchetes. La primera posición es la **0**.','Por eso una lista de 3 elementos tiene índices 0, 1 y 2, y no existe el 3.'],
-     code:L('colores = ["rojo", "verde", "azul"]','','# índice:    0        1         2','# valor:   "rojo"  "verde"   "azul"','','print(colores[0])   # rojo','print(colores[1])   # verde')},
-{h:'Índices: se cuenta desde 0', p:['El primer elemento está en el índice 0, no en el 1. El último está en `len(lista) - 1`.','Los índices negativos cuentan desde el final: `-1` es el último, `-2` el penúltimo.','Si pedís un índice que no existe, Python lanza `IndexError`.'],
+    {h:'Cada casillero tiene un número', p:['Para pedir un valor usás su **índice** entre corchetes. La primera posición es la **0**.','Una lista de 3 elementos tiene índices 0, 1 y 2.'],
+     code:L('colores = ["rojo", "verde", "azul"]','print(colores[0])   # rojo','print(colores[1])   # verde')},
+{h:'Índices: se cuenta desde 0', p:['El primer elemento está en el índice 0. El último en `len(lista) - 1`.','Los índices negativos cuentan desde el final: `-1` es el último.','Si pedís un índice que no existe, Python lanza `IndexError`.'],
      code:L('nums = [10, 20, 30]','print(nums[0])   # 10','print(nums[2])   # 30','print(nums[-1])  # 30','print(nums[3])   # IndexError')},
-    {h:'Las listas se modifican', p:['A diferencia de un texto, una lista se puede cambiar en el lugar: le asignás un valor a un índice.','`in` pregunta si un elemento está; `not in` pregunta lo contrario. Las dos devuelven `True` o `False`.','Escribir en un índice que no existe también da `IndexError`.'],
-     code:L('nums = [10, 20, 30]','nums[0] = 99','print(nums)      # [99, 20, 30]','print(20 in nums)    # True','print(40 in nums)    # False','print(40 not in nums) # True','nums[5] = 99     # IndexError')}
+    {h:'Las listas se modifican', p:['Le asignás un valor a un índice.','`in` pregunta si un elemento está; `not in` pregunta lo contrario.'],
+     code:L('nums = [10, 20, 30]','nums[0] = 99','print(nums)      # [99, 20, 30]','print(20 in nums)    # True','print(40 in nums)    # False')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('frutas = ["pera", "uva", "kiwi"]','print(len(frutas))'), opts:['`2`','`3`','`4`','`"pera"`'], a:1,
-     why:'`len` cuenta cuántos elementos hay en la lista. Hay 3: pera, uva y kiwi.'},
+     why:'`len` cuenta cuántos elementos hay. Hay 3.'},
     {t:'fill', q:'Completá para que se imprima 8.', code:L('nums = [5, 8, 12]','print(nums[___])   # 8'), ans:['1'], bank:['0','1','2','3'],
-     why:'El 8 está en el índice 1 porque se cuenta desde 0: 5 está en 0, 8 en 1, 12 en 2.'},
+     why:'El 8 está en el índice 1.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','print(nums[3])'), line:1,
-     why:'La lista tiene 3 elementos, así que los índices válidos son 0, 1 y 2. Pedir el 3 da IndexError.',
+     why:'La lista tiene 3 elementos (índices 0, 1 y 2).',
      fix:{q:'¿Cómo se arregla?', opts:['Usar `nums[2]` en vez de `nums[3]`','Usar `nums[4]` en vez de `nums[3]`','Agregar `:` al final','Cambiar `print` por `len`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [3, 6, 9, 12]','print(nums[-2])'), opts:['`3`','`6`','`9`','`12`'], a:2,
-     why:'El -1 es el último (12), el -2 es el penúltimo (9).'},
+     why:'El -2 es el penúltimo (9).'},
     {t:'fill', q:'Completá para cambiar el segundo elemento.', code:L('nums = [1, 2, 3]','nums[1] = ___','print(nums)   # [1, 9, 3]'), ans:['9'], bank:['9','1','2','3'],
-     why:'`nums[1]` es el segundo elemento (el del medio). Al asignarle 9, la lista queda [1, 9, 3].'},
+     why:'`nums[1]` es el segundo elemento.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 8, 12]','print(8 in nums)'), opts:['`True`','`False`','`8`','`IndexError`'], a:0,
-     why:'`8 in nums` pregunta si el 8 está en la lista. Está, así que devuelve `True`.'},
+     why:'`8 in nums` pregunta si el 8 está en la lista.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','nums[3] = 99','print(nums)'), line:1,
-     why:'Escribir en un índice que no existe también da IndexError: solo hay índices 0, 1 y 2.',
+     why:'Escribir en un índice que no existe también da IndexError.',
      fix:{q:'¿Cómo se arregla?', opts:['Cambiar `nums[3]` por `nums[2]`','Cambiar `nums[3]` por `nums[4]`','Cambiar `99` por `30`','Agregar `:` al final'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 8, 12]','print(10 not in nums)'), opts:['`True`','`False`','`10`','`IndexError`'], a:0,
      why:'`10 not in nums` pregunta si el 10 NO está. Como no está, devuelve `True`.'}
@@ -616,33 +567,33 @@ const LESSONS=[
   title:'Métodos de listas', sub:'append, sort y copias',
   week:2, weekName:'Colecciones',
   cards:[
-    {h:'Qué es un método', p:['Un **método** es una acción que la lista sabe hacer sobre sí misma. Se escribe `lista.accion()`: el nombre de la lista, un **punto**, y lo que querés hacer.','Casi todos los métodos de lista **cambian la lista original** en lugar de crear una nueva.'],
-     code:L('frutas = ["pera", "uva"]','frutas.append("kiwi")   # lista.acción(valor)','print(frutas)           # ["pera", "uva", "kiwi"]')},
-{h:'Agregar con append e insert', p:['`append(x)` suma `x` al final de la lista.','`insert(i, x)` mete `x` en la posición `i` y corre el resto un lugar a la derecha.'],
+    {h:'Qué es un método', p:['Un **método** es una acción que la lista sabe hacer sobre sí misma. Se escribe `lista.accion()`.','Casi todos los métodos de lista **cambian la lista original**.'],
+     code:L('frutas = ["pera", "uva"]','frutas.append("kiwi")','print(frutas)           # ["pera", "uva", "kiwi"]')},
+{h:'Agregar con append e insert', p:['`append(x)` suma `x` al final.','`insert(i, x)` mete `x` en la posición `i`.'],
      code:L('nums = [1, 2]','nums.append(3)','print(nums)  # [1, 2, 3]','nums.insert(1, 9)','print(nums)  # [1, 9, 2, 3]')},
-    {h:'Sacar con remove y pop', p:['`remove(x)` saca el primer elemento igual a `x`. Si `x` no está, da `ValueError`.','`pop()` saca y devuelve el último elemento. `pop(i)` saca el del índice `i`. En una lista vacía, `pop()` da `IndexError`.'],
-     code:L('nums = [1, 2, 3, 2]','nums.remove(2)','print(nums)  # [1, 3, 2]','ultimo = nums.pop()','print(ultimo)  # 2','print(nums)    # [1, 3]')},
-    {h:'sort, sorted, count e index', p:['`lista.sort()` ordena la lista en el lugar y no devuelve nada.','`sorted(lista)` devuelve una lista nueva ordenada, sin tocar la original.','`count(x)` cuenta cuántas veces aparece `x`. `index(x)` te dice en qué posición está la primera aparición.'],
-     code:L('nums = [3, 1, 2]','nums.sort()','print(nums)   # [1, 2, 3]','otra = sorted([3, 1, 2])','print(otra)   # [1, 2, 3]','print(nums.count(2))  # 1','print(nums.index(3))  # 2')},
-    {h:'Cuidado con las copias', p:['`b = a` NO copia la lista: `b` y `a` apuntan a la misma. Si cambiás una, cambia la otra.','`a.copy()` sí crea una lista nueva e independiente.'],
+    {h:'Sacar con remove y pop', p:['`remove(x)` saca el primer elemento igual a `x`.','`pop()` saca y devuelve el último. `pop(i)` saca el del índice `i`.'],
+     code:L('nums = [1, 2, 3, 2]','nums.remove(2)','print(nums)  # [1, 3, 2]','ultimo = nums.pop()','print(ultimo)  # 2')},
+    {h:'sort, sorted, count e index', p:['`lista.sort()` ordena en el lugar y no devuelve nada.','`sorted(lista)` devuelve una lista nueva ordenada, sin tocar la original.','`count(x)` cuenta cuántas veces aparece `x`. `index(x)` da la primera posición.'],
+     code:L('nums = [3, 1, 2]','nums.sort()','print(nums)   # [1, 2, 3]','otra = sorted([3, 1, 2])','print(nums.count(2))  # 1')},
+    {h:'Cuidado con las copias', p:['`b = a` NO copia la lista: `b` y `a` apuntan a la misma.','`a.copy()` sí crea una lista nueva e independiente.'],
      code:L('a = [1, 2]','b = a','b[0] = 99','print(a)   # [99, 2]','c = a.copy()','c[0] = 0','print(a)   # [99, 2]')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [4, 7]','nums.append(9)','print(nums)'), opts:['`[4, 7]`','`[4, 7, 9]`','`[9, 4, 7]`','`IndexError`'], a:1,
-     why:'`append` agrega al final. La lista original [4, 7] pasa a [4, 7, 9].'},
+     why:'`append` agrega al final.'},
     {t:'fill', q:'Completá para meter 2 en el medio.', code:L('nums = [1, 4]','nums.___(1, 2)','print(nums)   # [1, 2, 4]'), ans:['insert'], bank:['insert','append','add','push'],
-     why:'`insert(1, 2)` mete el 2 en la posición 1 y corre el 4 un lugar a la derecha.'},
+     why:'`insert(1, 2)` mete el 2 en la posición 1.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30]','nums.remove()','print(nums)'), line:1,
-     why:'`remove` necesita un argumento: el elemento a sacar. Sin argumento da TypeError.',
+     why:'`remove` necesita un argumento.',
      fix:{q:'¿Cómo se arregla?', opts:['Pasar el elemento: `nums.remove(20)`','Pasar dos valores: `nums.remove(20, 30)`','Cambiar `remove` por `delete`','Poner `nums.remove([])`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [2, 3, 1]','otra = sorted(nums)','print(nums)'), opts:['`[1, 2, 3]`','`[2, 3, 1]`','`None`','`IndexError`'], a:1,
-     why:'`sorted` devuelve una lista nueva y NO modifica la original. Por eso `nums` sigue igual.'},
+     why:'`sorted` devuelve una lista nueva y NO modifica la original.'},
     {t:'fill', q:'Completá para sacar y guardar el último.', code:L('nums = [7, 8, 9]','ultimo = nums.___()','print(ultimo)   # 9'), ans:['pop'], bank:['pop','remove','sort','last'],
-     why:'`pop()` saca el último elemento y lo devuelve. Con `remove(9)` también se saca, pero no se devuelve.'},
+     why:'`pop()` saca el último elemento y lo devuelve.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('a = [1, 2]','b = a.copy()','b[0] = 99','print(a)'), opts:['`[1, 2]`','`[99, 2]`','`[99, 1]`','`IndexError`'], a:0,
-     why:'`a.copy()` crea una lista nueva. Cambiar `b` no afecta a `a`, así que `a` sigue siendo [1, 2].'},
+     why:'`a.copy()` crea una lista nueva. Cambiar `b` no afecta a `a`.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = []','nums.pop()'), line:1,
-     why:'No se puede hacer `pop` en una lista vacía: no hay último elemento. Da IndexError.',
+     why:'No se puede hacer `pop` en una lista vacía.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar un elemento primero: `nums.append(1)`','Cambiar `pop` por `append`','Poner `nums.pop(0)`','Poner `nums.pop(1)`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 2, 3, 2]','print(nums.count(2))'), opts:['`1`','`2`','`3`','`5`'], a:2,
      why:'`count(2)` cuenta cuántas veces aparece el 2. Aparece 3 veces.'}
@@ -653,33 +604,33 @@ const LESSONS=[
   week:2, weekName:'Colecciones',
   cards:[
     {h:'Qué es cortar', p:['Un **corte** (slice) te da un **pedazo** de una lista, sin modificarla. Se escribe con dos números separados por `:` entre corchetes.','Ayuda imaginar que los índices están **entre** los elementos: `[1:3]` arranca antes del índice 1 y corta antes del 3.'],
-     code:L('# valores:   10   20   30   40   50','# índices:    0    1    2    3    4','','nums = [10, 20, 30, 40, 50]','print(nums[1:3])   # [20, 30]','print(nums)        # sigue igual: [10, 20, 30, 40, 50]')},
-{h:'Cortar con lista[a:b]', p:['`lista[a:b]` devuelve los elementos desde `a` hasta antes de `b`. El final no se incluye, igual que en `range`.','Si `a` es 1 y `b` es 3, devuelve los índices 1 y 2, no el 3.','Para cortar se usan dos puntos. Con una coma (`nums[1, 3]`) o con un `range` Python da `TypeError`: un índice tiene que ser un número entero o un corte `a:b`.'],
+     code:L('nums = [10, 20, 30, 40, 50]','print(nums[1:3])   # [20, 30]','print(nums)        # sigue igual')},
+{h:'Cortar con lista[a:b]', p:['`lista[a:b]` devuelve los elementos desde `a` hasta antes de `b`. El final no se incluye.','Para cortar se usan dos puntos. Con coma (`nums[1, 3]`) Python da `TypeError`.'],
      code:L('nums = [10, 20, 30, 40, 50]','print(nums[1:3])  # [20, 30]','print(nums[0:2])  # [10, 20]','print(nums[2:4])  # [30, 40]')},
-    {h:'Omitir extremos y paso', p:['Si omitís el principio `nums[:3]`, arranca desde 0. Si omitís el final `nums[2:]`, llega hasta el final.','Un tercer número es el paso: `nums[::2]` toma uno sí y uno no. `nums[::-1]` recorre al revés.','Los negativos también sirven en un corte: `nums[-2:]` toma los dos últimos.'],
+    {h:'Omitir extremos y paso', p:['`nums[:3]` arranca desde 0. `nums[2:]` llega hasta el final.','Un tercer número es el paso. `nums[::2]` toma uno sí y uno no. `nums[::-1]` recorre al revés.'],
      code:L('nums = [1, 2, 3, 4]','print(nums[:2])   # [1, 2]','print(nums[2:])   # [3, 4]','print(nums[::2])  # [1, 3]','print(nums[::-1]) # [4, 3, 2, 1]','print(nums[-2:])  # [3, 4]')},
     {h:'Slicing también con texto', p:['Como un texto también es una secuencia, se puede cortar igual que una lista.'],
      code:L('s = "python"','print(s[0:2])   # py','print(s[2:])    # thon','print(s[::-1])  # nohtyp')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [10, 20, 30, 40]','print(nums[1:3])'), opts:['`[10, 20]`','`[20, 30]`','`[20, 30, 40]`','`[10, 20, 30]`'], a:1,
-     why:'El slice devuelve los índices 1 y 2. El índice 3 queda afuera porque el final no se incluye.'},
+     why:'El slice devuelve los índices 1 y 2. El índice 3 queda afuera.'},
     {t:'fill', q:'Completá para que se imprima [7, 8].', code:L('nums = [5, 6, 7, 8]','print(nums[___:])   # [7, 8]'), ans:['2'], bank:['2','1','3','-1'],
-     why:'El 7 está en el índice 2. Como no ponés final, llega hasta el último elemento.'},
+     why:'El 7 está en el índice 2.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4, 5, 6]','print(nums[::2])'), opts:['`[1, 2, 3]`','`[1, 3, 5]`','`[2, 4, 6]`','`[1, 2]`'], a:1,
-     why:'El paso 2 agarra uno sí y uno no, empezando por el índice 0: 1, 3, 5.'},
+     why:'El paso 2 agarra uno sí y uno no: 1, 3, 5.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [10, 20, 30, 40]','print(nums[1, 3])'), line:1,
-     why:'El corte se escribe con dos puntos, no con coma. Con coma Python no lo reconoce como corte y da TypeError.',
+     why:'El corte se escribe con dos puntos, no con coma.',
      fix:{q:'¿Cómo se arregla?', opts:['Cambiar `nums[1, 3]` por `nums[1:3]`','Cambiar `nums[1, 3]` por `nums[1, 3, 4]`','Cambiar `print` por `nums`','Agregar `:` al final'], a:0}},
     {t:'fill', q:'Completá para que salga "ol".', code:L('s = "hola"','print(s[___])   # ol'), ans:['1:3'], bank:['1:3','0:2','1:2','2:4'],
-     why:'El slice 1:3 toma los índices 1 y 2, que son la "o" y la "l".'},
+     why:'El slice 1:3 toma los índices 1 y 2.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3]','print(nums[::-1])'), opts:['`[1, 2, 3]`','`[3, 2, 1]`','`[3]`','`IndexError`'], a:1,
-     why:'El paso -1 recorre al revés, así que invierte la lista.'},
+     why:'El paso -1 recorre al revés.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3, 4]','print(nums[range(1, 3)])'), line:1,
-     why:'`nums[range(1, 3)]` usa un `range` como índice. Eso da TypeError: un índice tiene que ser un entero o un corte `a:b`.',
+     why:'`range` como índice da TypeError. Un índice tiene que ser un entero o un corte `a:b`.',
      fix:{q:'¿Cómo se arregla?', opts:['Cambiar `range(1, 3)` por `1:3`','Cambiar `range(1, 3)` por `range(1, 4)`','Poner `list(range(1, 3))`','Cambiar `print` por `range`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4, 5]','print(nums[-2:])'), opts:['`[4, 5]`','`[3, 4, 5]`','`[2, 3, 4, 5]`','`[5]`'], a:0,
-     why:'Los índices negativos cuentan desde el final. `-2` es el 4, y al no poner final llega hasta el 5.'}
+     why:'Los índices negativos cuentan desde el final. `-2` es el 4.'}
   ]
 },
 {
@@ -688,31 +639,31 @@ const LESSONS=[
   cards:[
     {h:'Recorrer una lista', p:['`for` recorre los elementos de la lista uno por uno. La variable del `for` (acá `n`) toma cada valor.'],
      code:L('nums = [10, 20, 30]','for n in nums:','    print(n)')},
-    {h:'Vuelta por vuelta con una lista', p:['Cuando el `for` recorre una lista, la variable toma **un elemento por vuelta**, en orden, igual que con `range` pero con los valores de la lista.','Siempre podés seguirlo a mano anotando cuánto vale la variable en cada vuelta.'],
-     code:L('precios = [10, 25, 8]','total = 0','for p in precios:','    total += p','print(total)   # 43','','# p vale 10 → total = 0 + 10 = 10','# p vale 25 → total = 10 + 25 = 35','# p vale 8  → total = 35 + 8 = 43')},
-{h:'enumerate: índice y valor', p:['`enumerate(lista)` devuelve pares `(índice, elemento)` en cada vuelta.','Se usa con dos variables en el `for`: la primera recibe el índice, la segunda el elemento.','Sin `enumerate`, el `for` da un solo valor por vuelta: no se puede usar con dos variables.'],
+    {h:'Vuelta por vuelta con una lista', p:['Cuando el `for` recorre una lista, la variable toma **un elemento por vuelta**, en orden.'],
+     code:L('precios = [10, 25, 8]','total = 0','for p in precios:','    total += p','print(total)   # 43')},
+{h:'enumerate: índice y valor', p:['`enumerate(lista)` devuelve pares `(índice, elemento)` en cada vuelta.','Se usa con dos variables en el `for`.'],
      code:L('nums = ["a", "b", "c"]','for i, x in enumerate(nums):','    print(i, x)   # 0 a, 1 b, 2 c')},
-    {h:'sum, min y max', p:['`sum(lista)` suma todos los números. `min(lista)` da el menor y `max(lista)` el mayor.'],
+    {h:'sum, min y max', p:['`sum(lista)` suma todos los números. `min` da el menor y `max` el mayor.'],
      code:L('nums = [4, 1, 7]','print(sum(nums))  # 12','print(min(nums))  # 1','print(max(nums))  # 7')},
-    {h:'Acumular con range(len)', p:['Otra forma de recorrer: `for i in range(len(lista))` te da los índices, y adentro accedés con `lista[i]`.','Un patrón muy común: arrancar una variable en 0 y sumarle algo en cada vuelta con `+=`.'],
+    {h:'Acumular con range(len)', p:['`for i in range(len(lista))` te da los índices. Adentro accedés con `lista[i]`.'],
      code:L('nums = [10, 20, 30]','total = 0','for i in range(len(nums)):','    total += nums[i]','print(total)   # 60')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [5, 6, 7]','for n in nums:','    print(n)'), opts:['`5, 6, 7`','`0, 1, 2`','`1, 2, 3`','`[5, 6, 7]`'], a:0,
-     why:'`for n in nums` recorre los valores de la lista, no los índices. Por eso imprime 5, 6 y 7.'},
+     why:'`for n in nums` recorre los valores, no los índices.'},
     {t:'fill', q:'Completá para sumar la lista.', code:L('nums = [3, 4, 5]','print(___(nums))   # 12'), ans:['sum'], bank:['sum','len','max','total'],
-     why:'`sum` suma todos los números de la lista. `len` cuenta cuántos hay, no los suma.'},
+     why:'`sum` suma todos los números.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [8, 2, 5]','print(max(nums))'), opts:['`2`','`5`','`8`','`[8, 2, 5]`'], a:2,
-     why:'`max` devuelve el mayor. El mayor de 8, 2 y 5 es 8.'},
+     why:'`max` devuelve el mayor. El mayor es 8.'},
     {t:'fill', q:'Completá el acumulador.', code:L('nums = [2, 3, 4]','total = 0','for n in nums:','    total ___ n','print(total)   # 9'), ans:['+='], bank:['+=','=','==','-='],
-     why:'`+=` suma `n` a lo que ya hay en `total`. Al final: 0 + 2 + 3 + 4 = 9.'},
+     why:'`+=` suma `n` a lo que ya hay en `total`.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = ["a", "b"]','for i, x in nums:','    print(i, x)'), line:1,
-     why:'Un `for` común da un solo valor por vuelta, no dos. Para tener el índice y el elemento hace falta `enumerate`. Si no, Python da ValueError.',
+     why:'Un `for` común da un solo valor por vuelta, no dos. Para índice y elemento hace falta `enumerate`.',
      fix:{q:'¿Cómo se arregla?', opts:['Usar `enumerate(nums)`','Usar `range(nums)`','Poner `nums.items()`','Agregar `, i`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('letras = ["x", "y"]','for i, l in enumerate(letras):','    print(i, l)'), opts:['`x, y`','`0 x, 1 y`','`1 x, 2 y`','`0, 1`'], a:1,
-     why:'`enumerate` da el índice y el elemento. Cada vuelta imprime el índice (0, 1) junto al valor.'},
+     why:'`enumerate` da el índice y el elemento.'},
     {t:'bug', q:'Tocá la línea donde salta el error.', code:L('nums = [10, 20, 30]','for i in range(4):','    print(nums[i])'), line:2,
-     why:'`range(4)` genera 0, 1, 2 y 3. Cuando `i` vale 3, `nums[3]` no existe y da IndexError.',
+     why:'`range(4)` genera 0, 1, 2 y 3. Cuando `i` vale 3, `nums[3]` no existe.',
      fix:{q:'¿Cómo se arregla?', opts:['Cambiar `range(4)` por `range(len(nums))`','Cambiar `range(4)` por `range(5)`','Quitar el `print`','Agregar `enumerate`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [3, 4, 5]','print(sum(nums))'), opts:['`3`','`12`','`60`','`[3, 4, 5]`'], a:1,
      why:'`sum` suma los tres números: 3 + 4 + 5 = 12.'}
@@ -722,97 +673,97 @@ const LESSONS=[
   title:'Tuplas', sub:'Inmutables y desempaquetado',
   week:2, weekName:'Colecciones',
   cards:[
-    {h:'Tuplas: como listas pero fijas', p:['Una tupla se escribe entre paréntesis. Se indexa igual que una lista: `[0]`, `[-1]`, `len()`.','A diferencia de una lista, no se puede modificar: no existe `tupla[0] = 9`.'],
+    {h:'Tuplas: como listas pero fijas', p:['Una tupla se escribe entre paréntesis. Se indexa igual que una lista.','A diferencia de una lista, no se puede modificar.'],
      code:L('punto = (3, 5)','print(punto[0])  # 3','print(punto[1])  # 5','print(len(punto))  # 2')},
-    {h:'No se puede modificar', p:['Intentar cambiar un elemento de una tupla da `TypeError`. Para tener algo modificable, usá una lista.','Si los valores no tienen que cambiar (como una coordenada), una tupla deja claro que son fijos.'],
+    {h:'No se puede modificar', p:['Intentar cambiar un elemento de una tupla da `TypeError`.'],
      code:L('punto = (3, 5)','punto[0] = 9','# TypeError')},
-    {h:'Desempaquetar', p:['Podés asignar los valores de una tupla a varias variables en una sola línea.','La cantidad de variables tiene que coincidir con la cantidad de elementos. Si no, da `ValueError`.'],
+    {h:'Desempaquetar', p:['Podés asignar los valores de una tupla a varias variables en una sola línea.','La cantidad de variables tiene que coincidir con la cantidad de elementos.'],
      code:L('punto = (3, 5)','x, y = punto','print(x)   # 3','print(y)   # 5')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('punto = (7, 2, 9)','print(punto[1])'), opts:['`7`','`2`','`9`','`(7, 2, 9)`'], a:1,
-     why:'La tupla se indexa como cualquier secuencia: el índice 1 es el segundo elemento, o sea 2.'},
+     why:'El índice 1 es el segundo elemento, o sea 2.'},
     {t:'fill', q:'Completá para desempaquetar la tupla.', code:L('punto = (2, 5)','x, y = ___','print(x)   # 2'), ans:['punto'], bank:['punto','x','y','x, y'],
-     why:'Desempaquetar es asignar los dos valores de la tupla a dos variables. La fuente es la tupla `punto`.'},
+     why:'Desempaquetar es asignar los dos valores de la tupla a dos variables.'},
     {t:'quiz', q:'¿Qué pasa?', code:L('punto = (3, 5)','punto[0] = 9'), opts:['`punto` cambia a `(9, 5)`','Lanza `TypeError`','Lanza `IndexError`','Se crea una tupla nueva'], a:1,
-     why:'Las tuplas son inmutables. Intentar modificar un elemento lanza TypeError, no IndexError.'},
+     why:'Las tuplas son inmutables.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('punto = (1, 2)','punto[0] = 99'), line:1,
-     why:'No se puede reasignar un elemento de una tupla. Da TypeError porque la tupla es inmutable.',
+     why:'No se puede reasignar un elemento de una tupla.',
      fix:{q:'¿Cómo se arregla?', opts:['Crear una tupla nueva: `punto = (99, 2)`','Cambiar por `punto[0] == 99`','Agregar `:` al final','Usar `punto.append(99)`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('a, b = (10, 20)','print(a)'), opts:['`10`','`20`','`(10, 20)`','`IndexError`'], a:0,
-     why:'Al desempaquetar, `a` recibe el primer valor (10) y `b` el segundo (20).'},
+     why:'Al desempaquetar, `a` recibe el primer valor (10).'},
     {t:'fill', q:'Completá para que se imprima 6.', code:L('punto = (4, 6, 8)','print(punto[___])   # 6'), ans:['1'], bank:['0','1','2','3'],
-     why:'El 6 está en el índice 1, porque se cuenta desde 0.'},
+     why:'El 6 está en el índice 1.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('par = (1, 2, 3)','a, b = par','print(a, b)'), line:1,
-     why:'La tupla tiene 3 valores, pero solo hay 2 variables. Python no sabe qué hacer con el tercero y da ValueError.',
+     why:'La tupla tiene 3 valores, pero solo hay 2 variables.',
      fix:{q:'¿Cómo se arregla?', opts:['Desempaquetar los tres: `a, b, c = par`','Cambiar `par` por `(1, 2, 3, 4)`','Agregar `:` al final','Poner `a, b = (1, 2, 3)`'], a:0}},
     {t:'quiz', q:'¿Cuál conviene para guardar coordenadas (x, y) que no cambian?', opts:['Una lista porque es más flexible','Una tupla porque no se modifica','Un diccionario porque tiene claves','Un texto porque es inmutable'], a:1,
-     why:'Si los valores no tienen que cambiar, una tupla deja esa intención clara y evita modificaciones accidentales.'}
+     why:'Si los valores no tienen que cambiar, una tupla deja esa intención clara.'}
   ]
 },
 {
   title:'Diccionarios', sub:'Clave:valor',
   week:2, weekName:'Colecciones',
   cards:[
-    {h:'Buscar por nombre, no por posición', p:['En una lista buscás por **posición** (`lista[0]`). Pero a veces querés buscar por **nombre**: la edad de Ana, el precio de la pera. Para eso sirve un **diccionario**, como una agenda de contactos.','Cada entrada tiene una **clave** (lo que buscás) y un **valor** (lo que obtenés).'],
-     code:L('# con lista: hay que recordar en qué posición estaba Ana','edades = [30, 25]','','# con diccionario: se pide directo por el nombre','edades = {"Ana": 30, "Luis": 25}','print(edades["Luis"])   # 25')},
-{h:'Clave:valor', p:['Un diccionario guarda pares clave:valor entre llaves. La clave va antes de los dos puntos y el valor después.','Para acceder a un valor se usa la clave entre corchetes. `len()` cuenta cuántos pares hay.'],
+    {h:'Buscar por nombre, no por posición', p:['En una lista buscás por **posición**. Un **diccionario** te deja buscar por **nombre**.','Cada entrada tiene una **clave** (lo que buscás) y un **valor** (lo que obtenés).'],
+     code:L('edades = {"Ana": 30, "Luis": 25}','print(edades["Luis"])   # 25')},
+{h:'Clave:valor', p:['Un diccionario guarda pares clave:valor entre llaves.','Para acceder a un valor se usa la clave entre corchetes. `len()` cuenta cuántos pares hay.'],
      code:L('edad = {"Ana": 30, "Luis": 25}','print(edad["Ana"])   # 30','print(len(edad))     # 2')},
-    {h:'KeyError y get', p:['Si pedís una clave que no existe, Python lanza `KeyError`.','`.get(clave)` devuelve `None` si no existe (no rompe). `.get(clave, defecto)` devuelve el defecto.'],
+    {h:'KeyError y get', p:['Si pedís una clave que no existe, Python lanza `KeyError`.','`.get(clave)` devuelve `None` si no existe. `.get(clave, defecto)` devuelve el defecto.'],
      code:L('edad = {"Ana": 30}','print(edad["Luis"])  # KeyError','print(edad.get("Luis"))   # None','print(edad.get("Luis", 0))  # 0')},
     {h:'Agregar, modificar, borrar', p:['Asignar a una clave que ya existe modifica su valor. Si no existe, la agrega.','`pop(clave)` borra la clave y devuelve su valor.'],
-     code:L('d = {"a": 1}','d["b"] = 2       # agregar','d["a"] = 10      # modificar','d.pop("b")       # borrar','print(d)   # {\'a\': 10}')},
-    {h:'Recorrer un diccionario', p:['`for k in d` recorre solo las claves. `.keys()` también. `.values()` recorre los valores.','`.items()` devuelve pares (clave, valor), ideal para `for k, v in d.items():`.','`in` sobre un diccionario pregunta por las claves, no por los valores.'],
+     code:L('d = {"a": 1}','d["b"] = 2       # agregar','d["a"] = 10      # modificar','d.pop("b")       # borrar','print(d)')},
+    {h:'Recorrer un diccionario', p:['`for k in d` recorre las claves. `.values()` recorre los valores.','`.items()` devuelve pares (clave, valor).','`in` sobre un diccionario pregunta por las claves.'],
      code:L('d = {"a": 1, "b": 2}','for k in d:','    print(k)   # a, b','for k, v in d.items():','    print(k, v)')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('d = {"x": 10, "y": 20}','print(d["y"])'), opts:['`10`','`20`','`"y"`','`KeyError`'], a:1,
-     why:'`d["y"]` busca la clave "y" y devuelve su valor: 20.'},
+     why:'`d["y"]` busca la clave "y" y devuelve 20.'},
     {t:'fill', q:'Completá para no romper si la clave no existe.', code:L('d = {"x": 10}','print(d.___("y", 0))   # 0'), ans:['get'], bank:['get','keys','find','value'],
-     why:'`.get(clave, defecto)` devuelve el defecto si la clave no está. Con corchetes daría KeyError.'},
+     why:'`.get(clave, defecto)` devuelve el defecto si la clave no está.'},
     {t:'quiz', q:'¿Qué pasa?', code:L('d = {"a": 1}','print(d["b"])'), opts:['Imprime `1`','Imprime `None`','Lanza `KeyError`','Imprime `0`'], a:2,
-     why:'La clave "b" no existe. Con corchetes, Python lanza KeyError. Para evitar eso se usa `.get()`.'},
-    {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d)   # {\'a\': 1, \'b\': 2}'), ans:['"b"'], bank:['"b"','"a"','b','2'],
-     why:'La clave va entre comillas porque es un texto. Sin comillas, Python busca una variable llamada `b` y da NameError.'},
+     why:'La clave "b" no existe. Con corchetes, Python lanza KeyError.'},
+    {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d)'), ans:['"b"'], bank:['"b"','"a"','b','2'],
+     why:'La clave va entre comillas porque es un texto.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2, "c": 3}','print(len(d))'), opts:['`1`','`3`','`6`','`9`'], a:1,
-     why:'`len` de un diccionario cuenta los pares clave:valor. Hay 3: a, b y c.'},
+     why:'Hay 3 pares clave:valor.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('d = {"Ana": 30}','print(d["Luis"])'), line:1,
-     why:'La clave "Luis" no está en el diccionario. Con corchetes, eso lanza KeyError.',
+     why:'La clave "Luis" no está en el diccionario.',
      fix:{q:'¿Cómo se arregla?', opts:['Usar `d.get("Luis", 0)`','Usar `d["luis"]`','Usar `d[0]`','Poner `d.append("Luis")`'], a:0}},
     {t:'bug', q:'Tocá la línea con el error.', code:L('d = {"a": 1, "b": 2}','for k, v in d:','    print(k, v)'), line:1,
-     why:'Recorrer un diccionario directamente da solo las claves. Al intentar desempaquetar una clave en dos variables, da ValueError.',
+     why:'Recorrer un diccionario directamente da solo las claves.',
      fix:{q:'¿Cómo se arregla?', opts:['Usar `d.items()` en el for','Usar `d.keys()` en el for','Usar `d.values()` en el for','Usar `range(d)` en el for'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2}','print("a" in d)'), opts:['`True`','`False`','`1`','`KeyError`'], a:0,
-     why:'`in` sobre un diccionario busca en las claves. "a" es una clave, así que da True.'}
+     why:'`in` sobre un diccionario busca en las claves. "a" es una clave.'}
   ]
 },
 {
   title:'Sets', sub:'Únicos y sin orden',
   week:2, weekName:'Colecciones',
   cards:[
-    {h:'¿Para qué sirve un set?', p:['Un **set** es una colección donde **cada elemento aparece una sola vez**. Es ideal para quitar repetidos o para preguntar rápido "¿está esto acá?".','Si intentás meter un valor que ya está, Python simplemente lo ignora.'],
+    {h:'¿Para qué sirve un set?', p:['Un **set** es una colección donde **cada elemento aparece una sola vez**.','Si intentás meter un valor que ya está, Python lo ignora.'],
      code:L('visitas = {"Ana", "Luis", "Ana"}','print(visitas)   # Ana aparece una sola vez')},
-{h:'Conjuntos: sin duplicados', p:['Un set se escribe entre llaves, como un diccionario sin valores. No tiene orden ni índices: no podés hacer `s[0]`.','`len()` cuenta cuántos elementos hay. `in` pregunta si un elemento está.'],
+{h:'Conjuntos: sin duplicados', p:['Un set se escribe entre llaves. No tiene orden ni índices: no podés hacer `s[0]`.','`len()` cuenta cuántos elementos hay. `in` pregunta si un elemento está.'],
      code:L('s = {1, 2, 3}','print(len(s))   # 3','print(2 in s)   # True','print(s[0])     # TypeError')},
-    {h:'set(lista) quita repetidos', p:['Pasar una lista a `set()` devuelve un conjunto sin los elementos repetidos.','Ojo: como no tiene orden, el resultado puede aparecer en cualquier orden.'],
+    {h:'set(lista) quita repetidos', p:['Pasar una lista a `set()` devuelve un conjunto sin los elementos repetidos.'],
      code:L('nums = [1, 2, 2, 3, 3, 3]','unicos = set(nums)','print(unicos)   # {1, 2, 3}','print(len(unicos))  # 3')},
-    {h:'Operaciones de conjuntos', p:['`.add(x)` agrega. `.remove(x)` saca (y da `KeyError` si `x` no está).','`a | b` es la unión (todo junto). `a & b` es la intersección (lo que está en los dos). `a - b` es lo que está en `a` pero no en `b`.'],
+    {h:'Operaciones de conjuntos', p:['`.add(x)` agrega. `.remove(x)` saca.','`a | b` es la unión. `a & b` es la intersección. `a - b` es lo que está en `a` pero no en `b`.'],
      code:L('s = {1, 2}','s.add(3)','s.remove(1)','print(s)   # {2, 3}','a = {1, 2, 3}','b = {2, 3, 4}','print(a | b)   # {1, 2, 3, 4}','print(a & b)   # {2, 3}','print(a - b)   # {1}')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 2, 3]','print(len(set(nums)))'), opts:['`2`','`3`','`4`','`6`'], a:1,
-     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}. `len` cuenta 3 elementos.'},
+     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}.'},
     {t:'fill', q:'Completá para agregar el 3.', code:L('s = {1, 2}','s.___(3)','print(len(s))   # 3'), ans:['add'], bank:['add','append','insert','push'],
-     why:'En un set se agrega con `.add()`. `append` es de listas, no de sets.'},
+     why:'En un set se agrega con `.add()`.'},
     {t:'quiz', q:'¿Qué pasa?', code:L('s = {1, 2, 3}','print(s[0])'), opts:['Imprime `1`','Imprime `{1}`','Lanza `TypeError`','Lanza `IndexError`'], a:2,
-     why:'Los sets no tienen índices. Intentar indexarlos con corchetes lanza TypeError.'},
+     why:'Los sets no tienen índices.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('s = {10, 20, 30}','print(s[1])'), line:1,
-     why:'Los sets no se indexan. `s[1]` da TypeError porque los sets no tienen orden ni posiciones.',
+     why:'Los sets no se indexan.',
      fix:{q:'¿Cómo se arregla?', opts:['Recorrerlo con `for x in s:` en vez de usar un índice','Agregar `:` al final','Cambiar `set` por `dict`','Usar `s.get(1)`'], a:0}},
     {t:'fill', q:'Completá para que quede la intersección.', code:L('a = {1, 2, 3}','b = {2, 3, 4}','print(a ___ b)   # {2, 3}'), ans:['&'], bank:['&','|','-','+'],
-     why:'`&` da la intersección: los elementos que están en los dos conjuntos. Acá son 2 y 3.'},
+     why:'`&` da la intersección.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('a = {1, 2}','b = {2, 3}','print(a | b)'), opts:['`{1, 2}`','`{2}`','`{1, 2, 3}`','`{1, 3}`'], a:2,
-     why:'`|` es la unión: todo lo que está en `a` o en `b`, sin repetir. Queda {1, 2, 3}.'},
+     why:'`|` es la unión. Queda {1, 2, 3}.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('s = {1, 2}','s.remove(5)'), line:1,
      why:'`remove(5)` sobre un set que no tiene el 5 da KeyError.',
      fix:{q:'¿Cómo se arregla?', opts:['Verificar antes con `if 5 in s:` o quitar la línea','Cambiar `5` por `10`','Poner `s.pop(5)`','Agregar `:` al final'], a:0}},
@@ -824,33 +775,33 @@ const LESSONS=[
   title:'Comprensiones', sub:'Listas en una línea',
   week:2, weekName:'Colecciones',
   cards:[
-    {h:'Una lista armada en una línea', p:['Una comprensión de lista crea una lista nueva aplicando una operación a cada elemento de otra lista.','Se escribe entre corchetes: primero la operación, después el `for`.'],
+    {h:'Una lista armada en una línea', p:['Una comprensión de lista crea una lista nueva aplicando una operación a cada elemento.','Se escribe entre corchetes: primero la operación, después el `for`.'],
      code:L('nums = [1, 2, 3, 4]','doble = [n * 2 for n in nums]','print(doble)   # [2, 4, 6, 8]')},
-    {h:'Cómo leer una comprensión', p:['Se lee en voz alta: `[n ** 2 for n in nums]` quiere decir **"n al cuadrado, para cada n en nums"**. Lo que va **al principio** es lo que se guarda en la lista nueva, y el `for` dice de dónde salen los elementos.','La lista original **no se modifica**: se arma una lista nueva aparte.'],
-     code:L('nums = [1, 2, 3]','cuad = [n ** 2 for n in nums]','','# n vale 1 → guarda 1 ** 2 = 1','# n vale 2 → guarda 2 ** 2 = 4','# n vale 3 → guarda 3 ** 2 = 9','print(cuad)   # [1, 4, 9]')},
-{h:'Equivale a for + append', p:['La comprensión hace lo mismo que un `for` que arma una lista con `append`, pero en una línea.','Para casos simples, la comprensión es más corta y clara.'],
+    {h:'Cómo leer una comprensión', p:['`[n ** 2 for n in nums]` quiere decir **"n al cuadrado, para cada n en nums"**.','La lista original **no se modifica**.'],
+     code:L('nums = [1, 2, 3]','cuad = [n ** 2 for n in nums]','print(cuad)   # [1, 4, 9]')},
+{h:'Equivale a for + append', p:['La comprensión hace lo mismo que un `for` que arma una lista con `append`, pero en una línea.'],
      code:L('nums = [1, 2, 3, 4]','doble = []','for n in nums:','    doble.append(n * 2)','print(doble)   # [2, 4, 6, 8]')},
-    {h:'Filtrar con if', p:['Podés agregar un `if` al final para quedarte solo con los elementos que cumplan la condición.','El `if` filtra: los elementos que no cumplen no entran a la lista nueva.'],
+    {h:'Filtrar con if', p:['Podés agregar un `if` al final para quedarte solo con los elementos que cumplan la condición.'],
      code:L('a = [1, 2, 3, 4]','p = [n for n in a if n % 2 == 0]','print(p)   # [2, 4]')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3]','print([n * 10 for n in nums])'), opts:['`[1, 2, 3]`','`[10, 20, 30]`','`[10, 2, 3]`','`[1, 10, 100]`'], a:1,
-     why:'La comprensión multiplica cada elemento por 10: 1*10, 2*10, 3*10 = 10, 20, 30.'},
+     why:'Multiplica cada elemento por 10: 10, 20, 30.'},
     {t:'fill', q:'Completá la comprensión.', code:L('nums = [1, 2, 3]','doble = [n * 2 ___ n in nums]','print(doble)   # [2, 4, 6]'), ans:['for'], bank:['for','in','if','while'],
-     why:'Toda comprensión lleva un `for` que recorre la lista. Después viene `in` y el nombre de la lista.'},
+     why:'Toda comprensión lleva un `for` que recorre la lista.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 2, 3, 4]','print([n for n in nums if n > 2])'), opts:['`[1, 2]`','`[3, 4]`','`[1, 2, 3, 4]`','`[2, 3, 4]`'], a:1,
-     why:'El `if n > 2` filtra: solo entran los que son mayores a 2, o sea el 3 y el 4.'},
+     why:'El `if n > 2` deja pasar solo 3 y 4.'},
     {t:'fill', q:'Completá para dejar solo los menores a 3.', code:L('a = [1, 2, 3, 4]','p = [n for n in a ___ n < 3]','print(p)   # [1, 2]'), ans:['if'], bank:['if','for','while','in'],
-     why:'El `if` es lo que filtra. Sin él, la comprensión incluiría todos los números.'},
+     why:'El `if` es lo que filtra.'},
     {t:'quiz', q:'¿Qué comprensión hace lo mismo?', code:L('nums = [1, 2, 3]','resultado = []','for n in nums:','    resultado.append(n + 1)','print(resultado)'), opts:['`[n for n in nums]`','`[n + 1 for n in nums]`','`[nums + 1 for n in nums]`','`[n + 1 if n in nums]`'], a:1,
-     why:'El `for` original suma 1 a cada elemento. La comprensión equivalente también suma 1 a cada uno.'},
+     why:'Suma 1 a cada elemento.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','doble = [n * 2 for n nums]','print(doble)'), line:1,
-     why:'Falta el `in` después de la variable del for. Sin `in`, Python no puede saber de dónde sacar los valores.',
+     why:'Falta el `in` después de la variable del for.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `in` antes de `nums`','Agregar `if` antes de `nums`','Cambiar `for` por `in`','Agregar paréntesis alrededor'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('a = [5, 6, 7, 8]','print([x for x in a if x > 6])'), opts:['`[5, 6]`','`[7, 8]`','`[6, 7, 8]`','`[5, 6, 7, 8]`'], a:1,
      why:'El filtro `x > 6` deja pasar solo 7 y 8.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','doble = n * 2 for n in nums','print(doble)'), line:1,
-     why:'Una comprensión necesita corchetes. Sin ellos, la sintaxis del `for` suelto no es válida y Python tira SyntaxError.',
+     why:'Una comprensión necesita corchetes.',
      fix:{q:'¿Cómo se arregla?', opts:['Envolver entre corchetes: `[n * 2 for n in nums]`','Cambiar `for` por `if`','Agregar `:` al final','Poner `print` adelante'], a:0}}
   ]
 },
@@ -862,22 +813,22 @@ const LESSONS=[
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [10, 20, 30]','nums.append(40)','print(nums[-1])'), opts:['`10`','`30`','`40`','`IndexError`'], a:2,
-     why:'`append(40)` agrega el 40 al final. `nums[-1]` devuelve el último, que ahora es 40.'},
+     why:'`append(40)` agrega el 40 al final. `nums[-1]` devuelve el último, que es 40.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('d = {"a": 1, "b": 2}','print(d.get("c", 0))'), opts:['`None`','`0`','`KeyError`','`2`'], a:1,
-     why:'La clave "c" no está. `.get` con defecto devuelve el 0 en vez de romper.'},
+     why:'La clave "c" no está. `.get` con defecto devuelve 0.'},
     {t:'fill', q:'Completá para cortar del 3 al 4.', code:L('nums = [1, 2, 3, 4, 5]','print(nums[___])   # [3, 4]'), ans:['2:4'], bank:['2:4','1:3','2:3','3:5'],
-     why:'El 3 está en el índice 2 y el 4 en el 3. Con `2:4` entran los índices 2 y 3, o sea [3, 4].'},
+     why:'El 3 está en el índice 2 y el 4 en el 3. Con `2:4` entran [3, 4].'},
     {t:'quiz', q:'¿Qué imprime?', code:L('nums = [1, 1, 2, 3, 3]','print(len(set(nums)))'), opts:['`2`','`3`','`5`','`1`'], a:1,
-     why:'`set(nums)` quita los repetidos y deja {1, 2, 3}. `len` cuenta 3.'},
+     why:'`set(nums)` deja {1, 2, 3}. `len` cuenta 3.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('punto = (3, 5)','punto[0] = 9'), line:1,
-     why:'Las tuplas son inmutables. Asignar a un índice lanza TypeError.',
+     why:'Las tuplas son inmutables.',
      fix:{q:'¿Cómo se arregla?', opts:['Crear una tupla nueva: `punto = (9, 5)`','Cambiar por `punto[0] == 9`','Agregar `:` al final','Usar `punto.append(9)`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:L('a = [1, 2, 3, 4]','b = [n * 2 for n in a if n > 2]','print(b)'), opts:['`[2, 4, 6, 8]`','`[6, 8]`','`[4, 6, 8]`','`[2, 4]`'], a:1,
-     why:'El `if n > 2` filtra a [3, 4]. Después el `* 2` los transforma en [6, 8].'},
+     why:'El `if n > 2` filtra a [3, 4]. El `* 2` los transforma en [6, 8].'},
     {t:'fill', q:'Completá para agregar la clave "b".', code:L('d = {"a": 1}','d[___] = 2','print(d["b"])   # 2'), ans:['"b"'], bank:['"b"','b','2','"a"'],
-     why:'Sin comillas, Python busca una variable llamada `b` y da NameError. Con `"b"` se agrega una clave nueva.'},
+     why:'La clave va entre comillas porque es un texto.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('nums = [1, 2, 3]','nums.remove(2, 1)'), line:1,
-     why:'`remove` toma un solo argumento. Pasarle dos da TypeError.',
+     why:'`remove` toma un solo argumento.',
      fix:{q:'¿Cómo se arregla?', opts:['Quitar el `, 1`','Cambiar por `pop(2, 1)`','Agregar `:` al final','Cambiar `remove` por `delete`'], a:0}}
   ]
 },
@@ -885,80 +836,80 @@ const LESSONS=[
   week:3, weekName:'Funciones',
   title:'Tu primera función', sub:'def y cómo llamarla',
   cards:[
-    {h:'Por qué existen las funciones', p:['Imaginá que querés mostrar el mismo saludo en tres lugares del programa. Podés copiar el código tres veces, pero si después lo querés cambiar, tenés que cambiarlo tres veces.','Una **función** es un bloque de código con nombre. Lo escribís **una sola vez** y lo usás cuando quieras. Ya usaste funciones hechas por otros: `print()`, `len()`, `input()`. Ahora vas a escribir las tuyas.'],
-     code:L('# sin función: todo repetido','print("Hola, bienvenido")','print("Hola, bienvenido")','print("Hola, bienvenido")','','# con función: escrito una vez','saludar()','saludar()','saludar()')},
-    {h:'Cómo se define una función', p:['Se define con `def` (de "definir"), el nombre que vos elegís, paréntesis y `:`. El código de adentro va con sangría de 4 espacios, igual que en un `if`.','Ojo: **definir no ejecuta nada**. Es como escribir una receta: la receta existe, pero nadie cocinó todavía.'],
+    {h:'Por qué existen las funciones', p:['Una **función** es un bloque de código con nombre. Lo escribís **una sola vez** y lo usás cuando quieras. Ya usaste funciones hechas por otros: `print()`, `len()`, `input()`.'],
+     code:L('# sin función','print("Hola, bienvenido")','print("Hola, bienvenido")','print("Hola, bienvenido")','','# con función','saludar()','saludar()','saludar()')},
+    {h:'Cómo se define una función', p:['Se define con `def`, el nombre, paréntesis y `:`. El código de adentro va con sangría de 4 espacios.','Ojo: **definir no ejecuta nada**.'],
      code:L('def saludar():','    print("Hola")','    print("Bienvenido")','','# Hasta acá no se imprimió nada')},
-    {h:'Cómo se llama una función', p:['Para ejecutarla, la **llamás**: escribís su nombre seguido de paréntesis. Cada llamada ejecuta todo el bloque de nuevo.','Los paréntesis son obligatorios: `saludar` solo nombra la función, `saludar()` la ejecuta.'],
+    {h:'Cómo se llama una función', p:['Para ejecutarla, la **llamás**: escribís su nombre seguido de paréntesis.','Los paréntesis son obligatorios.'],
      code:L('def saludar():','    print("Hola")','','saludar()   # muestra Hola','saludar()   # muestra Hola otra vez')},
-    {h:'El orden importa', p:['Python lee de arriba hacia abajo. Para poder llamar a una función, tiene que haberla leído antes: si llamás a una función que todavía no definiste, da `NameError`.','Los tres errores típicos al empezar: olvidar el `:` del `def`, olvidar la sangría del cuerpo, y llamarla antes de definirla.'],
+    {h:'El orden importa', p:['Python lee de arriba hacia abajo. Para poder llamar a una función, tiene que haberla leído antes.'],
      code:L('hola()   # NameError: todavía no existe','','def hola():','    print("Hola")','','hola()   # acá sí funciona')}
   ],
   ex:[
     {t:'fill', q:'Definí una función llamada `saludar`.', code:L('___ saludar():','    print("Hola")'), ans:['def'], bank:['def','function','fun','return'],
-     why:'Las funciones se definen con `def`, después el nombre, los paréntesis y los dos puntos.'},
+     why:'Las funciones se definen con `def`.'},
     {t:'quiz', q:'¿Cuántas veces se imprime `Hola`?', code:L('def saludar():','    print("Hola")','','saludar()','saludar()'), opts:['Ninguna','Una','Dos','Da error'], a:2,
-     why:'Cada llamada ejecuta el cuerpo completo. Hay dos llamadas, así que se imprime dos veces.'},
+     why:'Cada llamada ejecuta el cuerpo completo. Hay dos llamadas.'},
     {t:'quiz', q:'¿Qué imprime este programa?', code:L('def saludar():','    print("Hola")'), opts:['`Hola`','Nada: solo definió la función, no la llamó','Da error','`saludar`'], a:1,
-     why:'Definir una función no la ejecuta. Sin una llamada como `saludar()`, el cuerpo nunca corre.'},
+     why:'Definir una función no la ejecuta.'},
     {t:'fill', q:'Llamá a la función para que se ejecute.', code:L('def decir():','    print("Listo")','','___'), ans:['decir()'], bank:['decir()','decir','def decir','print(decir)'],
-     why:'Para ejecutarla hay que escribir el nombre con paréntesis. Sin paréntesis, Python solo nombra la función y no hace nada.'},
+     why:'Para ejecutarla hay que escribir el nombre con paréntesis.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('def avisar()','    print("Atención")','','avisar()'), line:0,
-     why:'La línea del `def` tiene que terminar en `:`. Sin los dos puntos Python lanza SyntaxError.',
+     why:'La línea del `def` tiene que terminar en `:`.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `:` al final del `def`','Poner comillas en `avisar`','Sacar los paréntesis','Cambiar `def` por `fun`'], a:0}},
     {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('hola()','','def hola():','    print("Hola")'), line:0,
-     why:'Python lee de arriba hacia abajo: cuando llega a `hola()` todavía no leyó el `def`, así que ese nombre no existe.',
+     why:'Python lee de arriba hacia abajo. Cuando llega a `hola()` todavía no leyó el `def`.',
      fix:{q:'¿Cómo se arregla?', opts:['Mover la llamada debajo del `def`','Agregar `:` a la llamada','Cambiar `print` por `input`','Borrar el `def`'], a:0}},
     {t:'bug', q:'Esto lanza IndentationError. Tocá la línea del error.', code:L('def decir():','print("Hola")','','decir()'), line:1,
-     why:'El cuerpo de una función tiene que ir con sangría. Sin los 4 espacios Python no sabe que ese `print` pertenece a la función.',
+     why:'El cuerpo de una función tiene que ir con sangría.',
      fix:{q:'¿Cómo se arregla?', opts:['Indentar el `print` con 4 espacios','Borrar los paréntesis del `def`','Agregar `:` al `print`','Mover `decir()` arriba'], a:0}},
     {t:'code', q:'Completá el cuerpo de la función: tiene que mostrar `Hola`.', pre:'def saludar():', init:'    ', sol:'    print("Hola")', post:'',
      test:L('assert salida(saludar).strip() == "Hola", "Al llamar a saludar() tiene que mostrarse Hola (con H mayúscula)."'),
      hint:'El cuerpo va con 4 espacios de sangría y usa `print("...")`.',
-     why:'Una línea con sangría debajo del `def` forma el cuerpo. `print("Hola")` muestra el texto cada vez que se llama.'},
+     why:'Una línea con sangría debajo del `def` forma el cuerpo.'},
     {t:'code', q:'La función ya está definida. Escribí la línea que la llama.', pre:L('def chau():','    print("Chau")',''), init:'', sol:'chau()', post:'',
      test:L('assert salida_codigo.strip() == "Chau", "Tenés que llamar a la función con paréntesis: chau()"'),
      hint:'Escribí el nombre de la función seguido de paréntesis.',
-     why:'La llamada `chau()` ejecuta el cuerpo y se imprime Chau. Sin paréntesis no pasaría nada.'}
+     why:'La llamada `chau()` ejecuta el cuerpo y se imprime Chau.'}
   ]
 },
 {
   week:3, weekName:'Funciones',
   title:'Parámetros', sub:'Pasarle datos a la función',
   cards:[
-    {h:'Funciones que reciben datos', p:['Una función que siempre hace lo mismo sirve poco. Con un **parámetro** le podés pasar un dato distinto cada vez.','El parámetro es un nombre que va **entre los paréntesis del `def`** y funciona como una variable dentro de la función. El valor que ponés al llamarla se llama **argumento**.'],
+    {h:'Funciones que reciben datos', p:['Con un **parámetro** le podés pasar un dato distinto cada vez.','El parámetro va **entre los paréntesis del `def`**. El valor que ponés al llamarla se llama **argumento**.'],
      code:L('def saludar(nombre):   # nombre = parámetro','    print("Hola", nombre)','','saludar("Ana")   # "Ana" = argumento','saludar("Leo")   # Hola Leo')},
-    {h:'Parámetro y argumento', p:['Parámetro y argumento son dos caras de lo mismo. El **parámetro** es el nombre que aparece al definir la función. El **argumento** es el valor real con el que la llamás.','Cuando llamás `saludar("Ana")`, Python hace por dentro `nombre = "Ana"` y después ejecuta el cuerpo.'],
+    {h:'Parámetro y argumento', p:['El **parámetro** es el nombre que aparece al definir la función. El **argumento** es el valor real con el que la llamás.'],
      code:L('def doble(n):','    print(n * 2)','','doble(4)    # n vale 4, muestra 8','doble(10)   # n vale 10, muestra 20')},
-    {h:'Varios parámetros', p:['Si la función necesita más de un dato, separás los parámetros con coma. Al llamarla, los argumentos se asignan **en el mismo orden**: el primero al primer parámetro, el segundo al segundo.','Tiene que haber exactamente un argumento por cada parámetro. Si falta o sobra alguno, Python lanza `TypeError`.'],
-     code:L('def restar(a, b):','    print(a - b)','','restar(10, 3)   # a=10, b=3 → 7','restar(3, 10)   # a=3, b=10 → -7','restar(5)       # TypeError: falta b')},
-    {h:'Argumentos: valores, variables o cuentas', p:['Como argumento podés pasar un valor directo, una variable o una cuenta. Python primero calcula el valor y después lo manda a la función.','Un texto va entre comillas. Si escribís `saludar(Ana)` sin comillas, Python busca una variable llamada `Ana` y da `NameError`.'],
+    {h:'Varios parámetros', p:['Si la función necesita más de un dato, separás los parámetros con coma. Al llamarla, los argumentos se asignan **en el mismo orden**.','Si falta o sobra alguno, Python lanza `TypeError`.'],
+     code:L('def restar(a, b):','    print(a - b)','','restar(10, 3)   # 7','restar(3, 10)   # -7','restar(5)       # TypeError')},
+    {h:'Argumentos: valores, variables o cuentas', p:['Como argumento podés pasar un valor directo, una variable o una cuenta.','Un texto va entre comillas. `saludar(Ana)` sin comillas da `NameError`.'],
      code:L('def saludar(nombre):','    print(f"Hola, {nombre}")','','saludar("Ana")      # un texto','amigo = "Leo"','saludar(amigo)      # una variable','saludar("A" + "na") # una cuenta')}
   ],
   ex:[
     {t:'quiz', q:'¿Cuál es el parámetro?', code:L('def saludar(nombre):','    print(nombre)','','saludar("Ana")'), opts:['`nombre`','`"Ana"`','`saludar`','`print`'], a:0,
-     why:'El parámetro es el nombre que aparece entre los paréntesis del `def`. `"Ana"` es el argumento.'},
+     why:'El parámetro es el nombre que aparece en el `def`.'},
     {t:'quiz', q:'¿Cuál es el argumento?', code:L('def doble(n):','    print(n * 2)','','doble(5)'), opts:['`n`','`5`','`doble`','`print`'], a:1,
-     why:'El argumento es el valor con el que se llama a la función. `n` es el parámetro.'},
+     why:'El argumento es el valor con el que se llama a la función.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def doble(n):','    print(n * 2)','','doble(4)','doble(10)'), opts:['`8` y `20`','`4` y `10`','`8` y `10`','Da error'], a:0,
      why:'Primero `n` vale 4 y se imprime 8. Después `n` vale 10 y se imprime 20.'},
     {t:'fill', q:'La función recibe dos números. Completá el segundo parámetro.', code:L('def sumar(a, ___):','    print(a + b)'), ans:['b'], bank:['b','"b"','2','sumar'],
-     why:'Los parámetros son nombres. Como el cuerpo usa `b`, el segundo parámetro tiene que llamarse `b`, sin comillas.'},
+     why:'Como el cuerpo usa `b`, el segundo parámetro tiene que llamarse `b`.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def restar(a, b):','    print(a - b)','','restar(10, 3)'), opts:['`7`','`-7`','`13`','`10`'], a:0,
-     why:'Los argumentos se asignan en orden: `a` vale 10 y `b` vale 3, así que 10 - 3 = 7.'},
+     why:'`a` vale 10 y `b` vale 3, así que 10 - 3 = 7.'},
     {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('def sumar(a, b):','    print(a + b)','','sumar(5)'), line:3,
-     why:'La función pide dos argumentos y la llamada manda solo uno, así que falta `b`.',
+     why:'La función pide dos argumentos y la llamada manda solo uno.',
      fix:{q:'¿Cómo se arregla?', opts:['Pasar los dos argumentos: `sumar(5, 3)`','Agregar `:` a la llamada','Cambiar `def` por `fun`','Borrar los paréntesis'], a:0}},
     {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('def saludar(nombre):','    print(f"Hola {nombre}")','','saludar(Ana)'), line:3,
-     why:'Sin comillas, Python busca una variable llamada `Ana`, que no existe. Un texto tiene que ir entre comillas.',
+     why:'Sin comillas, Python busca una variable llamada `Ana`, que no existe.',
      fix:{q:'¿Cómo se arregla?', opts:['Poner `"Ana"` entre comillas','Agregar `:` al final','Borrar el `f` del `print`','Poner `Ana` dentro de una lista'], a:0}},
     {t:'code', q:'Completá el cuerpo: tiene que mostrar `Hola, ` y el nombre.', pre:'def saludar(nombre):', init:'    ', sol:'    print(f"Hola, {nombre}")', post:'',
-     test:L('assert salida(saludar, "Ana").strip() == "Hola, Ana", "saludar(\\"Ana\\") tendría que mostrar: Hola, Ana"','assert salida(saludar, "Leo").strip() == "Hola, Leo", "Tiene que funcionar con cualquier nombre, no solo con Ana."'),
+     test:L('assert salida(saludar, "Ana").strip() == "Hola, Ana", "saludar(\\"Ana\\") tendría que mostrar: Hola, Ana"','assert salida(saludar, "Leo").strip() == "Hola, Leo", "Tiene que funcionar con cualquier nombre."'),
      hint:'Usá una f-string: `f"Hola, {nombre}"`.',
-     why:'Con una f-string metés el valor del parámetro dentro del texto, así que sirve para cualquier nombre.'},
+     why:'Con una f-string metés el valor del parámetro dentro del texto.'},
     {t:'code', q:'Escribí la función completa: `cuadrado(n)` muestra `n * n`.', pre:'', init:'', sol:L('def cuadrado(n):','    print(n * n)'), post:'',
      test:L('assert salida(cuadrado, 4).strip() == "16", "cuadrado(4) tendría que mostrar 16"','assert salida(cuadrado, 5).strip() == "25", "cuadrado(5) tendría que mostrar 25"'),
-     hint:'Empezá con `def cuadrado(n):` y, abajo y con sangría, el `print`.',
+     hint:'Empezá con `def cuadrado(n):` y abajo con sangría el `print`.',
      why:'Un parámetro `n` recibe el valor y el cuerpo lo usa como una variable más.'}
   ]
 },
@@ -966,31 +917,31 @@ const LESSONS=[
   week:3, weekName:'Funciones',
   title:'return', sub:'Devolver un resultado',
   cards:[
-    {h:'Mostrar no es lo mismo que devolver', p:['Hasta ahora las funciones **mostraban** cosas con `print`. Pero muchas veces querés que la función **te entregue un resultado** para usarlo después: guardarlo, sumarlo, compararlo.','Para eso está `return`: la función termina y **devuelve** ese valor a quien la llamó. Cuando llamás `doble(4)`, es como si Python reemplazara esa llamada por el valor devuelto.'],
+    {h:'Mostrar no es lo mismo que devolver', p:['`return` hace que la función **devuelva** un valor a quien la llamó.','Cuando llamás `doble(4)`, es como si Python reemplazara esa llamada por el valor devuelto.'],
      code:L('def doble(n):','    return n * 2','','x = doble(4)   # x guarda 8','print(x)       # muestra 8')},
-    {h:'Usar lo que devuelve', p:['Como la llamada se reemplaza por el valor, la podés usar donde irían un número o un texto: en una cuenta, en un `print`, en una comparación, o como argumento de otra función.'],
+    {h:'Usar lo que devuelve', p:['Como la llamada se reemplaza por el valor, la podés usar donde irían un número o un texto.'],
      code:L('def doble(n):','    return n * 2','','print(doble(3))          # 6','print(doble(3) + 1)      # 7','print(doble(doble(2)))   # 8','x = doble(5) > 8         # True')},
-    {h:'return corta la función', p:['En cuanto Python ejecuta un `return`, la función **termina ahí** y lo que haya debajo no se ejecuta.','Si una función no tiene `return`, devuelve `None`, que significa "nada". Eso pasa con las que solo usan `print`: muestran algo, pero no entregan ningún valor.'],
-     code:L('def f():','    return 1','    print("nunca llega")','','def g():','    print("hola")   # no devuelve nada','','x = g()    # muestra hola','print(x)    # None')},
-    {h:'Devolver True o False', p:['Una función puede devolver el resultado de una comparación. Así armás preguntas reutilizables, y después las usás en un `if`.'],
+    {h:'return corta la función', p:['En cuanto Python ejecuta un `return`, la función **termina ahí**.','Si una función no tiene `return`, devuelve `None`.'],
+     code:L('def f():','    return 1','    print("nunca llega")','','def g():','    print("hola")','','x = g()    # muestra hola','print(x)    # None')},
+    {h:'Devolver True o False', p:['Una función puede devolver el resultado de una comparación.'],
      code:L('def es_par(n):','    return n % 2 == 0','','print(es_par(4))   # True','print(es_par(7))   # False','','if es_par(10):','    print("Es par")')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('def triple(n):','    return n * 3','','x = triple(4)','print(x)'), opts:['`12`','`None`','`4`','Da error'], a:0,
-     why:'`triple(4)` devuelve 12 y ese valor queda guardado en `x`.'},
+     why:'`triple(4)` devuelve 12.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def triple(n):','    print(n * 3)','','x = triple(4)','print(x)'), opts:['`12` y `12`','`12` y `None`','Solo `12`','Da error'], a:1,
-     why:'Dentro de la función el `print` muestra 12. Pero como no hay `return`, la función devuelve `None`, y eso es lo que muestra el segundo `print`.'},
+     why:'Como no hay `return`, la función devuelve `None`.'},
     {t:'fill', q:'Hacé que la función devuelva el doble.', code:L('def doble(n):','    ___ n * 2'), ans:['return'], bank:['return','print','def','input'],
-     why:'`return` entrega el valor a quien llamó a la función. `print` solo lo mostraría.'},
+     why:'`return` entrega el valor a quien llamó a la función.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def f():','    return 1','    print("hola")','','print(f())'), opts:['`1`','`hola` y después `1`','`hola`','Da error'], a:0,
-     why:'`return` corta la función: el `print("hola")` nunca se ejecuta. Solo se muestra el 1 del `print` de afuera.'},
+     why:'`return` corta la función: el `print("hola")` nunca se ejecuta.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def doble(n):','    return n * 2','','print(doble(3) + doble(4))'), opts:['`14`','`7`','`24`','`6` y `8`'], a:0,
      why:'Cada llamada se reemplaza por su valor: 6 + 8 = 14.'},
     {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('def suma(a, b):','    print(a + b)','','total = suma(2, 3) + 1'), line:3,
-     why:'`suma` no tiene `return`, así que devuelve `None`. Y `None + 1` no se puede calcular.',
+     why:'`suma` no tiene `return`, así que devuelve `None`. `None + 1` no se puede calcular.',
      fix:{q:'¿Cómo se arregla?', opts:['Cambiar el `print` de `suma` por `return`','Cambiar `+ 1` por `- 1`','Agregar `:` a la última línea','Borrar los paréntesis'], a:0}},
     {t:'bug', q:'Tocá la línea con el error.', code:L('def es_mayor(edad):','    return edad >= 18','','if es_mayor 20:','    print("Pasá")'), line:3,
-     why:'Para usar una función hay que llamarla con paréntesis: `es_mayor(20)`. Sin ellos Python lanza SyntaxError.',
+     why:'Para usar una función hay que llamarla con paréntesis.',
      fix:{q:'¿Cómo se arregla?', opts:['Llamarla con paréntesis: `es_mayor(20)`','Cambiar `>=` por `=>`','Borrar el `return`','Poner `20` entre comillas'], a:0}},
     {t:'code', q:'Completá el cuerpo: que devuelva el doble de `n`.', pre:'def doble(n):', init:'    ', sol:'    return n * 2', post:'',
      test:L('r = doble(3)','assert r is not None, "doble(3) devolvió None: ¿usaste print en vez de return?"','assert r == 6, f"doble(3) devolvió {r!r} y tendría que devolver 6"','assert doble(-2) == -4, "doble(-2) tendría que devolver -4"'),
@@ -999,42 +950,42 @@ const LESSONS=[
     {t:'code', q:'Completá el cuerpo: que devuelva `True` si `n` es par.', pre:'def es_par(n):', init:'    ', sol:'    return n % 2 == 0', post:'',
      test:L('assert es_par(4) is True, "es_par(4) tendría que devolver True"','assert es_par(7) is False, "es_par(7) tendría que devolver False"','assert es_par(0) is True, "es_par(0) tendría que devolver True"'),
      hint:'Un número es par si el resto de dividirlo por 2 es 0: `n % 2 == 0`.',
-     why:'La comparación `n % 2 == 0` ya da `True` o `False`, así que se puede devolver directamente.'},
+     why:'La comparación `n % 2 == 0` ya da `True` o `False`.'},
     {t:'code', q:'Completá el cuerpo: devolvé el área de un rectángulo (base por altura).', pre:'def area(base, altura):', init:'    ', sol:'    return base * altura', post:'',
      test:L('assert area(4, 3) == 12, "area(4, 3) tendría que devolver 12"','assert area(5, 5) == 25, "area(5, 5) tendría que devolver 25"'),
      hint:'`return` y la multiplicación de los dos parámetros.',
-     why:'Con dos parámetros la función puede calcular con ambos y devolver el resultado.'}
+     why:'Con dos parámetros la función puede calcular con ambos.'}
   ]
 },
 {
   week:3, weekName:'Funciones',
   title:'Valores por defecto', sub:'Parámetros opcionales y con nombre',
   cards:[
-    {h:'Parámetros con valor por defecto', p:['A veces un parámetro casi siempre vale lo mismo. Le podés dar un **valor por defecto** con `=` en el `def`. Si al llamar a la función no pasás ese argumento, Python usa el valor por defecto.','Si lo pasás, se usa el tuyo. Los parámetros con valor por defecto van **siempre al final**, después de los obligatorios.'],
+    {h:'Parámetros con valor por defecto', p:['A veces un parámetro casi siempre vale lo mismo. Le podés dar un **valor por defecto** con `=`.','Los parámetros con valor por defecto van **siempre al final**.'],
      code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar("Ana")           # Hola, Ana','saludar("Ana", "Chau")   # Chau, Ana')},
-    {h:'Argumentos con nombre', p:['Al llamar a una función podés indicar **a qué parámetro** va cada valor, escribiendo `parámetro=valor`. Así el orden deja de importar y la llamada se entiende mejor.','Podés mezclar: primero los comunes, por orden, y después los que llevan nombre.'],
-     code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar(saludo="Buen día", nombre="Leo")','# Buen día, Leo','','saludar("Leo", saludo="Chau")','# Chau, Leo')},
-    {h:'Ya los usaste: sep y end', p:['`print` también tiene parámetros con valor por defecto. `sep` es lo que va **entre** los valores (por defecto un espacio) y `end` es lo que va **al final** (por defecto un salto de línea).','Como son parámetros con nombre, se cambian así: `sep="-"` o `end=""`.'],
+    {h:'Argumentos con nombre', p:['Al llamar podés indicar **a qué parámetro** va cada valor: `parámetro=valor`. Así el orden deja de importar.'],
+     code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar(saludo="Buen día", nombre="Leo")','# Buen día, Leo')},
+    {h:'Ya los usaste: sep y end', p:['`print` tiene `sep` (lo que va **entre** los valores) y `end` (lo que va **al final**).'],
      code:L('print("a", "b")             # a b','print("a", "b", sep="-")   # a-b','','print("Hola", end="")','print("Mundo")   # HolaMundo')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar("Ana")'), opts:['`Hola, Ana`','`saludo, Ana`','Da error','`Ana, Hola`'], a:0,
      why:'No se pasó `saludo`, así que se usa el valor por defecto `"Hola"`.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar("Ana", "Chau")'), opts:['`Hola, Ana`','`Chau, Ana`','`Ana, Chau`','Da error'], a:1,
-     why:'Si se pasa el argumento, reemplaza al valor por defecto: `saludo` vale `"Chau"`.'},
+     why:'Si se pasa el argumento, reemplaza al valor por defecto.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def saludar(nombre, saludo="Hola"):','    print(f"{saludo}, {nombre}")','','saludar(saludo="Buen día", nombre="Leo")'), opts:['`Buen día, Leo`','`Leo, Buen día`','`Hola, Leo`','Da error'], a:0,
-     why:'Con argumentos con nombre cada valor va al parámetro indicado, sin importar el orden.'},
+     why:'Con argumentos con nombre cada valor va al parámetro indicado.'},
     {t:'fill', q:'Dale a `saludo` el valor por defecto `"Hola"`.', code:L('def saludar(nombre, saludo___"Hola"):','    print(f"{saludo}, {nombre}")'), ans:['='], bank:['=','==','=>',','],
      why:'El valor por defecto se escribe con un `=` pegado al nombre del parámetro.'},
     {t:'fill', q:'Llamá a la función indicando el parámetro por su nombre.', code:L('def potencia(base, exp=2):','    return base ** exp','','print(potencia(3, ___=3))'), ans:['exp'], bank:['exp','base','3','2'],
-     why:'`exp=3` le dice a Python que ese 3 es para el parámetro `exp`. Da 3 ** 3 = 27.'},
+     why:'`exp=3` le dice a Python que ese 3 es para el parámetro `exp`.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('def sumar(a=1, b):','    return a + b'), line:0,
-     why:'Los parámetros con valor por defecto tienen que ir después de los obligatorios. Si no, Python lanza SyntaxError.',
+     why:'Los parámetros con valor por defecto tienen que ir después de los obligatorios.',
      fix:{q:'¿Cómo se arregla?', opts:['Poner `b` antes de `a=1`','Borrar el `return`','Cambiar `=` por `==`','Agregar comillas a `1`'], a:0}},
     {t:'quiz', q:'¿Qué imprime?', code:'print("a", "b", sep="-")', opts:['`a b`','`a-b`','`ab`','`a, b`'], a:1,
-     why:'`sep` es lo que se pone entre los valores. Acá es un guion en lugar del espacio.'},
+     why:'`sep` es lo que se pone entre los valores.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('print("Hola", end="")','print("Mundo")'), opts:['`Hola Mundo`','`HolaMundo`','`Hola` y abajo `Mundo`','`Mundo`'], a:1,
-     why:'`end=""` hace que el primer `print` no agregue el salto de línea, así que el segundo escribe pegado.'},
+     why:'`end=""` hace que el primer `print` no agregue el salto de línea.'},
     {t:'code', q:'Completá el cuerpo: devolvé el porcentaje de `monto`. Si no se indica, es el 10 %.', pre:'def propina(monto, porcentaje=10):', init:'    ', sol:'    return monto * porcentaje / 100', post:'',
      test:L('assert propina(200) == 20, "propina(200) tendría que devolver 20 (el 10 por ciento de 200)"','assert propina(200, 15) == 30, "propina(200, 15) tendría que devolver 30"'),
      hint:'El porcentaje de un monto es `monto * porcentaje / 100`.',
@@ -1042,39 +993,39 @@ const LESSONS=[
     {t:'code', q:'Mostrá `2025`, `10` y `21` separados por guiones, usando `sep`.', pre:'', init:'', sol:'print("2025", "10", "21", sep="-")', post:'',
      test:L('assert salida_codigo.strip() == "2025-10-21", "Tiene que mostrarse 2025-10-21. Usá sep=\\"-\\" dentro del print."'),
      hint:'`print("2025", "10", "21", sep="-")`.',
-     why:'`sep` cambia lo que se pone entre los valores, así que no hace falta armar el texto a mano.'}
+     why:'`sep` cambia lo que se pone entre los valores.'}
   ]
 },
 {
   week:3, weekName:'Funciones',
   title:'Alcance', sub:'Dónde vive cada variable',
   cards:[
-    {h:'Variables locales', p:['Una variable que creás **dentro** de una función es **local**: existe solo mientras la función se ejecuta. Cuando termina, desaparece.','Por eso, desde afuera no podés verla: si la nombrás, Python da `NameError`. Lo mismo pasa con los parámetros.'],
+    {h:'Variables locales', p:['Una variable que creás **dentro** de una función es **local**: existe solo mientras la función se ejecuta.','Desde afuera no podés verla: si la nombrás, Python da `NameError`.'],
      code:L('def calcular():','    resultado = 3 * 4   # local','    print(resultado)','','calcular()          # 12','print(resultado)    # NameError')},
-    {h:'Variables globales', p:['Una variable creada **afuera** de todas las funciones es **global**. Las funciones pueden **leerla**.','El "alcance" (scope) es justamente eso: la zona del programa donde un nombre existe.'],
+    {h:'Variables globales', p:['Una variable creada **afuera** de todas las funciones es **global**. Las funciones pueden **leerla**.'],
      code:L('IVA = 21   # global','','def con_iva(precio):','    return precio + precio * IVA / 100','','print(con_iva(100))   # 121.0')},
-    {h:'Mismo nombre, otra variable', p:['Si dentro de una función le asignás un valor a un nombre, Python crea una variable **local nueva**, aunque afuera exista otra con el mismo nombre. La de afuera no se toca.','Con los parámetros pasa igual: cambiar `n` adentro no cambia la variable que pasaste al llamar.'],
+    {h:'Mismo nombre, otra variable', p:['Si dentro de una función le asignás un valor a un nombre, Python crea una variable **local nueva**. La de afuera no se toca.'],
      code:L('x = 10','','def f():','    x = 99      # otra x, local','    print(x)    # 99','','f()','print(x)        # 10 (no cambió)')},
-    {h:'Cambiar una global desde adentro', p:['Como asignar crea una variable local, `contador += 1` dentro de una función falla: Python cree que `contador` es local y no la encuentra (da `UnboundLocalError`).','Se arregla con `global contador` al principio de la función. Pero es mejor evitarlo: **pasá los datos por parámetro y devolvé el resultado con `return`**. El código queda más fácil de entender.'],
-     code:L('contador = 0','','def sumar():','    global contador   # "usá la de afuera"','    contador += 1','','sumar()','print(contador)   # 1','','# mejor: contador = sumar(contador)')}
+    {h:'Cambiar una global desde adentro', p:['`contador += 1` dentro de una función falla: Python cree que `contador` es local.','Se arregla con `global contador`. Pero es mejor evitarlo: **pasá los datos por parámetro y devolvé con `return`**.'],
+     code:L('contador = 0','','def sumar():','    global contador','    contador += 1','','sumar()','print(contador)   # 1')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué pasa al correr esto?', code:L('def f():','    x = 5','','f()','print(x)'), opts:['Imprime `5`','`NameError`: `x` solo existe dentro de `f`','Imprime `None`','Imprime `x`'], a:1,
-     why:'`x` es local: se crea al ejecutar `f()` y desaparece al terminar. Afuera no existe.'},
+     why:'`x` es local: se crea al ejecutar `f()` y desaparece al terminar.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('mensaje = "Hola"','','def decir():','    print(mensaje)','','decir()'), opts:['`Hola`','`mensaje`','Nada','`NameError`'], a:0,
-     why:'Las funciones pueden leer las variables globales, y `mensaje` está definida afuera.'},
+     why:'Las funciones pueden leer las variables globales.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('x = 10','','def f():','    x = 99','    print(x)','','f()','print(x)'), opts:['`99` y `99`','`99` y `10`','`10` y `99`','`10` y `10`'], a:1,
      why:'Dentro de `f`, `x = 99` crea una `x` local. La `x` de afuera sigue valiendo 10.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def f(n):','    n = n + 1','    return n','','n = 10','print(f(n))','print(n)'), opts:['`11` y `11`','`11` y `10`','`10` y `10`','`10` y `11`'], a:1,
-     why:'El `n` de la función es otro `n`, local. Sumarle 1 adentro no cambia el `n` de afuera.'},
+     why:'El `n` de la función es otro `n`, local.'},
     {t:'bug', q:'Esto lanza UnboundLocalError. Tocá la línea donde salta.', code:L('contador = 0','','def sumar():','    contador += 1','','sumar()'), line:3,
-     why:'Como `contador` se asigna dentro de la función, Python la trata como local. Pero todavía no tiene valor, y no puede sumarle 1.',
+     why:'Como `contador` se asigna dentro de la función, Python la trata como local.',
      fix:{q:'¿Cómo se arregla?', opts:['Agregar `global contador` dentro de la función','Borrar la línea `contador = 0`','Poner `return` antes del `+=`','Cambiar `+=` por `==`'], a:0}},
     {t:'bug', q:'Esto lanza NameError. Tocá la línea donde salta.', code:L('def calcular():','    resultado = 3 * 4','','calcular()','print(resultado)'), line:4,
-     why:'`resultado` es local de `calcular`: afuera no existe. Hay que devolverlo con `return` y guardarlo.',
+     why:'`resultado` es local de `calcular`: afuera no existe.',
      fix:{q:'¿Cómo se arregla?', opts:['Devolver el valor con `return` y guardarlo afuera','Agregar `:` al `print`','Cambiar `calcular()` por `calcular`','Poner `resultado` entre comillas'], a:0}},
     {t:'fill', q:'Usá la palabra que permite cambiar la variable de afuera.', code:L('puntos = 0','','def sumar():','    ___ puntos','    puntos += 10','','sumar()','print(puntos)'), ans:['global'], bank:['global','local','def','return'],
-     why:'`global puntos` le dice a Python que use la variable de afuera en vez de crear una local.'},
+     why:'`global puntos` le dice a Python que use la variable de afuera.'},
     {t:'code', q:'La función calcula, pero no entrega nada. Escribí la línea que falta para devolver `total`.', pre:L('def total_con_iva(precio):','    total = precio * 1.21'), init:'    ', sol:'    return total', post:'',
      test:L('r = total_con_iva(100)','assert r is not None, "La función devolvió None: falta el return."','assert round(r, 2) == 121.0, f"total_con_iva(100) devolvió {r!r} y tendría que devolver 121.0"'),
      hint:'Para sacar el valor de la función usá `return total`.',
@@ -1082,29 +1033,29 @@ const LESSONS=[
     {t:'code', q:'Usá la variable global `IVA` para devolver el precio más el IVA.', pre:L('IVA = 21','','def con_iva(precio):'), init:'    ', sol:'    return precio + precio * IVA / 100', post:'',
      test:L('assert con_iva(100) == 121, "con_iva(100) tendría que devolver 121"','assert con_iva(200) == 242, "con_iva(200) tendría que devolver 242"'),
      hint:'El IVA es `precio * IVA / 100`. Sumáselo al precio.',
-     why:'La función lee la global `IVA` sin problema: leer no necesita nada especial.'}
+     why:'La función lee la global `IVA` sin problema.'}
   ]
 },
 {
   week:3, weekName:'Funciones',
   title:'Funciones con listas', sub:'Recorrer, acumular y devolver',
   cards:[
-    {h:'Recibir una lista y recorrerla', p:['Una función puede recibir una lista como parámetro y recorrerla con `for`, igual que afuera. El patrón más común: crear un acumulador, recorrer sumando y **devolver** el resultado al final.','El `return` va **después** del bucle (con una sangría menos que el `for`). Si lo ponés adentro, la función termina en la primera vuelta.'],
+    {h:'Recibir una lista y recorrerla', p:['Una función puede recibir una lista y recorrerla con `for`. El patrón más común: crear un acumulador, recorrer sumando y **devolver** el resultado al final.','El `return` va **después** del bucle. Si lo ponés adentro, la función termina en la primera vuelta.'],
      code:L('def total(nums):','    r = 0','    for n in nums:','        r += n','    return r   # fuera del for','','print(total([1, 2, 3]))   # 6')},
-    {h:'return adentro del bucle', p:['A veces querés cortar apenas encontrás algo. Ahí sí sirve el `return` dentro del bucle: devuelve en cuanto se cumple la condición y la función termina.','Si el bucle termina sin encontrar nada, se ejecuta el `return` de abajo.'],
-     code:L('def tiene(lista, x):','    for e in lista:','        if e == x:','            return True   # lo encontró','    return False          # no lo encontró','','print(tiene([4, 5, 6], 5))   # True','print(tiene([4, 5, 6], 9))   # False')},
-    {h:'Una función puede usar otra', p:['Dentro de una función podés llamar a otras funciones. Así partís un problema grande en pasos chicos, cada uno con su nombre.'],
-     code:L('def es_par(n):','    return n % 2 == 0','','def contar_pares(nums):','    c = 0','    for n in nums:','        if es_par(n):   # usa la otra','            c += 1','    return c')},
-    {h:'Las listas se modifican por dentro', p:['Cuando pasás una lista, la función trabaja sobre **la misma lista**, no sobre una copia. Si adentro hacés `append`, la lista de afuera también cambia.','Eso es distinto de los números y los textos, que no se pueden modificar por dentro. Por eso una función que modifica una lista a veces no necesita devolver nada.'],
-     code:L('def agregar(lista):','    lista.append(0)   # cambia la original','','nums = [1, 2]','agregar(nums)','print(nums)   # [1, 2, 0]')}
+    {h:'return adentro del bucle', p:['A veces querés cortar apenas encontrás algo. Ahí sí sirve el `return` dentro del bucle.'],
+     code:L('def tiene(lista, x):','    for e in lista:','        if e == x:','            return True','    return False','','print(tiene([4, 5, 6], 5))   # True','print(tiene([4, 5, 6], 9))   # False')},
+    {h:'Una función puede usar otra', p:['Dentro de una función podés llamar a otras funciones.'],
+     code:L('def es_par(n):','    return n % 2 == 0','','def contar_pares(nums):','    c = 0','    for n in nums:','        if es_par(n):','            c += 1','    return c')},
+    {h:'Las listas se modifican por dentro', p:['Cuando pasás una lista, la función trabaja sobre **la misma lista**, no sobre una copia. Si adentro hacés `append`, la lista de afuera también cambia.'],
+     code:L('def agregar(lista):','    lista.append(0)','','nums = [1, 2]','agregar(nums)','print(nums)   # [1, 2, 0]')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('def total(nums):','    r = 0','    for n in nums:','        r += n','    return r','','print(total([1, 2, 3]))'), opts:['`3`','`6`','`0`','`[1, 2, 3]`'], a:1,
-     why:'El acumulador suma 1 + 2 + 3 = 6 y el `return` de afuera del bucle lo devuelve.'},
+     why:'El acumulador suma 1 + 2 + 3 = 6 y el `return` lo devuelve.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def primero(lista):','    for x in lista:','        return x','','print(primero([7, 8, 9]))'), opts:['`7`','`9`','`[7, 8, 9]`','`None`'], a:0,
-     why:'El `return` dentro del `for` corta la función en la primera vuelta, con `x` valiendo 7.'},
+     why:'El `return` dentro del `for` corta la función en la primera vuelta.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('def agregar(lista):','    lista.append(0)','','nums = [1, 2]','agregar(nums)','print(nums)'), opts:['`[1, 2]`','`[1, 2, 0]`','`[0]`','`None`'], a:1,
-     why:'La función recibe la misma lista, no una copia. El `append` la modifica también afuera.'},
+     why:'La función recibe la misma lista, no una copia.'},
     {t:'fill', q:'Hacé que la función devuelva el contador.', code:L('def contar_pares(nums):','    c = 0','    for n in nums:','        if n % 2 == 0:','            c += 1','    ___ c'), ans:['return'], bank:['return','print','break','continue'],
      why:'Después del bucle se devuelve el acumulador con `return c`.'},
     {t:'fill', q:'Completá la comparación para quedarte con el mayor.', code:L('def maximo(nums):','    m = nums[0]','    for n in nums:','        if n ___ m:','            m = n','    return m'), ans:['>'], bank:['>','<','==','!='],
@@ -1132,30 +1083,30 @@ const LESSONS=[
   week:3, weekName:'Funciones',
   title:'Lambda', sub:'Funciones de una línea',
   cards:[
-    {h:'Una función en una línea', p:['Una **lambda** es una función mini, sin nombre propio y de una sola línea. Se escribe `lambda parámetros: expresión` y **devuelve el resultado de la expresión**, sin escribir `return`.','Es equivalente a un `def` corto. Podés guardarla en una variable y llamarla como cualquier función.'],
+    {h:'Una función en una línea', p:['Una **lambda** es una función mini, sin nombre propio y de una sola línea. Se escribe `lambda parámetros: expresión` y **devuelve el resultado de la expresión**.','Es equivalente a un `def` corto.'],
      code:L('def doble(n):','    return n * 2','','doble = lambda n: n * 2   # lo mismo','','print(doble(5))   # 10')},
-    {h:'Varios parámetros', p:['Si necesita más de un dato, separás los parámetros con coma, igual que en un `def`.'],
+    {h:'Varios parámetros', p:['Si necesita más de un dato, separás los parámetros con coma.'],
      code:L('suma = lambda a, b: a + b','print(suma(2, 3))   # 5','','es_par = lambda n: n % 2 == 0','print(es_par(4))    # True')},
-    {h:'Las funciones también son valores', p:['En Python una función se puede **pasar como dato**: guardarla en una variable, una lista o un diccionario, o dársela a otra función. Para eso se escribe su nombre **sin paréntesis**, porque con paréntesis se ejecutaría.','`sorted`, `min` y `max` aceptan un parámetro `key`: una función que se aplica a cada elemento para decidir el orden.'],
-     code:L('palabras = ["sol", "casa", "a"]','print(sorted(palabras, key=len))','# ["a", "sol", "casa"]  (por largo)','','pares = [("Ana", 30), ("Leo", 25)]','print(sorted(pares, key=lambda t: t[1]))','# [("Leo", 25), ("Ana", 30)] (por edad)')},
-    {h:'Cuándo usar lambda', p:['Las lambdas sirven para cosas cortas que usás una sola vez, como el `key` de un `sorted`. Si la función necesita varias líneas, un `if` o un bucle, usá `def`: se lee mucho mejor.','Dentro de una lambda no se escribe `return`: ya devuelve el resultado.'],
+    {h:'Las funciones también son valores', p:['En Python una función se puede **pasar como dato**. Para eso se escribe su nombre **sin paréntesis**.','`sorted`, `min` y `max` aceptan un parámetro `key`: una función que se aplica a cada elemento.'],
+     code:L('palabras = ["sol", "casa", "a"]','print(sorted(palabras, key=len))','# ["a", "sol", "casa"]','','pares = [("Ana", 30), ("Leo", 25)]','print(sorted(pares, key=lambda t: t[1]))','# [("Leo", 25), ("Ana", 30)]')},
+    {h:'Cuándo usar lambda', p:['Las lambdas sirven para cosas cortas que usás una sola vez.','Dentro de una lambda no se escribe `return`: ya devuelve el resultado.'],
      code:L('# lambda: corto, para usar una vez','sorted(nums, key=lambda n: -n)','','# def: cuando hay varios pasos','def categoria(edad):','    if edad >= 18:','        return "adulto"','    return "menor"')}
   ],
   ex:[
     {t:'quiz', q:'¿Qué imprime?', code:L('doble = lambda n: n * 2','print(doble(5))'), opts:['`10`','`5`','`n * 2`','Da error'], a:0,
-     why:'La lambda devuelve `n * 2` sin necesidad de `return`. Con `n` valiendo 5, da 10.'},
+     why:'La lambda devuelve `n * 2` sin necesidad de `return`.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('suma = lambda a, b: a + b','print(suma(2, 3))'), opts:['`5`','`23`','`2, 3`','Da error'], a:0,
-     why:'Los parámetros se asignan en orden: `a` vale 2 y `b` vale 3, y devuelve 5.'},
+     why:'`a` vale 2 y `b` vale 3, y devuelve 5.'},
     {t:'fill', q:'Escribí una lambda que resta 1.', code:L('menos_uno = ___ n: n - 1','print(menos_uno(10))'), ans:['lambda'], bank:['lambda','def','return','fun'],
-     why:'Las funciones de una línea empiezan con `lambda`, después los parámetros, `:` y la expresión.'},
+     why:'Las funciones de una línea empiezan con `lambda`.'},
     {t:'fill', q:'Ordená las palabras por su largo usando el parámetro de orden.', code:L('palabras = ["sol", "casa", "a"]','print(sorted(palabras, ___=len))'), ans:['key'], bank:['key','sort','by','len'],
-     why:'`key` recibe la función que se aplica a cada elemento para decidir el orden. Acá se usa `len` sin paréntesis.'},
+     why:'`key` recibe la función que se aplica a cada elemento.'},
     {t:'quiz', q:'¿Qué imprime?', code:L('p = ["sol", "casa", "a"]','print(sorted(p, key=len))'), opts:['`["a", "sol", "casa"]`','`["a", "casa", "sol"]`','`["casa", "sol", "a"]`','`["sol", "casa", "a"]`'], a:0,
-     why:'Se ordena por el largo de cada texto: `"a"` tiene 1, `"sol"` tiene 3 y `"casa"` tiene 4.'},
+     why:'Se ordena por el largo: `"a"` (1), `"sol"` (3), `"casa"` (4).'},
     {t:'quiz', q:'¿Qué imprime?', code:L('pares = [("Ana", 30), ("Leo", 25)]','print(sorted(pares, key=lambda t: t[1]))'), opts:['`[("Leo", 25), ("Ana", 30)]`','`[("Ana", 30), ("Leo", 25)]`','`[25, 30]`','Da error'], a:0,
-     why:'La lambda toma cada tupla `t` y devuelve `t[1]`, la edad. Se ordena de menor a mayor por edad.'},
+     why:'La lambda devuelve `t[1]`, la edad. Se ordena por edad.'},
     {t:'bug', q:'Tocá la línea con el error.', code:L('doble = lambda n: return n * 2','print(doble(4))'), line:0,
-     why:'Una lambda ya devuelve el resultado de su expresión. Escribir `return` adentro es un SyntaxError.',
+     why:'Una lambda ya devuelve el resultado. Escribir `return` adentro es un SyntaxError.',
      fix:{q:'¿Cómo se arregla?', opts:['Sacar el `return`','Agregar `:` después del `return`','Cambiar `lambda` por `def`','Poner `n * 2` entre comillas'], a:0}},
     {t:'bug', q:'Esto lanza TypeError. Tocá la línea donde salta.', code:L('p = ["sol", "casa", "a"]','print(max(p, key=len()))'), line:1,
      why:'Con `len()` se ejecuta la función sin argumento. Para pasarla como dato se escribe sin paréntesis: `key=len`.',
@@ -1163,18 +1114,18 @@ const LESSONS=[
     {t:'code', q:'Escribí una lambda llamada `cuadrado` que devuelva `n` al cuadrado.', pre:'', init:'cuadrado = ', sol:'cuadrado = lambda n: n ** 2', post:'',
      test:L('assert cuadrado(5) == 25, "cuadrado(5) tendría que devolver 25"','assert cuadrado(-3) == 9, "cuadrado(-3) tendría que devolver 9"'),
      hint:'`lambda n: ...` y, después de los dos puntos, la cuenta.',
-     why:'Después de `lambda n:` va la expresión que se devuelve. No hace falta `return`.'},
+     why:'Después de `lambda n:` va la expresión que se devuelve.'},
     {t:'code', q:'Guardá en `resultado` las palabras ordenadas por largo.', pre:L('palabras = ["pera", "uva", "manzana"]',''), init:'', sol:'resultado = sorted(palabras, key=len)', post:'',
      test:L('assert resultado == ["uva", "pera", "manzana"], "resultado tendría que ser [\\"uva\\", \\"pera\\", \\"manzana\\"]"'),
      hint:'`sorted(palabras, key=len)` y guardalo con `resultado = ...`.',
-     why:'`key=len` ordena según el largo de cada palabra: uva (3), pera (4), manzana (7).'}
+     why:'`key=len` ordena según el largo de cada palabra.'}
   ]
 },
 {
   week:3, weekName:'Funciones',
   title:'Repaso Semana 3', sub:'Funciones, todo junto',
   cards:[
-    {h:'Todo lo de esta semana', p:['Una función se define con `def`, se ejecuta al llamarla con paréntesis y puede recibir **parámetros**. Con `return` devuelve un resultado; sin `return` devuelve `None`.','Los parámetros pueden tener **valor por defecto** y se pueden pasar **por nombre**. Las variables de adentro son **locales**; las de afuera, **globales**. Una **lambda** es una función corta de una línea.'],
+    {h:'Todo lo de esta semana', p:['Una función se define con `def`, se ejecuta al llamarla con paréntesis y puede recibir **parámetros**. Con `return` devuelve un resultado; sin `return` devuelve `None`.','Los parámetros pueden tener **valor por defecto** y se pueden pasar **por nombre**. Las variables de adentro son **locales**. Una **lambda** es una función corta de una línea.'],
      code:L('def promedio(nums, decimales=1):','    prom = sum(nums) / len(nums)','    return round(prom, decimales)','','print(promedio([7, 8, 10]))     # 8.3','print(promedio([7, 8, 10], 2))  # 8.33','','por_dos = lambda n: n * 2')}
   ],
   ex:[
@@ -1188,20 +1139,20 @@ const LESSONS=[
      why:'La función necesita dos argumentos y solo recibe uno.',
      fix:{q:'¿Cómo se arregla?', opts:['Pasar los dos argumentos','Cambiar `return` por `print`','Agregar `:` al final','Borrar los paréntesis'], a:0}},
     {t:'bug', q:'Esto lanza IndentationError. Tocá la línea del error.', code:L('def mayor(a, b):','if a > b:','        return a','    return b'), line:1,
-     why:'El `if` forma parte del cuerpo de la función, así que necesita sangría de 4 espacios.',
+     why:'El `if` forma parte del cuerpo de la función, así que necesita sangría.',
      fix:{q:'¿Cómo se arregla?', opts:['Indentar el `if` con 4 espacios','Borrar el `return b`','Cambiar `>` por `>=`','Agregar `:` al `def`'], a:0}},
     {t:'code', q:'Completá el cuerpo: devolvé `True` si `edad` es 18 o más.', pre:'def es_mayor_de_edad(edad):', init:'    ', sol:'    return edad >= 18', post:'',
      test:L('assert es_mayor_de_edad(18) is True, "con 18 tendría que devolver True"','assert es_mayor_de_edad(17) is False, "con 17 tendría que devolver False"'),
      hint:'Devolvé directamente la comparación `edad >= 18`.',
-     why:'La comparación ya es `True` o `False`, así que no hace falta un `if`.'},
+     why:'La comparación ya es `True` o `False`.'},
     {t:'code', q:'Completá `responder`: devuelve `"Pong"` si `texto` es `"!ping"` y `"No existe"` en cualquier otro caso.', pre:'def responder(texto):', init:'    ', sol:L('    if texto == "!ping":','        return "Pong"','    return "No existe"'), post:'',
      test:L('assert responder("!ping") == "Pong", "responder(\\"!ping\\") tendría que devolver Pong"','assert responder("!w") == "No existe", "responder(\\"!w\\") tendría que devolver No existe"'),
      hint:'Un `if texto == "!ping":` con su `return`, y después un `return` para el resto.',
-     why:'El primer `return` corta la función si se cumple el `if`; si no, sigue y devuelve "No existe".'},
+     why:'El primer `return` corta la función si se cumple el `if`.'},
     {t:'code', q:'Armá el diccionario `comandos`: la clave `"!ping"` con la función `ping` y `"!w"` con la función `w`. Sin paréntesis.', pre:L('def ping():','    return "Pong"','','def w():','    return "Agarraste la pala"',''), init:'', sol:'comandos = {"!ping": ping, "!w": w}', post:'',
      test:L('assert comandos["!ping"]() == "Pong", "comandos[\\"!ping\\"] tendría que ser la función ping"','assert comandos["!w"]() == "Agarraste la pala", "comandos[\\"!w\\"] tendría que ser la función w"'),
      hint:'Un diccionario `{clave: valor, ...}` donde el valor es el nombre de la función, sin `()`.',
-     why:'Las funciones son valores: guardadas en un diccionario, `comandos[texto]()` busca y ejecuta la que corresponda. Así se arma un bot sin una cadena de `if`.'},
+     why:'Las funciones son valores: guardadas en un diccionario, `comandos[texto]()` busca y ejecuta la que corresponda.'},
     {t:'code', q:'Completá el cuerpo: devolvé el promedio de la lista (la suma dividida por la cantidad).', pre:'def promedio(nums):', init:'    ', sol:'    return sum(nums) / len(nums)', post:'',
      test:L('assert promedio([2, 4, 6]) == 4, "promedio([2, 4, 6]) tendría que devolver 4"','assert promedio([10]) == 10, "promedio([10]) tendría que devolver 10"'),
      hint:'Usá `sum(...)` y `len(...)` con la lista.',
@@ -1210,7 +1161,7 @@ const LESSONS=[
 }
 ];
 
-/* ---------- Progreso guardado (solo en este navegador) ---------- */
+/* ---------- Progreso ---------- */
 const KEY='python-desde-cero-v1';
 let save={xp:0,streak:0,last:'',done:{},days:{},photo:null};
 try{const s=localStorage.getItem(KEY); if(s){const o=JSON.parse(s); if(o&&typeof o==='object') save=Object.assign(save,o);}}catch(e){}
@@ -1218,7 +1169,6 @@ function persist(){
   try{ localStorage.setItem(KEY,JSON.stringify(save)); return true; }
   catch(e){ return false; }
 }
-/* Redimensiona y comprime una imagen para que entre en localStorage */
 function compressImage(file,max,quality){
   return new Promise(res=>{
     const img=new Image();
@@ -1239,7 +1189,6 @@ function compressImage(file,max,quality){
     img.src=url;
   });
 }
-/* Intenta guardar la foto; si no entra, comprime más fuerte y reintenta */
 async function setPhoto(file){
   let data=await compressImage(file,256,0.82);
   if(!data){ toast('No pude leer esa imagen'); return; }
@@ -1269,7 +1218,6 @@ function bumpStreak(){
   save.streak=(save.last===dayKey(y))?save.streak+1:1; save.last=today;
 }
 
-/* ---------- Utilidades ---------- */
 function el(tag,attrs){
   const e=document.createElement(tag); attrs=attrs||{};
   for(const k in attrs){const v=attrs[k];
@@ -1313,7 +1261,6 @@ const ICONS={
 function icon(n,cls){const s=el('span',{class:'ic'+(cls?' '+cls:'')});s.innerHTML=ICONS[n];return s;}
 function stars(n,big){const w=el('span',{class:'stars'+(big?' big':''),role:'img','aria-label':n+' de 3 estrellas'});for(let i=0;i<3;i++)w.append(icon('star',i<n?'on':''));return w;}
 
-/* ---------- Resaltado de sintaxis ---------- */
 const KW=new Set(['if','elif','else','for','while','in','and','or','not','True','False','None','break','continue','def','return','import','from','as','class','try','except','finally','raise','with','lambda','pass','global','is','assert','del','yield']);
 const FN=new Set(['print','input','int','float','str','bool','range','len','type','list','dict','set','tuple','sum','min','max','sorted','enumerate','zip','open','abs','round','isinstance','map','filter','super','reversed']);
 const TOK=/(f?"[^"\n]*"|f?'[^'\n]*'|#.*$|___|\d+(?:\.\d+)?|[A-Za-z_]\w*|\s+|.)/g;
@@ -1344,7 +1291,7 @@ function codeFill(c){
       const idx=bi++; const v=c.filled[idx];
       let cls='blank'+(v?' filled':'');
       if(c.checked) cls+=(v===c.ex.ans[idx])?' ok':' bad';
-      return el('button',{class:cls,type:'button','aria-label':v?('Espacio '+(idx+1)+': '+v+'. Tocá para vaciar'):('Espacio vacío '+(idx+1)),disabled:c.checked,onclick:()=>{c.filled[idx]=null;render();}},v||'');
+      return el('button',{class:cls,type:'button','aria-label':v?('Espacio '+(idx+1)+': '+v):('Espacio vacío '+(idx+1)),disabled:c.checked,onclick:()=>{c.filled[idx]=null;render();}},v||'');
     }));
     if(i<a.length-1) pre.append('\n');
   });
@@ -1364,15 +1311,11 @@ function codeBug(c){
   });
   return el('div',{class:'code'},tag(),box);
 }
+let S=null;
 
-/* ---------- Estado ---------- */
-let S=null; // null = inicio
-
-/* ---------- Ejecutar Python de verdad (Pyodide en un Worker) ---------- */
 const PYURL='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
 const TEST_HELPERS='import io as _io, contextlib as _cx\ndef salida(_f, *_a, **_k):\n    _b = _io.StringIO()\n    with _cx.redirect_stdout(_b):\n        _f(*_a, **_k)\n    return _b.getvalue()\n';
 const PY={state:'idle',worker:null,ready:null,pending:{},stream:{},n:0};
-
 const TERM_PRELUDE_SRC=String.raw`
 import sys as _sys, time as _time, random as _random, builtins as _bi, json as _json
 import js as _js
@@ -1400,30 +1343,24 @@ class _Out:
         if _time.time() - _last[0] > 0.05:
             _flush()
         return len(s)
-    def flush(self):
-        pass
-    def isatty(self):
-        return False
+    def flush(self): pass
+    def isatty(self): return False
 class _Err:
     encoding = "utf-8"
     def write(self, s):
         s = str(s)
-        if _tb[0] == "drop":
-            return len(s)
+        if _tb[0] == "drop": return len(s)
         if _tb[0] is not None:
             _tb[0].append(s)
-            if "_pyodide" in s or "_base.py" in s:
-                _tb[0] = "drop"
+            if "_pyodide" in s or "_base.py" in s: _tb[0] = "drop"
             return len(s)
         if s.startswith("Traceback (most recent call last)"):
             _tb[0] = [s]
             return len(s)
         _o.write(s)
         return len(s)
-    def flush(self):
-        pass
-    def isatty(self):
-        return False
+    def flush(self): pass
+    def isatty(self): return False
 _old_out = _sys.stdout
 _old_err = _sys.stderr
 _o = _Out()
@@ -1444,8 +1381,7 @@ _bi.input = _input
 _orig_sleep = getattr(_time, "_orig_sleep", _time.sleep)
 _time._orig_sleep = _orig_sleep
 def _sleep(x):
-    if _ai[0] < len(_answers):
-        return
+    if _ai[0] < len(_answers): return
     _flush()
     _orig_sleep(x)
 _time.sleep = _sleep
@@ -1588,7 +1524,7 @@ const ERR_ES={
 };
 function fullSrc(ex,user){ return [ex.pre,user,ex.post].filter(x=>x!=null&&x!=='').join('\n'); }
 function analyseRun(c,r){
-  const ex=c.ex, preN=ex.pre?ex.pre.split('\n').length:0, userN=(c.text||'').split('\n').length;
+  const ex=c.ex, preN=(ex.setup?ex.setup.split('\n').length:0)+(ex.pre?ex.pre.split('\n').length:0), userN=(c.text||'').split('\n').length;
   if(r.ok) return {ok:true,out:r.out};
   if(r.stage==='load') return {ok:false,kind:'load',head:'No pude cargar Python',body:'Hace falta internet la primera vez para descargar el ejecutor. Revisá la conexión y probá de nuevo.',out:''};
   if(r.stage==='timeout') return {ok:false,kind:'timeout',head:'Tu código tardó demasiado',body:'Parece un bucle que no termina. Revisá la condición del `while` o el `for`.',out:r.out||''};
@@ -1606,7 +1542,7 @@ function analyseRun(c,r){
 async function runCode(){
   const c=S.cur, ex=c.ex; if(!ready(c)) return;
   c.running=true; render();
-  const r=await pyRun(fullSrc(ex,c.text),TEST_HELPERS+(ex.test||''));
+  const r=await pyRun((ex.setup?ex.setup+'\n':'')+fullSrc(ex,c.text),TEST_HELPERS+(ex.test||''));
   if(!S||S.cur!==c) return;
   c.running=false; c.res=analyseRun(c,r);
   if(c.res.ok){ c.ok=true; settleCode(c); }
@@ -1639,8 +1575,7 @@ function codeEditor(c){
   setupTA(ta,sync);
   box.append(ta);
   if(ex.post) box.append(staticPre(ex.post));
-  const wrap=el('div',{},box);
-  return wrap;
+  return el('div',{},box);
 }
 function runPanel(c){
   const box=el('div',{class:'runbox'});
@@ -1667,7 +1602,6 @@ function codeDock(c){
   return dock('',kids);
 }
 
-/* ---------- Editor libre: varios archivos, importar, exportar y ejecutar ---------- */
 const EDKEY='python-desde-cero-editor-v1';
 const STARTER='# Escribí tu código acá y tocá "Ejecutar"\nnombre = "mundo"\nprint(f"Hola, {nombre}")\n';
 let TAB='lessons';
@@ -1731,7 +1665,6 @@ function analyseFree(r){
   const m=[...String(r.err||'').matchAll(/File "<exec>", line (\d+)/g)]; const ln=m.length?+m[m.length-1][1]:0;
   return {ok:false,head:'Python encontró un error',body:(ln?'En la línea '+ln+'. ':'')+(ERR_ES[type]||''),raw:last.slice(0,200),out:r.out||''};
 }
-/* Consola del editor: el programa se ejecuta en vivo y, cuando pide input(), la consola espera la respuesta */
 const T={fileId:null,running:false,waiting:false,answers:[],code:'',seed:0,out:'',newOut:'',status:'idle',res:null,msg:''};
 const termShown=()=>T.newOut.length>=T.out.length?T.newOut:T.out;
 function termPaint(){
@@ -1749,7 +1682,6 @@ async function termExec(){
 }
 function termStart(){ if(T.running) return; const f=edCur(); T.fileId=f.id; T.code=f.code; T.answers=[]; T.out=''; T.seed=Math.floor(Math.random()*1e9); termExec(); }
 function termSubmit(v){ if(!T.waiting||T.running) return; T.answers.push(v); T.waiting=false; termExec(); }
-/* Escritura de código: cierra paréntesis y comillas solo, sangría automática y barra de símbolos sobre el teclado */
 const PAIRS={'(':')','[':']','{':'}','"':'"',"'":"'"};
 const CLOSERS=new Set([')',']','}','"',"'"]);
 function setupTA(ta,onChange){
@@ -1791,7 +1723,6 @@ function setupTA(ta,onChange){
     }
   });
 }
-/* Barra de símbolos: aparece sobre el teclado cuando se escribe código */
 const KB=el('div',{class:'kbar',role:'toolbar','aria-label':'Símbolos',hidden:true});
 let KBTA=null;
 [['⇥','tab'],['(','('],[')',')'],['[','['],[']',']'],['{','{'],['}','}'],['"','"'],["'","'"],[':',':'],['=','='],[',',','],['.','.'],['#','#'],['_','_'],['+','+'],['-','-'],['*','*'],['/','/'],['<','<'],['>','>'],['!','!'],['%','%'],['\\','\\'],['←','left'],['→','right']].forEach(k=>{
@@ -1816,7 +1747,7 @@ function edMenu(){
     return m;
   }
   if(ED.ask==='del'){
-    m.append(el('p',{},'¿Eliminar `'.replace(/`/g,'')+f.name+'`? No se puede deshacer.'),el('button',{type:'button',class:'danger',onclick:edDelete},'Sí, eliminar'),el('button',{type:'button',onclick:()=>{ED.ask=null;render();}},'Cancelar'));
+    m.append(el('p',{},'¿Eliminar '+f.name+'? No se puede deshacer.'),el('button',{type:'button',class:'danger',onclick:edDelete},'Sí, eliminar'),el('button',{type:'button',onclick:()=>{ED.ask=null;render();}},'Cancelar'));
     return m;
   }
   [['Nuevo archivo',edNew],['Importar…',edImport],['Renombrar',()=>{ED.ask='rename';render();}],['Duplicar',edDup],['Exportar (.py)',edExport],['Copiar código',edCopy],['Exportar todos (.json)',edExportAll,'wide']].forEach(a=>m.append(el('button',{type:'button',class:a[2]||'',onclick:a[1]},a[0])));
@@ -1940,15 +1871,12 @@ function feedback(c){
   return {head:'No era esa',body:out};
 }
 
-/* ---------- Pantallas ---------- */
 function stat(ic,tone,val,label){
   return el('div',{class:'stat'},el('div',{class:'row t-'+tone},icon(ic),el('span',{},String(val))),el('small',{},label));
 }
-/* ---------- Mapa de lecciones, separado por semanas ---------- */
 const MAP_W=360, STEP=132, Y0=100, XL=92, XR=268;
 const NS='http://www.w3.org/2000/svg';
 let celebrate=null, homeAfter=null, homeTimers=[];
-/* Lo que se muestra en el cartel de cada semana. Si una lección trae weekName, se usa como respaldo del nombre. */
 const WEEKS={
   1:{name:'Fundamentos',desc:'La base de todo: guardar datos, hacer cuentas, decidir y repetir.',topics:['Variables','Operadores','Entrada y salida','Condicionales','Bucles']},
   2:{name:'Colecciones',desc:'Cómo guardar y manejar muchos datos a la vez.',topics:['Listas','Slicing','Tuplas','Diccionarios','Sets','Comprensiones']},
@@ -1962,7 +1890,6 @@ function connD(j){const a=pos(j),b=pos(j+1),m=(a.y+b.y)/2;return 'M'+a.x+' '+a.y
 function firstNotDone(set){for(let i=0;i<LESSONS.length;i++) if(!set.has(i)) return i; return -1;}
 function statesOf(set){const f=firstNotDone(set);return LESSONS.map((_,i)=>set.has(i)?'done':(i===f?'current':'locked'));}
 function svgEl(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs) e.setAttribute(k,attrs[k]);return e;}
-/* Lecciones consecutivas con la misma semana forman un grupo; en cada grupo el camino vuelve a empezar */
 function weekGroups(){
   const g=[];
   LESSONS.forEach((l,i)=>{
@@ -2036,13 +1963,10 @@ function buildMap(set){
     sec.append(map);
     root.append(sec);
   });
-  /* Aviso de la próxima semana, que todavía no tiene lecciones */
   const nextW=groups[groups.length-1].week+1;
   if(WEEKS[nextW]) root.append(el('section',{class:'week'},buildBanner(nextW,'','soon')));
   return root;
 }
-/* Al volver de completar una lección: se muestra el estado anterior y se anima el cambio por etapas.
-   Si era la última de la semana, también se desbloquea el cartel de la semana siguiente. */
 function afterHome(root,realSet,pending,initSet){
   homeTimers.forEach(clearTimeout); homeTimers=[];
   const groups=weekGroups();
@@ -2050,7 +1974,6 @@ function afterHome(root,realSet,pending,initSet){
   const bannerAt=w=>root.querySelector('.wbanner[data-w="'+w+'"]');
   const go=(ms,fn)=>homeTimers.push(setTimeout(fn,ms));
   const show=(e,smooth)=>{if(e) e.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});};
-  /* Si la lección es la primera de una semana que no es la 1, se muestra el cartel junto con el círculo */
   const focusOf=i=>{const g=groups.find(x=>x.idx[0]===i&&x.week>1);return g?bannerAt(g.week):nodeAt(i);};
   if(pending===null){
     const f=firstNotDone(realSet);
@@ -2197,7 +2120,6 @@ function Perfil(){
   const n=Object.keys(save.done).length;
   const st=currentStreak();
 
-  // Input de foto oculto
   const avatarInput=el('input',{type:'file',accept:'image/*',style:'display:none'});
   avatarInput.addEventListener('change',async()=>{
     const f=avatarInput.files&&avatarInput.files[0];
@@ -2205,7 +2127,6 @@ function Perfil(){
     if(f) await setPhoto(f);
   });
 
-  // Días de la semana actual (lunes a domingo)
   const today=new Date();
   const dow=today.getDay();
   const monOff=dow===0?-6:1-dow;
@@ -2234,6 +2155,10 @@ function Perfil(){
     el('span',{class:'prof-avatar-edit'},'Cambiar foto')
   );
 
+  const json=JSON.stringify({app:'python-desde-cero',version:1,save},null,2);
+  const ta=el('textarea',{class:'modal-json',readonly:true,spellcheck:'false','aria-label':'Tu progreso en JSON'});
+  ta.value=json;
+
   return el('div',{},
     avatarInput,
     el('header',{class:'head edhead'},el('p',{class:'eyebrow'},'Tu progreso'),el('h1',{},'Perfil')),
@@ -2257,15 +2182,71 @@ function Perfil(){
     el('div',{class:'prof-actions'},
       el('button',{class:'btn',type:'button',onclick:exportProgress},'Exportar progreso'),
       el('button',{class:'btn ghost',type:'button',onclick:importProgress},'Importar progreso')
+    ),
+    el('div',{class:'prof-json'},
+      el('p',{class:'kicker'},'Tu progreso en texto'),
+      el('p',{class:'modal-hint'},'Copiá esto y guardalo como progreso-python.json para no perderlo.'),
+      ta,
+      el('button',{class:'btn ghost',type:'button',onclick:async()=>{
+        ta.focus(); ta.select(); ta.setSelectionRange(0,ta.value.length);
+        try{ await navigator.clipboard.writeText(json); toast('Copiado al portapapeles'); }
+        catch(e){ let ok=false; try{ ok=document.execCommand('copy'); }catch(_){}; toast(ok?'Copiado':'Seleccioná el texto y copialo manualmente'); }
+      }},'Copiar JSON')
     )
   );
 }
 
+function showExportModal(name,json){
+  document.querySelectorAll('.modal-bg').forEach(n=>n.remove());
+  const ta=el('textarea',{class:'modal-json',readonly:true,spellcheck:'false'});
+  ta.value=json;
+  const bg=el('div',{class:'modal-bg'},
+    el('div',{class:'modal'},
+      el('h3',{},'Exportar progreso'),
+      el('p',{class:'modal-hint'},'Tocá "Copiar" y pegá el texto en un archivo nuevo llamado '+name+'. Después podés restaurarlo con "Importar progreso".'),
+      ta,
+      el('div',{class:'modal-actions'},
+        el('button',{class:'btn',type:'button',onclick:async()=>{
+          ta.focus(); ta.select(); ta.setSelectionRange(0,ta.value.length);
+          try{ await navigator.clipboard.writeText(json); toast('Copiado al portapapeles'); }
+          catch(e){ let ok=false; try{ ok=document.execCommand('copy'); }catch(_){}; toast(ok?'Copiado':'Seleccioná el texto y copialo manualmente'); }
+        }},'Copiar'),
+        el('button',{class:'btn ghost',type:'button',onclick:()=>bg.remove()},'Cerrar')
+      )
+    )
+  );
+  bg.addEventListener('click',e=>{ if(e.target===bg) bg.remove(); });
+  document.body.append(bg);
+  setTimeout(()=>{ ta.focus(); ta.select(); },100);
+}
+
 async function exportProgress(){
   const data={app:'python-desde-cero',version:1,exportedAt:new Date().toISOString(),save};
-  const r=await saveText('progreso-python.json',JSON.stringify(data,null,2),'application/json');
-  if(r==='download'||r==='share') toast('Progreso exportado');
-  else if(r==='fail') toast('No pude descargarlo. Probá desde el navegador de escritorio.');
+  const json=JSON.stringify(data,null,2);
+  const name='progreso-python.json';
+  const isWebView=/wv\)/.test(navigator.userAgent);
+  if(!isWebView){
+    try{
+      const file=new File([json],name,{type:'application/json'});
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:name});
+        toast('Progreso compartido');
+        return;
+      }
+    }catch(e){ if(e&&e.name==='AbortError') return; }
+  }
+  let downloaded=false;
+  try{
+    const u=URL.createObjectURL(new Blob([json],{type:'application/json'}));
+    const a=el('a',{href:u,download:name,style:'display:none'});
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),5000);
+    downloaded=true;
+  }catch(e){}
+  showExportModal(name,json);
+  if(downloaded) toast('Si no se descargó, copiá el texto del cuadro');
 }
 
 function importProgress(){
