@@ -3,7 +3,7 @@
   "appName": "Learn Python",
   "webDir": "www",
   "server": {
-    "url": "https://shiina1123098-debug.github.io/Learn-Python/",
+    "url": "https://learn-pythonl.netlify.app/",
     "androidScheme": "https",
     "errorPath": "error.html"
   }
