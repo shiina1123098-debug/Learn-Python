@@ -291,6 +291,54 @@ body.kbopen .app.has-nav{padding-bottom:70px}
 .res strong{font-family:var(--f-display);font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
 .res span{font-size:.76rem;color:var(--muted)}
 
+/* Perfil */
+.prof-week{margin-top:22px}
+.prof-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px}
+.prof-day{display:grid;justify-items:center;gap:6px;min-width:0}
+.prof-circle{width:100%;max-width:46px;aspect-ratio:1;border-radius:50%;border:2px solid var(--line);
+  background:var(--surface2);display:grid;place-items:center;color:var(--good);
+  transition:background-color .3s ease,border-color .3s ease,box-shadow .3s ease}
+.prof-circle .ic{width:55%;height:55%}
+.prof-day.on .prof-circle{background:var(--good-bg);border-color:var(--good)}
+.prof-day.today .prof-circle{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.prof-dayname{font-size:.72rem;color:var(--muted);font-weight:600;line-height:1}
+.prof-day.on .prof-dayname{color:var(--good)}
+.prof-day.today .prof-dayname{color:var(--accent);font-weight:800}
+.prof-list{margin-top:24px}
+.prof-lessons{display:grid;gap:6px;margin-top:10px}
+.prof-lesson{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+.prof-num{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);min-width:1.8ch;text-align:right;font-variant-numeric:tabular-nums}
+.prof-title{font-weight:600;font-size:.95rem;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof-status{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:4px}
+.prof-status .ic{width:.95em;height:.95em}
+.prof-lesson.done{border-color:var(--good);background:var(--good-bg)}
+.prof-lesson.done .prof-num,.prof-lesson.done .prof-title{color:var(--good-deep)}
+.prof-lesson.done .prof-status{color:var(--good)}
+.prof-actions{display:grid;gap:10px;margin-top:24px}
+
+.prof-btn{display:inline-flex;align-items:center;gap:10px;margin:0 0 12px;
+  padding:5px 14px 5px 5px;border:1px solid var(--line);background:var(--surface);
+  border-radius:99px;font-weight:700;font-size:.88rem;color:var(--ink);
+  box-shadow:0 2px 0 var(--line);transition:transform .12s ease}
+.prof-btn:active{transform:translateY(1px);box-shadow:0 1px 0 var(--line)}
+.prof-av{width:34px;height:34px;border-radius:50%;overflow:hidden;flex:none;
+  background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.prof-av .ic{width:20px;height:20px}
+.prof-av img{width:100%;height:100%;object-fit:cover;display:block}
+
+.prof-avatar-wrap{display:flex;justify-content:center;margin:2px 0 20px}
+.prof-avatar-big{position:relative;width:130px;height:150px;padding:0;border:0;
+  background:transparent;cursor:pointer;display:grid;place-items:center}
+.prof-avatar-cv{width:110px;height:110px;border-radius:50%;overflow:hidden;
+  background:var(--surface);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);
+  display:grid;place-items:center;color:var(--muted)}
+.prof-avatar-cv .ic{width:52px;height:52px}
+.prof-avatar-cv img{width:100%;height:100%;object-fit:cover;display:block}
+.prof-avatar-edit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  background:var(--accent);color:var(--accent-ink);font-size:.72rem;font-weight:800;
+  padding:4px 12px;border-radius:99px;box-shadow:0 2px 0 var(--accent-deep);white-space:nowrap}
+
 @media (prefers-reduced-motion:no-preference){
   .dock-in{animation:rise .18s ease-out}
   @keyframes rise{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -1164,9 +1212,45 @@ const LESSONS=[
 
 /* ---------- Progreso guardado (solo en este navegador) ---------- */
 const KEY='python-desde-cero-v1';
-let save={xp:0,streak:0,last:'',done:{}};
+let save={xp:0,streak:0,last:'',done:{},days:{},photo:null};
 try{const s=localStorage.getItem(KEY); if(s){const o=JSON.parse(s); if(o&&typeof o==='object') save=Object.assign(save,o);}}catch(e){}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
+function persist(){
+  try{ localStorage.setItem(KEY,JSON.stringify(save)); return true; }
+  catch(e){ return false; }
+}
+/* Redimensiona y comprime una imagen para que entre en localStorage */
+function compressImage(file,max,quality){
+  return new Promise(res=>{
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      const scale=Math.min(1,(max||256)/Math.max(img.width,img.height));
+      const w=Math.max(1,Math.round(img.width*scale));
+      const h=Math.max(1,Math.round(img.height*scale));
+      const cv=document.createElement('canvas');
+      cv.width=w; cv.height=h;
+      const ctx=cv.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      try{ res(cv.toDataURL('image/jpeg',quality||0.82)); }
+      catch(e){ res(null); }
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(url); res(null); };
+    img.src=url;
+  });
+}
+/* Intenta guardar la foto; si no entra, comprime más fuerte y reintenta */
+async function setPhoto(file){
+  let data=await compressImage(file,256,0.82);
+  if(!data){ toast('No pude leer esa imagen'); return; }
+  save.photo=data;
+  if(persist()){ render(true); return; }
+  data=await compressImage(file,128,0.7);
+  if(data&&(save.photo=data,persist())){ toast('Foto guardada en tamaño chico'); render(true); return; }
+  save.photo=null; persist();
+  toast('No hay espacio para guardar la foto');
+  render(true);
+}
 function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function currentStreak(){
   if(!save.last) return 0;
@@ -1174,7 +1258,13 @@ function currentStreak(){
   return (save.last===dayKey()||save.last===dayKey(y))?save.streak:0;
 }
 function bumpStreak(){
-  const today=dayKey(); if(save.last===today) return;
+  const today=dayKey();
+  if(!save.days) save.days={};
+  save.days[today]=true;
+  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-60);
+  const cutoffKey=dayKey(cutoff);
+  Object.keys(save.days).forEach(k=>{ if(k<cutoffKey) delete save.days[k]; });
+  if(save.last===today) return;
   const y=new Date(); y.setDate(y.getDate()-1);
   save.streak=(save.last===dayKey(y))?save.streak+1:1; save.last=today;
 }
@@ -1217,7 +1307,8 @@ const ICONS={
   code:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4.5l-4 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>',
   plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
   stop:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
-  star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>'
+  star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>',
+  user:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 20.5a8.5 8.5 0 0 1 17 0z"/></svg>'
 };
 function icon(n,cls){const s=el('span',{class:'ic'+(cls?' '+cls:'')});s.innerHTML=ICONS[n];return s;}
 function stars(n,big){const w=el('span',{class:'stars'+(big?' big':''),role:'img','aria-label':n+' de 3 estrellas'});for(let i=0;i<3;i++)w.append(icon('star',i<n?'on':''));return w;}
@@ -1775,7 +1866,10 @@ function Editor(){
 }
 function TabBar(){
   const b=(ic,label,id)=>{ const on=TAB===id; return el('button',{class:'tab'+(on?' on':''),type:'button','aria-current':on?'page':null,onclick:()=>{ if(TAB===id){window.scrollTo(0,0);return;} edSave(); TAB=id; render(true); }},icon(ic),el('span',{},label)); };
-  return el('nav',{class:'tabbar','aria-label':'Secciones'},b('book','Lecciones','lessons'),b('code','Editor','editor'));
+  return el('nav',{class:'tabbar','aria-label':'Secciones'},
+    b('book','Lecciones','lessons'),
+    b('code','Editor','editor'),
+    b('user','Perfil','perfil'));
 }
 edLoad();
 window.addEventListener('pagehide',edSave);
@@ -2005,6 +2099,10 @@ function Home(){
   homeAfter=()=>afterHome(map,realSet,pending,initSet);
   const n=Object.keys(save.done).length, st=currentStreak();
   return el('div',{},
+    el('button',{class:'prof-btn',type:'button',onclick:()=>{TAB='perfil';render(true);}},
+      el('span',{class:'prof-av'}, save.photo ? el('img',{src:save.photo,alt:''}) : icon('user')),
+      el('span',{},'Perfil')
+    ),
     el('header',{class:'head'},el('p',{class:'eyebrow'},weekLabel),el('h1',{},'Python desde cero')),
     el('div',{class:'stats'},
       stat('flame','flame',st,st===1?'día de racha':'días de racha'),
@@ -2094,12 +2192,134 @@ function Done(){
   return [main,dock('',[btn('Continuar',goHome)])];
 }
 
+/* ---------- Perfil ---------- */
+function Perfil(){
+  const n=Object.keys(save.done).length;
+  const st=currentStreak();
+
+  // Input de foto oculto
+  const avatarInput=el('input',{type:'file',accept:'image/*',style:'display:none'});
+  avatarInput.addEventListener('change',async()=>{
+    const f=avatarInput.files&&avatarInput.files[0];
+    avatarInput.value='';
+    if(f) await setPhoto(f);
+  });
+
+  // Días de la semana actual (lunes a domingo)
+  const today=new Date();
+  const dow=today.getDay();
+  const monOff=dow===0?-6:1-dow;
+  const monday=new Date(today); monday.setDate(today.getDate()+monOff);
+  const dayNames=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const todayKey=dayKey(today);
+  const days=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday); d.setDate(monday.getDate()+i);
+    const k=dayKey(d);
+    days.push({name:dayNames[i],active:!!(save.days&&save.days[k]),today:k===todayKey});
+  }
+
+  const lessons=el('div',{class:'prof-lessons'});
+  LESSONS.forEach((l,i)=>{
+    const d=save.done[i], done=!!d;
+    lessons.append(el('div',{class:'prof-lesson'+(done?' done':'')},
+      el('span',{class:'prof-num'},String(i+1)),
+      el('span',{class:'prof-title'},l.title),
+      el('span',{class:'prof-status'}, done?stars(d.stars):'—')
+    ));
+  });
+
+  const avatar=el('button',{class:'prof-avatar-big',type:'button',onclick:()=>avatarInput.click(),'aria-label':'Cambiar foto de perfil'},
+    el('span',{class:'prof-avatar-cv'}, save.photo ? el('img',{src:save.photo,alt:'Foto de perfil'}) : icon('user')),
+    el('span',{class:'prof-avatar-edit'},'Cambiar foto')
+  );
+
+  return el('div',{},
+    avatarInput,
+    el('header',{class:'head edhead'},el('p',{class:'eyebrow'},'Tu progreso'),el('h1',{},'Perfil')),
+    el('div',{class:'prof-avatar-wrap'},avatar),
+    el('div',{class:'stats'},
+      stat('check','good',n+'/'+LESSONS.length,'lecciones'),
+      stat('flame','flame',st,st===1?'día de racha':'días de racha'),
+      stat('bolt','spark',save.xp,'XP')
+    ),
+    el('div',{class:'prof-week'},
+      el('p',{class:'kicker'},'Esta semana'),
+      el('div',{class:'prof-days'},days.map(d=>el('div',{class:'prof-day'+(d.active?' on':'')+(d.today?' today':'')},
+        el('div',{class:'prof-circle'}, d.active?icon('check'):null),
+        el('span',{class:'prof-dayname'},d.name)
+      )))
+    ),
+    el('div',{class:'prof-list'},
+      el('p',{class:'kicker'},'Lecciones'),
+      lessons
+    ),
+    el('div',{class:'prof-actions'},
+      el('button',{class:'btn',type:'button',onclick:exportProgress},'Exportar progreso'),
+      el('button',{class:'btn ghost',type:'button',onclick:importProgress},'Importar progreso')
+    )
+  );
+}
+
+async function exportProgress(){
+  const data={app:'python-desde-cero',version:1,exportedAt:new Date().toISOString(),save};
+  const r=await saveText('progreso-python.json',JSON.stringify(data,null,2),'application/json');
+  if(r==='download'||r==='share') toast('Progreso exportado');
+  else if(r==='fail') toast('No pude descargarlo. Probá desde el navegador de escritorio.');
+}
+
+function importProgress(){
+  const inp=el('input',{type:'file',accept:'.json,application/json'});
+  inp.style.display='none';
+  document.body.append(inp);
+  inp.addEventListener('change',async()=>{
+    const file=inp.files&&inp.files[0];
+    inp.remove();
+    if(!file) return;
+    try{
+      const text=await file.text();
+      const data=JSON.parse(text);
+      const s=data&&data.save;
+      if(!s||typeof s!=='object'){ toast('El archivo no tiene un progreso válido'); return; }
+      const next={xp:0,streak:0,last:'',done:{},days:{},photo:save.photo};
+      if(typeof s.photo==='string' && s.photo.length<500000 && /^data:image\//.test(s.photo)) next.photo=s.photo;
+      if(typeof s.xp==='number'&&isFinite(s.xp)) next.xp=Math.max(0,Math.floor(s.xp));
+      if(typeof s.streak==='number'&&isFinite(s.streak)) next.streak=Math.max(0,Math.floor(s.streak));
+      if(typeof s.last==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s.last)) next.last=s.last;
+      if(s.done&&typeof s.done==='object'){
+        Object.keys(s.done).forEach(k=>{
+          const v=s.done[k];
+          if(/^\d+$/.test(k)&&v&&typeof v.stars==='number'){
+            next.done[+k]={stars:Math.max(1,Math.min(3,Math.round(v.stars)))};
+          }
+        });
+      }
+      if(s.days&&typeof s.days==='object'){
+        Object.keys(s.days).forEach(k=>{
+          if(/^\d{4}-\d{2}-\d{2}$/.test(k)&&s.days[k]) next.days[k]=true;
+        });
+      }
+      save=next;
+      persist();
+      toast('Progreso importado');
+      render(true);
+    }catch(e){
+      toast('No pude leer el archivo. ¿Es un JSON válido?');
+    }
+  });
+  inp.click();
+}
+
 const root=document.getElementById('app');
 function render(top){
   homeTimers.forEach(clearTimeout); homeTimers=[];
   const y=window.scrollY;
   root.replaceChildren();
-  if(!S){ root.className='app has-nav'; root.append(TAB==='editor'?Editor():Home(),TabBar()); }
+  if(!S){
+    root.className='app has-nav';
+    const view=TAB==='editor'?Editor():TAB==='perfil'?Perfil():Home();
+    root.append(view,TabBar());
+  }
   else{
     const parts=S.view==='cards'?Cards():S.view==='ex'?Exercise():Done();
     root.className='app has-dock';
