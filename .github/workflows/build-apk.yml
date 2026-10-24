@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 env:
-  APP_URL: https://shiina1123098-debug.github.io/Learn-Python/
+  APP_URL: https://learn-pythonl.netlify.app/
 
 jobs:
   build:
