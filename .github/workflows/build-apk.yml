@@ -13,9 +13,6 @@ permissions:
 
 env:
   APP_URL: https://learn-pythonl.netlify.app/
-  # Color de fondo para los iconos adaptativos de Android (opcional).
-  # Si tu icono ya trae fondo, podés borrar la línea del --icon-background-source más abajo.
-  ICON_BG: "#0A4F7C"
 
 jobs:
   build:
@@ -83,7 +80,7 @@ jobs:
         working-directory: app
         run: |
           npx cap add android
-          npx capacitor-assets generate --android --icon-background-source "$ICON_BG"
+          npx capacitor-assets generate --android
           npx cap sync android
 
       - name: Compilar el APK
