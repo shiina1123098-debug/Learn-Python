@@ -6,12 +6,16 @@ on:
     branches: [main, master]
     paths:
       - '.github/workflows/build-apk.yml'
+      - 'app/assets/icon-only.png'
 
 permissions:
   contents: write
 
 env:
   APP_URL: https://learn-pythonl.netlify.app/
+  # Color de fondo para los iconos adaptativos de Android (opcional).
+  # Si tu icono ya trae fondo, podés borrar la línea del --icon-background-source más abajo.
+  ICON_BG: "#0A4F7C"
 
 jobs:
   build:
@@ -30,6 +34,14 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
+      - name: Verificar que existe el icono
+        run: |
+          if [ ! -f app/assets/icon-only.png ]; then
+            echo "ERROR: falta app/assets/icon-only.png"
+            echo "Subí tu icono (PNG 1024x1024) a esa ruta y volvé a correr el workflow."
+            exit 1
+          fi
+
       - name: Crear el proyecto Capacitor
         run: |
           mkdir -p app/www
@@ -45,8 +57,7 @@ jobs:
             },
             "devDependencies": {
               "@capacitor/assets": "^3.0.5",
-              "@capacitor/cli": "^7.0.0",
-              "sharp": "^0.33.5"
+              "@capacitor/cli": "^7.0.0"
             }
           }
           EOF
@@ -63,23 +74,6 @@ jobs:
           <html lang="es"><head><meta charset="utf-8"><title>Learn Python</title></head>
           <body><script>location.replace("$APP_URL")</script></body></html>
           EOF
-          cat > make-icons.mjs <<'EOF'
-          import sharp from 'sharp';
-          import { mkdirSync } from 'node:fs';
-
-          const glyph = `
-            <polyline points="327,360 527,512 327,664" fill="none" stroke="#FFFFFF" stroke-width="90" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="567" y1="664" x2="697" y2="664" stroke="#7BE0A4" stroke-width="90" stroke-linecap="round"/>`;
-          const bg = `
-            <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A8FD6"/><stop offset="1" stop-color="#0A4F7C"/></linearGradient></defs>
-            <rect width="1024" height="1024" fill="url(#g)"/>`;
-          const svg = (inner) => Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${inner}</svg>`);
-
-          mkdirSync('assets', { recursive: true });
-          await sharp(svg(bg + glyph)).png().toFile('assets/icon-only.png');
-          await sharp(svg(glyph)).png().toFile('assets/icon-foreground.png');
-          await sharp(svg(bg)).png().toFile('assets/icon-background.png');
-          EOF
 
       - name: Instalar dependencias
         working-directory: app
@@ -88,9 +82,8 @@ jobs:
       - name: Generar el proyecto Android y los íconos
         working-directory: app
         run: |
-          node make-icons.mjs
           npx cap add android
-          npx capacitor-assets generate --android
+          npx capacitor-assets generate --android --icon-background-source "$ICON_BG"
           npx cap sync android
 
       - name: Compilar el APK
@@ -115,4 +108,3 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "APK más reciente" \
             --notes "Compilado desde el commit $GITHUB_SHA"
-            
