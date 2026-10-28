@@ -6,7 +6,7 @@ on:
     branches: [main, master]
     paths:
       - '.github/workflows/build-apk.yml'
-      - 'app/assets/logo.png'
+      - 'app/assets/logo.png' # <--- Actualizado
 
 permissions:
   contents: write
@@ -33,8 +33,9 @@ jobs:
 
       - name: Verificar que existe el icono
         run: |
-          if [ ! -f app/assets/icon-only.png ]; then
-            echo "ERROR: falta app/assets/icon-only.png"
+          # <--- Actualizado para buscar logo.png
+          if [ ! -f app/assets/logo.png ]; then
+            echo "ERROR: falta app/assets/logo.png"
             echo "Subí tu icono (PNG 1024x1024) a esa ruta y volvé a correr el workflow."
             exit 1
           fi
